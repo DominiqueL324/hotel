@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title of the PDF</title>
+        <link href=" {{asset('all.min.css')}} " rel="stylesheet" type="text/css">
+		  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+		  <!-- Custom styles for this template-->
+		  <link href="{{asset('sb-admin-2.min.css')}}" rel="stylesheet">
+		  <link href="{{asset('dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+    </head>
+    <body id="page-top"> 
+    	<div id="wrapper">
+	    	<div class="container-fluid">
+					<div class="card-header">
+						<div class="row">
+							<h4>Facture de la Reservation de Mr/Mme {{reservation.client.nom}} {{reservation.client.prenom}}</h4>
+						</div>
+						<div class="row">
+								<p>Nom du client&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{reservation.client.nom}}</strong> </p>
+								<p>Prénom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>{{reservation.client.prenom}}</strong></p>
+							<div class="col-lg-1">
+								<p>Chambre</p>
+							</div>
+							<div class="col-lg-2">
+								<p> <strong>{{reservation.offre.libelle}}</strong> </p>
+							</div>
+							
+							
+						</div>
+						<div class="row">
+							
+							<div class="col-lg-2">
+								<p>Date de début</p>
+							</div>
+							<div class="col-lg-2">
+								<p > <strong>{{reservation.beginat|date("d/m/Y")}}</strong> </p>
+							</div>
+							<input id="date1" type="hidden" value="{{reservation.beginat|date('m/d/Y')}}" name="">
+							<input id="date2" type="hidden" value="{{reservation.endat|date('m/d/Y')}}" name="">
+							<div class="col-lg-1">
+								<p> fin</p>
+							</div>
+							<div class="col-lg-2">
+								<p> <strong>{{reservation.endat|date("d/m/Y")}}</strong> </p>
+							</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-lg-2">
+								<p>Porte</p>
+							</div>
+							<div class="col-lg-2">
+								<p> <strong>{{reservation.offre.porte}}</strong> </p>
+							</div>
+							<div class="col-lg-1">
+								<p>Niveau</p>
+							</div>
+							<div class="col-lg-2">
+								<p> <strong>{{reservation.offre.etage}}</strong> </p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-2">
+								<p>Prix Total</p>
+							</div>
+							<div class="col-lg-2">
+								<p> <strong>{{reservation.prix}} Cfa</strong> </p>
+							</div>
+							<div class="col-lg-1">
+								<p>Avance</p>
+							</div>
+							<div class="col-lg-2">
+								<p> <strong>{{reservation.avance}} Cfa</strong> </p>
+							</div>
+						</div>
+
+						<div class="row">
+							<h4>Listes des paiements</h4>
+							<div class="col-lg-12">
+								<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+			                  <thead>
+			                    <tr>
+				                    <th>Date</th>
+									<th>Montant</th>
+			                    </tr>
+			                  </thead>
+			                  <tbody>
+				                    	{% for paiement in reservation.paiements %}
+											<tr>
+												<td> {{paiement.madeat |date("d/m/Y")}}  </td>
+												<td> {{paiement.montant}} </td>
+											</tr>
+										{% endfor %}	
+					         </tbody>
+				                </table>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+
+		  <!-- Bootstrap core JavaScript-->
+	  <script src=" {{ asset('jquery.min.js')}}"></script>
+	  <script src=" {{ asset('bootstrap.bundle.min.js')}}"></script>
+
+	  <!-- Core plugin JavaScript-->
+	  <script src="{{ asset('jquery.easing.min.js')}}"></script>
+
+	  <!-- Custom scripts for all pages-->
+	  <script src="{{ asset('sb-admin-2.min.js')}}"></script>
+	  <script src="{{ asset('jquery.dataTables.min.js')}}"></script>
+	  <script src="{{ asset('dataTables.bootstrap4.min.js')}}"></script>
+
+	  <!-- Page level custom scripts -->
+	  <script src="{{ asset('datatables-demo.js')}}"></script>
+    </body>
+</html>

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Acceuil" %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Bienvenu sur Brain Hotel</h1>
+	<div class="row">
+		<div class="col-lg-4">
+			<a href=" {{path('admin.user.index')}} ">
+				<div class="card">
+				  <div class="card-header">
+				    <center><g>Utilisateurs</g> </center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150"  src=" {{asset('user1.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-4">
+			<a href="{{path('admin.client.index')}}">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Clients</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150" src=" {{asset('client.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-4">
+			<a href="{{path('admin.offre.index')}}">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Offres</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150"  src=" {{asset('room.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+	</div>	
+
+	<div class="row">
+		<div class="col-lg-4">
+			<a href="#">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Stock</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150"  src=" {{asset('stock.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-4">
+			<a href="{{path('recep.reservation.index')}}">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Reservations</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150"  src=" {{asset('reservation.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-4">
+			<a href="#">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Location de salles</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150" src=" {{asset('location.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+	</div>	
+{% endblock %}

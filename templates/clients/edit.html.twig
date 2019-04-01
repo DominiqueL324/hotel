@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title client.nom %}
+{% block body %}
+
+	<div class="container mt-4">
+		<div class="card">
+			<div class="card-header">
+				    <center><h2>Modification du client {{client.nom}} {{client.prenom}} </h2></center>
+			</div>
+			<div class="card-body">
+				{{ form_start(form) }}
+				<div class="row">
+					<div class="col-md-4" > {{ form_row(form.nom) }} </div>
+					<div class="col-md-4"> {{ form_row(form.prenom) }} </div>
+					<div class="col-md-4"> {{ form_row(form.cni) }} </div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-4"> {{ form_row(form.telephone) }} </div>
+					<div class="col-md-4"> {{ form_row(form.email) }} </div>
+				</div>
+
+				<button class="btn btn-primary"> Modifier </button> 
+				<a href=" {{path('admin.client.index')}} " class="btn btn-danger">Annuler</a>
+				{{ form_end(form) }}
+				
+				</div>
+		</div>
+		
+	</div>
+{% endblock %}

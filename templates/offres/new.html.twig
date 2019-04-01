@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title offre.libelle %}
+{% block body %}
+	<div class="container mt-4">
+		<div class="card">
+			<div class="card-header">
+				    <center><h2>Ajouter une offre</h2></center>
+			</div>
+			<div class="card-body">
+				{{ form_start(form) }}
+				<div class="row">
+					<div class="col-md-3" > {{ form_row(form.libelle) }} </div>
+					<div class="col-md-3"> {{ form_row(form.etage) }} </div>
+					<div class="col-md-3"> {{ form_row(form.porte) }} </div>
+					<div class="col-md-3"> {{ form_row(form.prix) }} </div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-4"> {{ form_row(form.clim) }} </div>
+					<div class="col-md-4"> {{ form_row(form.wifi) }} </div>
+					<div class="col-md-4"> {{ form_row(form.superficie) }} </div>
+				</div>
+				<button class="btn btn-primary"> Enregistrer </button>
+
+				<a href=" {{path('home')}} " class="btn btn-danger">Annuler</a> 
+				{{ form_end(form) }}
+				
+				</div>
+		</div>
+		
+	</div>
+{% endblock %}

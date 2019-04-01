@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Reservations-index" %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Liste des Reservations</h1>
+<div class=" mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		<br>
+		<div class="card">
+		<div class="card-header">
+			<div class="text-right">
+				 <a class="btn btn-primary" href=" {{path('recep.reservation.etape1')}} "> Ajouter  </a>
+			</div>
+		</div>
+		<br>
+		<div class="card-body">
+		 <div class="table-responsive">
+	                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+	                  <thead>
+	                    <tr>
+		                    <th>Informations Client</th>
+							<th>Libellé</th>
+							<th>Porte</th>
+							<th>Niveau</th>
+							<th>Date debut</th>
+							<th>Date fin</th>
+							<th>Prix</th>
+							<th>Etat</th>
+							<th>Action</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+	                    	{% for reservation in reservations %}
+						<tr>
+							<td> {{reservation.client.nom}} {{ reservation.client.nom}} </td>
+							<td> {{reservation.offre.libelle}} </td>
+							<td> {{reservation.offre.porte}} </td>
+							<td> {{reservation.offre.etage}} </td>
+							<td> {{reservation.beginat|date("d/m/Y") }} </td>
+							<td> {{reservation.endat|date("d/m/Y") }} </td>
+							<td> {{reservation.prix }} </td>
+							<td>{{reservation.etat }}  </td>
+							<td>
+								<a href=" {{path('recep.reservation.details',{id:reservation.id})}} ">consulter</a>
+							</td>
+							<input id="date2" type="hidden" value="{{reservation.endat|date('m/d/Y')}}" name="">
+						</tr>
+						
+					{% endfor %}
+	                  </tbody>
+	                </table>
+	            	</div>
+					
+	            </div>
+        </div>
+		
+
+	</div>
+{% endblock %}
+{% block script %}
+	<script type="text/javascript">
+		/*function diffdate(d1,d2){
+			var jour = d2.getTime() - d1.getTime();
+			return Math.ceil(jour/(1000*60*60*24));
+		}
+
+        window.onload = function(){
+        	var dte_2 = document.getElementById("date2").value;
+        	var date2 = new Date(dte_2);
+        	var oday = new Date();
+        	var jour = diffdate(date2,oday);
+        	if(jour<0){
+        		document.getElementById("etat").innerText = "En cours";
+        	}else{
+        		document.getElementById("etat").innerText = "Terminée";
+        	}
+
+        } */
+    </script>
+{% endblock %}

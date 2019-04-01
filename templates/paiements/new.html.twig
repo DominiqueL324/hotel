@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block title "new" %}
+{% block body %}
+
+	<div class="container mt-4">
+		{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+		{% endfor %}
+		<div class="card" style="padding-left: 2; padding-right: 2;padding-bottom: 2">
+			<div class="card-header">
+				    <center><h2>Ajouter un Paiement</h2></center>
+			</div>
+			<div class="card-body">
+				<form class="form" method="post" action="{{path('recep.paiement.new',{id:paiements.reservation.id})}}">
+					<div class="row">
+						<div class="col-md-4"> <label>Prix Total</label>  <input class="form-control" type="text" name="" value=" {{paiements.reservation.prix}} " readonly="readonly"> </div>
+						<div class="col-md-4"> <label>Avance Actuelle</label>  <input class="form-control" type="text" name="" value=" {{paiements.reservation.avance}} " readonly="readonly"> </div>
+						<div class="col-md-4"> <label>Reste</label>  <input class="form-control" type="text" name="" value=" {{paiements.reservation.prix - paiements.reservation.avance}} " readonly="readonly"> </div>
+						<div class="col-md-4"> <input class="form-control" type="hidden" name="id" value=" {{paiements.reservation.id}} " readonly="readonly"> </div>
+					</div>
+					<div class="row">
+						<div class="col-md-4"> 
+							<label>Client</label>  
+							<input class="form-control" type="text" name="" value=" {{paiements.reservation.client.nom}}  {{paiements.reservation.client.prenom}} " readonly="readonly"> 
+						</div>
+
+						<div class="col-md-4" > 
+							<label>Offre</label> 
+							<input class="form-control" type="text" name="" value=" {{paiements.reservation.offre.libelle}} " readonly="readonly"> 
+						</div>
+
+						<div class="col-md-4">
+							 <label>Nouveau Paiement</label> 
+							 <input class="form-control" type="number" name="montant" > 
+						</div>
+						
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-6"> 
+							<input type="submit" class="btn btn-primary" value="Enregistrer"> 
+							<a href=" {{path('home')}} " class="btn btn-danger">Annuler</a>
+						</div>
+					</div>
+				</form>
+				</div>
+		</div>
+		
+	</div>
+{% endblock %}

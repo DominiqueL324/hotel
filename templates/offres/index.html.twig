@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Utilsateur-index" %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Gestion des Offres</h1>
+<div class="container mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		<br>
+		<div class="card">
+		<div class="card-header">
+			<div class="text-right">
+				 <a class="btn btn-primary" href="{{path('admin.offre.new')}}"> Ajouter  </a>
+				 <a class="btn btn-primary" href="{{path('admin.offre.etat')}}"> Etat des offres</a>
+			</div>
+		</div>
+		<br>
+	<div class="card-body">
+	 <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+	                    <th>Libellé</th>
+						<th>Etage</th>
+						<th>Porte</th>
+						<th>Superficie</th>
+						<th>Climatisée</th>
+						<th>Wifi</th>
+						<th>Prix</th>
+						<th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    	{% for offre in offres %}
+					<tr>
+						<td> {{offre.libelle}} </td>
+						<td> {{offre.etage}} </td>
+						<td> {{offre.porte}} </td>
+						<td> {{offre.superficie}} </td>
+						{% if offre.clim == 0 %}
+					       <td> Climatisée </td>
+					    {% endif %} 
+						
+						{% if offre.clim == 1 %}
+					       <td> Non Climatisée </td>
+					    {% endif %} 
+
+					    {% if offre.wifi == 0 %}
+					       <td> Avec wifi </td>
+					    {% endif %} 
+						
+						{% if offre.wifi == 1 %}
+					       <td> Sans Wifi </td>
+					    {% endif %} 
+						
+						
+						<td> {{offre.prix}} </td>
+						<td>
+							<a href=" {{path('admin.offre.edit',{id:offre.id})}} "><i class="fas fa-fw fa-user-edit"></i></a>
+							<a href=" {{path('admin.offre.delete',{id:offre.id}) }}" onclick="return confirm('Voulez vous vraiment continuer??')"><i class="fas fa-fw fa-trash"></i></a>
+						</td>
+					</tr>
+				{% endfor %}
+                  </tbody>
+                </table>
+            	</div>
+            </div>
+        </div>
+		
+
+	</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title user.nom %}
+{% block body %}
+
+	<div class="container mt-4">
+		<div class="card" style="padding-left: 2; padding-right: 2;padding-bottom: 2">
+			<div class="card-header">
+				    <center><h2>Ajouter un Utilisateur</h2></center>
+			</div>
+			<div class="card-body">
+				{{ form_start(form) }}
+				<div class="row">
+					<div class="col-md-4" > {{ form_row(form.nom) }} </div>
+					<div class="col-md-4"> {{ form_row(form.prenom) }} </div>
+					<div class="col-md-4"> {{ form_row(form.cni) }} </div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-4"> {{ form_row(form.matricule) }} </div>
+					<div class="col-md-4"> {{ form_row(form.born_at) }} </div>
+					<div class="col-md-4"> {{ form_row(form.lieu_naissance) }} </div>
+					
+				</div>
+				<div class="row">
+					<div class="col-md-4"> {{ form_row(form.login) }} </div>
+					<div class="col-md-4"> {{ form_row(form.password) }} </div>
+					<div class="col-md-4"> {{ form_row(form.role) }} </div>
+				<button class="btn btn-primary"> Enregistrer </button> 
+				{{ form_end(form) }}
+				<a href=" {{path('home')}} " class="btn btn-danger">Annuler</a>
+				</div>
+		</div>
+		
+	</div>
+{% endblock %}
