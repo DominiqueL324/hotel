@@ -5,7 +5,7 @@
 {% block body %}
 <h1 class="header mt-4" style="text-align: center;">Bienvenu sur Brain Hotel</h1>
 	<div class="row">
-		<div class="col-lg-4">
+		<div class="col-lg-3">
 			<a href=" {{path('admin.user.index')}} ">
 				<div class="card">
 				  <div class="card-header">
@@ -17,7 +17,7 @@
 				</div>
 			</a>
 		</div>
-		<div class="col-lg-4">
+		<div class="col-lg-3">
 			<a href="{{path('admin.client.index')}}">
 				<div class="card">
 				  <div class="card-header">
@@ -29,11 +29,23 @@
 				</div>
 			</a>
 		</div>
-		<div class="col-lg-4">
+		<div class="col-lg-3">
 			<a href="{{path('admin.offre.index')}}">
 				<div class="card">
 				  <div class="card-header">
 				    <center>Offres</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150"  src=" {{asset('room.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-3">
+			<a href="{{path('recep.identification.index')}}">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Identification de Reservation</center>
 				  </div>
 				  <div class="card-body">
 				    <center><img width="150" height="150"  src=" {{asset('room.png')}} " alt=""></center>

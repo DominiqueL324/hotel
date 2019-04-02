@@ -66,6 +66,11 @@ class Reservation
      */
     private $etat;
 
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $valide;
+
     public function __construct()
     {
         $this->paiements = new ArrayCollection();
@@ -199,6 +204,18 @@ class Reservation
     public function setEtat(string $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getValide(): ?string
+    {
+        return $this->valide;
+    }
+
+    public function setValide(?string $valide): self
+    {
+        $this->valide = $valide;
 
         return $this;
     }

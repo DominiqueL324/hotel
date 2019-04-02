@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,51 @@ class Client
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Groupe", mappedBy="client")
+     */
+    private $groupes;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $sexe;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $pays_residence;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $nationalite;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $lieu_de_naissance;
+
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $profession;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $cni_made_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $born_at;
+
+    public function __construct()
+    {
+        $this->groupes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +167,118 @@ class Client
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Groupe[]
+     */
+    public function getGroupes(): Collection
+    {
+        return $this->groupes;
+    }
+
+    public function addGroupe(Groupe $groupe): self
+    {
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes[] = $groupe;
+            $groupe->addClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Groupe $groupe): self
+    {
+        if ($this->groupes->contains($groupe)) {
+            $this->groupes->removeElement($groupe);
+            $groupe->removeClient($this);
+        }
+
+        return $this;
+    }
+
+    public function getSexe(): ?string
+    {
+        return $this->sexe;
+    }
+
+    public function setSexe(?string $sexe): self
+    {
+        $this->sexe = $sexe;
+
+        return $this;
+    }
+
+    public function getPaysResidence(): ?string
+    {
+        return $this->pays_residence;
+    }
+
+    public function setPaysResidence(?string $pays_residence): self
+    {
+        $this->pays_residence = $pays_residence;
+
+        return $this;
+    }
+
+    public function getNationalite(): ?string
+    {
+        return $this->nationalite;
+    }
+
+    public function setNationalite(?string $nationalite): self
+    {
+        $this->nationalite = $nationalite;
+
+        return $this;
+    }
+
+    public function getLieuDeNaissance(): ?string
+    {
+        return $this->lieu_de_naissance;
+    }
+
+    public function setLieuDeNaissance(?string $lieu_de_naissance): self
+    {
+        $this->lieu_de_naissance = $lieu_de_naissance;
+
+        return $this;
+    }
+
+    public function getProfession(): ?string
+    {
+        return $this->profession;
+    }
+
+    public function setProfession(?string $profession): self
+    {
+        $this->profession = $profession;
+
+        return $this;
+    }
+
+    public function getCniMadeAt(): ?\DateTimeInterface
+    {
+        return $this->cni_made_at;
+    }
+
+    public function setCniMadeAt(?\DateTimeInterface $cni_made_at): self
+    {
+        $this->cni_made_at = $cni_made_at;
+
+        return $this;
+    }
+
+    public function getBornAt(): ?\DateTimeInterface
+    {
+        return $this->born_at;
+    }
+
+    public function setBornAt(?\DateTimeInterface $born_at): self
+    {
+        $this->born_at = $born_at;
 
         return $this;
     }
