@@ -40,7 +40,7 @@ class ClientRepository extends ServiceEntityRepository
     public function findByCni($value): ?Client
     {
         return $this->createQueryBuilder('c')
-            ->Where('c.cni = :val')
+            ->andWhere('c.cni = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

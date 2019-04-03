@@ -207,21 +207,32 @@
 			{
 				if(null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance'))
 					{
-						$client->setNom($request->get('nom'));
-						$client->setPrenom($request->get('prenom'));
-						$client->setTelephone($request->get('telephone'));
-						$client->setCni($request->get('cni'));
-						$client->setNationalite($request->get('nationalite'));
-						$client->setPaysResidence($request->get('paysresidence'));
-						$client->setProfession($request->get('profession'));
-						$client->setSexe($request->get('sexe'));
-						$client->setBornAt(new \DateTime($request->get('datenaissance')));
-						$client->setLieuDeNaissance($request->get('lieunaissance'));
-						$client->setCniMadeAt(new \DateTime($request->get('datecni')));
-						$this->em->persist($client);
-						$this->em->flush();
+						$client = $this->repositoryClient->findByCni($request->get('cni'));
+						if(is_null($client))
+						{
+							$client = new Client();
+							$client->setNom($request->get('nom'));
+							$client->setPrenom($request->get('prenom'));
+							$client->setTelephone($request->get('telephone'));
+							$client->setCni($request->get('cni'));
+							$client->setNationalite($request->get('nationalite'));
+							$client->setPaysResidence($request->get('paysresidence'));
+							$client->setProfession($request->get('profession'));
+							$client->setSexe($request->get('sexe'));
+							$client->setBornAt(new \DateTime($request->get('datenaissance')));
+							$client->setLieuDeNaissance($request->get('lieunaissance'));
+							$client->setCniMadeAt(new \DateTime($request->get('datecni')));
+							$client->setUser($this->repositoryUser->find(2));
+							$this->em->persist($client);
+							$this->em->flush();	
+						}else{
+							$this->addFlash('erreur','Un client avec cette CNI/Passeport existe déjà');
+							return $this->redirectToRoute('recep.new_client_reserv');
+						}
+						
 
 						$identification->setClient($client);
+						$identification->setCout(0.0);
 						$identification->setUser($this->repositoryUser->find(2));
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
@@ -230,16 +241,16 @@
 						$identification->setModeReglement($request->get('reglement'));
 						$identification->setImmatriculation($request->get('immatriculation'));
 						$identification->setMadeAt(new \DateTime());
-						$Maxid = $this->repositoryVar->getMaxId();$identification->setMadeAt(new \DateTime());
-						$result = implode($Maxid);
-						$result1 = ($result=="")?1:$result;
+						$identification->setOffre($this->repositoryOffre->find($request->get('offre')));
+						$Maxid = $this->repositoryVar->getMaxId();
+						//$result = implode("",$Maxid);
+						//$result1 = ($result=="")?1:$result;
 						$date = new \DateTime();
-						$result1 ="CICM".date("m")."".$result1."".date("y");
+						$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
 						$identification->setNumeroIdentification($result1);
 						$this->em->persist($identification);
 						$this->em->flush();
-
-						$this->repositoryReservation->find($request->get('idR'))->setValide("oui");
+						$this->repositoryOffre->find($request->get('offre'))->setDispo(false);
 						$this->em->flush();
 						$this->addFlash('success',"Opération efféctué avec success");
 						return $this->redirectToRoute('recep.identification.index');
