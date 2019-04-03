@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,6 +73,16 @@ class Offre
      * @ORM\Column(type="boolean")
      */
     private $dispo;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Identification", mappedBy="offre")
+     */
+    private $identifications;
+
+    public function __construct()
+    {
+        $this->identifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -191,6 +203,37 @@ class Offre
     public function setDispo(bool $dispo): self
     {
         $this->dispo = $dispo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Identification[]
+     */
+    public function getIdentifications(): Collection
+    {
+        return $this->identifications;
+    }
+
+    public function addIdentification(Identification $identification): self
+    {
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications[] = $identification;
+            $identification->setOffre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdentification(Identification $identification): self
+    {
+        if ($this->identifications->contains($identification)) {
+            $this->identifications->removeElement($identification);
+            // set the owning side to null (unless already changed)
+            if ($identification->getOffre() === $this) {
+                $identification->setOffre(null);
+            }
+        }
 
         return $this;
     }

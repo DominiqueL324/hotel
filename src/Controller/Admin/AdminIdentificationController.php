@@ -73,7 +73,7 @@
 
 
 		/**
-		* @Route("/recep/identificationnoreservation/etape1", name="recep.noreservationidentification.etape1")
+		* @Route("/recep/identification_no_reservation/etape1", name="recep.noreservationidentification.etape1")
 		* @return Response
 		*/
 		public function tmpN1():Response
@@ -83,7 +83,7 @@
 		}
 
 		/**
-		* @Route("/recep/identificationnoreservation/etape2/{id<\d+>}", name="recep.noreservationidentification.etape2")
+		* @Route("/recep/identification_no_reservation/etape2/{id<\d+>}", name="recep.noreservationidentification.etape2")
 		* @return Response
 		*/
 		public function tmpN2($id):Response
@@ -91,6 +91,16 @@
 			$client = $this->repositoryClient->find($id);
 			$offres = $this->repositoryOffre->findAll();
 			return $this->render('identification/nouvelleSansReservation1.html.twig',['offres'=>$offres,'client'=>$client]); 
+		}
+
+		/**
+		* @Route("/recep/new_client_identification", name="recep.new_client_reserv")
+		* @return Response
+		*/
+		public function NewReservationNewClient():Response
+		{
+			$offres = $this->repositoryOffre->findAll();
+			return $this->render('identification/NewReservationNewClient.html.twig',['offres'=>$offres]); 
 		}
 
 		/**

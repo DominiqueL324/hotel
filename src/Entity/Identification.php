@@ -73,6 +73,11 @@ class Identification
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Offre", inversedBy="identifications")
+     */
+    private $offre;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -206,6 +211,18 @@ class Identification
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getOffre(): ?Offre
+    {
+        return $this->offre;
+    }
+
+    public function setOffre(?Offre $offre): self
+    {
+        $this->offre = $offre;
 
         return $this;
     }
