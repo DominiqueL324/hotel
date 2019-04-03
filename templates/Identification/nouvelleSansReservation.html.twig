@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Utilsateur-index" %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Gestion des Utilisateurs</h1>
+
+<div class="container mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		<div class="card">
+			<div class="card-header">
+				<div class="text-right">
+					 <a class="btn btn-primary" href="{{path('recep.noreservationidentification.etape2',{id:0})}}"> Nouveau Client  </a>
+				</div>
+			</div>
+		<br>
+		<div class="card-body">
+			  <div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		            <thead>
+						<tr>
+							<th>Nom</th>
+							<th>Prenom</th>
+							<th>CNI</th>
+							<th>Telephone</th>
+							<th>Valider</th>
+						</tr>
+					</thead>
+			<tbody>
+				{% for client in clients %}
+					<tr>
+						<td> {{client.nom}} </td>
+						<td> {{client.prenom}} </td>
+						<td> {{client.cni}} </td>
+						<td> {{client.telephone}} </td>
+						<td>
+							<a href=" {{path('recep.noreservationidentification.etape2',{id:client.id})}} "><i class="fas fa-fw fa-user-check"></i></a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</div>
+</div>
+</div>
+</div>
+	
+	
+{% endblock %}

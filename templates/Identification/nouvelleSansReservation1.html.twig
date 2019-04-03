@@ -1,0 +1,258 @@
+{% extends 'base.html.twig' %}
+{% block title "Identification 2" %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				   <div class="row">
+						<h2>Nouvelle Identification</h2>
+						<div class="col-lg-3">
+						
+						</div>
+						<div class="col-lg-4">
+							<a href="{{path('recep.reservation.etape1')}}" class="btn btn-danger btn-icon-split" onclick="return confirm('Toutes les données saisies seront perdus')">
+				                    <span class="icon text-white-50">
+				                      <i class="fas fa-arrow-left"></i>
+				                    </span>
+				                    <span class="text">Etape 1</span>
+				                 </a>
+								<a href="#" class="btn btn-primary btn-icon-split">
+				                    <span class="icon text-white-50">
+				                      <i class="fas fa-flag"></i>
+				                    </span>
+				                    <span class="text">Etape 2</span>
+				                </a>
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+			<form class=" form" method="post" action=" {{path('recep.identification.new')}} ">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nom</label>
+									<input name="nom" value=" {{client.nom}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prenom</label>
+									<input name="prenom" type="text" value=" {{client.prenom}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<input name="nationalite" type="text" value=" {{client.telephone}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<input name="cni" type="text" value=" {{client.cni}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">N° de chambre *</label>
+									<select name="offre" class="form-control">
+										{% for offre in offres %}
+										<option value=" {{offre.id}} ">Porte : {{offre.porte}} Etage : {{offre.etage}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nationalité</label>
+									<input name="nationalite" type="text" class="form-control" required="required" value=" {{client.nationalite}} " placeholder="Nationalité du client">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Pays résidence</label>
+									<input name="paysresidence" type="text" class="form-control" required="required" value=" {{client.paysresidence}} " placeholder="Pays de résidence du client">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Profession </label>
+									<input name="profession" type="text" class="form-control" required="required" value=" {{client.profession}} " placeholder="Profession du client">
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date Naissance</label>
+									<input name="datenaissance" value=" {{client.bornat | date('d/m/Y')}} " type="date" class="form-control" required="required">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Lieu Naissance</label>
+									<input name="lieunaissance" type="text" class="form-control" required="required" value=" {{client.lieudenaissance}} " placeholder="Lieu de Naissance du client">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Date CNI/Passeport  *</label>
+									<input name="datecni" type="date"  value=" {{client.cnimadeat|date('d/m/Y')}} " class="form-control" required="required" placeholder="Profession du client">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Immatriculation </label>
+									<input name="immatriculation" type="text" class="form-control" placeholder="Immatriculation du véhicule">
+								</div>
+							</div>
+						</div>
+						
+						<h4>Autres Informations</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Venant de :</label>
+									<input name="venantde" type="text" class="form-control" required="required" placeholder="Ville de provenance">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Se rendant à</label>
+									<input name="serendanta" type="text" class="form-control" required="required" placeholder="Ville destination">
+									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
+									<input type="hidden" name="id" value="{{client.id}}">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Nombre de personne </label>
+									<input name="nombrepersonne" type="number" class="form-control" required="required" value="1">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Sexe</label>
+									<select name="sexe"  class="form-control">
+										<option value="jondo">------------</option>
+										<option value="masculin">Homme</option>
+										<option value="feminin">Femme</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Mode de règlement</label>
+									<select name="reglement"  class="form-control">
+										<option value="jondo">------------</option>
+										<option value="cheque">Chèque</option>
+										<option value="espece">Espèce</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nombre de nuitées</label>
+									<input name="nuite" type="number" class="form-control" value="0" required="required" >
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de Arrivée</label>
+									<input name="date_arrivee" type="date" class="form-control" required="required" >
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de départ</label>
+									<input name="date_depart"  type="date" class="form-control" required="required">
+								</div>
+							</div>
+						</div>
+						</div>
+
+						<div class="card-footer">
+								<div class="col-lg-4">
+									<input type="submit" class=" btn btn-success" value="Enregistrer" name="">
+										<a href="#" class="btn btn-warning btn-icon-split">
+						                    <span class="icon text-white-50">
+						                      <i class="fas fa-flag"></i>
+						                    </span>
+						                    <span class="text">Annuler</span>
+						                </a>
+							</div>
+						</div>
+					</form>
+			</div>
+		
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript">
+		function diffdate(d1,d2){
+			var jour = d2.getTime() - d1.getTime();
+			return Math.ceil(jour/(1000*60*60*24));
+		}
+        document.getElementById("date1").onchange = function() { 
+        	var dte_1 = document.getElementById("date1").value;
+        	var date1 = new Date(dte_1);
+        	var date = new Date();
+        	var actuel = diffdate(date,date1);
+        	if((actuel + 1) >= 1){
+        		document.getElementById("dtfin").style.display = "inline";
+        		document.getElementById("auday").style.display = "none";
+        		document.getElementById("diference").style.display = "none";
+        		document.getElementById("valider").style.display = "inline";
+        	}else{
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("dtfin").style.display = "none";
+        		document.getElementById("avnc").style.display = "none";
+        		document.getElementById("pt").style.display = "none";
+        		document.getElementById("diference").style.display = "none";
+        		document.getElementById("auday").style.display = "inline";
+        	}
+        }
+
+        document.getElementById("date2").onchange = function() { 
+        	var dte_1 = document.getElementById("date1").value;
+        	var dte_2 = document.getElementById("date2").value;
+        	var date1 = new Date(dte_1);
+        	var date2 = new Date(dte_2);
+        	var jour = diffdate(date1,date2);
+        	if((jour + 1) >= 1){
+        		document.getElementById("valider").style.display = "inline";
+        		document.getElementById("avnc").style.display = "inline";
+        		document.getElementById("pt").style.display = "inline";
+        		document.getElementById("auday").style.display = "none";
+        		document.getElementById("diference").style.display = "none";
+        		var prx = document.getElementById("prix").value;
+        		document.getElementById("prixtotal").value = prx * jour;
+        	}else{
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("avnc").style.display = "none";
+        		document.getElementById("pt").style.display = "none";
+        		document.getElementById("auday").style.display = "none";
+        		document.getElementById("diference").style.display = "inline";
+        		document.getElementById("prixtotal").value = 0;
+        	}
+        }  
+    </script>
+{% endblock %}
