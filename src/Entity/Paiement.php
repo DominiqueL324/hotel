@@ -38,6 +38,11 @@ class Paiement
      */
     private $montant;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Identification", inversedBy="paiements")
+     */
+    private $identification;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Paiement
     public function setMontant(int $montant): self
     {
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function getIdentification(): ?Identification
+    {
+        return $this->identification;
+    }
+
+    public function setIdentification(?Identification $identification): self
+    {
+        $this->identification = $identification;
 
         return $this;
     }

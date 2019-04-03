@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -77,6 +79,26 @@ class Identification
      * @ORM\ManyToOne(targetEntity="App\Entity\Offre", inversedBy="identifications")
      */
     private $offre;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="identifications")
+     */
+    private $client;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $cout;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Paiement", mappedBy="identification")
+     */
+    private $paiements;
+
+    public function __construct()
+    {
+        $this->paiements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -223,6 +245,61 @@ class Identification
     public function setOffre(?Offre $offre): self
     {
         $this->offre = $offre;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getCout(): ?float
+    {
+        return $this->cout;
+    }
+
+    public function setCout(?float $cout): self
+    {
+        $this->cout = $cout;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Paiement[]
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): self
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements[] = $paiement;
+            $paiement->setIdentification($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): self
+    {
+        if ($this->paiements->contains($paiement)) {
+            $this->paiements->removeElement($paiement);
+            // set the owning side to null (unless already changed)
+            if ($paiement->getIdentification() === $this) {
+                $paiement->setIdentification(null);
+            }
+        }
 
         return $this;
     }

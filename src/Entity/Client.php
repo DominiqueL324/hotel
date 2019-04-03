@@ -89,9 +89,15 @@ class Client
      */
     private $born_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Identification", mappedBy="client")
+     */
+    private $identifications;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
+        $this->identifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -279,6 +285,37 @@ class Client
     public function setBornAt(?\DateTimeInterface $born_at): self
     {
         $this->born_at = $born_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Identification[]
+     */
+    public function getIdentifications(): Collection
+    {
+        return $this->identifications;
+    }
+
+    public function addIdentification(Identification $identification): self
+    {
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications[] = $identification;
+            $identification->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdentification(Identification $identification): self
+    {
+        if ($this->identifications->contains($identification)) {
+            $this->identifications->removeElement($identification);
+            // set the owning side to null (unless already changed)
+            if ($identification->getClient() === $this) {
+                $identification->setClient(null);
+            }
+        }
 
         return $this;
     }
