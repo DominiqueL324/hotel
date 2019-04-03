@@ -62,7 +62,7 @@ class Identification
     private $numero_identification;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Reservation", inversedBy="identification", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Reservation", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $reservation;

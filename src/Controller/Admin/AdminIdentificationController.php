@@ -71,6 +71,28 @@
 			return $this->render('Identification/index.html.twig',compact('identifications')); 
 		}
 
+
+		/**
+		* @Route("/recep/identificationnoreservation/etape1", name="recep.noreservationidentification.etape1")
+		* @return Response
+		*/
+		public function tmpN1():Response
+		{
+			$clients = $this->repositoryClient->findAll();
+			return $this->render('identification/nouvelleSansReservation.html.twig',compact('clients')); 
+		}
+
+		/**
+		* @Route("/recep/identificationnoreservation/etape2/{id<\d+>}", name="recep.noreservationidentification.etape2")
+		* @return Response
+		*/
+		public function tmpN2($id):Response
+		{
+			$client = $this->repositoryClient->find($id);
+			$offres = $this->repositoryOffre->findAll();
+			return $this->render('identification/nouvelleSansReservation1.html.twig',['offres'=>$offres,'client'=>$client]); 
+		}
+
 		/**
 		* @Route("/recep/identification/etape2/{id<\d+>}", name="recep.identification.etape2")
 		* @return Response
@@ -100,7 +122,7 @@
 		{
 			$identification = new identification();
 			$client = new Client();
-			$client = $this->repositoryClient->findByCni($request->get('cni'));
+			$client = $this->repositoryClient->find($request->get('id'));
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
 				if(null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance'))
@@ -112,35 +134,41 @@
 						$client->setSexe($request->get('sexe'));
 						$client->setBornAt(new \DateTime($request->get('datenaissance')));
 						$client->setLieuDeNaissance($request->get('lieunaissance'));
-						$client->setCniMadeAt($request->get('datecni'));
+						$client->setCniMadeAt(new \DateTime($request->get('datecni')));
 						$this->em->flush();
 
-						$identification->setClient($client);
+						$identification->setReservation($this->repositoryReservation->find($request->get('idR')));
+						$identification->setUser($this->repositoryUser->find(2));
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
 						$identification->setNombrePersonne($request->get('nombrepersonne'));
 						$identification->setSeRendantA($request->get('serendanta'));
 						$identification->setModeReglement($request->get('reglement'));
-						$identification->setImmatricilation($request->get('immatriculation'));
-						$identification->setMarqueVehicule($request->get('immatriculation'));
-						$identification->setAvance($request->get('avance'));
-						$identification->setOffre($this->repositoryOffre->find($request->get('id_offre')));
-						$identification->setUser($this->repositoryUser->find(2));
+						$identification->setImmatriculation($request->get('immatriculation'));
+						$identification->setMadeAt(new \DateTime());
+						$Maxid = $this->repositoryVar->getMaxId();$identification->setMadeAt(new \DateTime());
+						$result = implode($Maxid);
+						$result1 = ($result=="")?1:$result;
+						$date = new \DateTime();
+						$result1 ="CICM".date("m")."".$result1."".date("y");
+						$identification->setNumeroIdentification($result1);
 						$this->em->persist($identification);
 						$this->em->flush();
-						$offre = $this->repositoryOffre->find($request->get('id_offre'));
-						$offre->setDispo(0);
+
+						$this->repositoryReservation->find($request->get('idR'))->setValide("oui");
 						$this->em->flush();
+						$this->addFlash('success',"Opération efféctué avec success");
 						return $this->redirectToRoute('recep.identification.index');
 					}else
 					{
-						$offre = $this->repositoryOffre->find($request->get('id_offre'));
 						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
-						return $this->redirectToRoute('recep.identification.etape2',['id'=>$request->get('id_offre')]);
+						return $this->redirectToRoute('recep.identification.etape2',['id'=>$request->get('idR')]);
 					}
 
+			}else{
+					$this->addFlash('erreur','Formulaire non reconnus');
+					return $this->redirectToRoute('recep.identification.etape2',['id'=>$request->get('idR')]);
 			}
-			
 		}
 
 		/**

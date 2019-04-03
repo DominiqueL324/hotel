@@ -36,6 +36,14 @@ class IdentificationRepository extends ServiceEntityRepository
     }
     */
 
+    public function getMaxId()
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i,MAX(i.id) AS id')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     /*
     public function findOneBySomeField($value): ?Identification
     {

@@ -130,6 +130,9 @@
 								<div class="form-group">
 									<label for="exampleInputEmail1">Se rendant à</label>
 									<input name="serendanta" type="text" class="form-control" required="required" placeholder="Ville destination">
+									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
+									<input type="hidden" name="id" value="{{reservation.client.id}}">
+									<input type="hidden" name="idR" value="{{reservation.id}}">
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -176,7 +179,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Date de départ</label>
-									<input name="date_depart" type="date" class="form-control" required="required">
+									<input name="date_depart" value="{{reservation.endat|date('d/m/Y')}} " type="text" class="form-control" readonly="readonly">
 								</div>
 							</div>
 						</div>

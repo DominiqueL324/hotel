@@ -10,12 +10,25 @@
 			{{message}}
 		</div>
 		{% endfor %}
+		
+		{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+		{% endfor %}
 		<br>
 		<div class="card">
 		<div class="card-header">
-			<div class="text-right">
-				 <a class="btn btn-primary" href=" {{path('recep.identification.etape1')}} "> Ajouter  </a>
+			<div class="row">
+				<div class="col-lg-3">
+					 <a class="btn btn-primary" href=" {{path('recep.identification.etape1')}} "> Indentifier une reservation  </a>
+				</div>
+				<div class="text-right">
+					 <a class="btn btn-success" href=" {{path('recep.noreservationidentification.etape1')}} ">Nouvelle identification</a>
+				</div>
+
 			</div>
+			
 		</div>
 		<br>
 		<div class="card-body">
@@ -25,22 +38,26 @@
 	                    <tr>
 		                    <th>Informations Client</th>
 							<th>Libellé</th>
-							<th>Nombre personnes</th>
+							<th>Nombre</th>
 							<th>Date arrivée</th>
 							<th>Date départ</th>
 							<th>Date Identification</th>
-							<th>Action</th>
+							<th>Avance</th>
+							<th>Facturer</th>
 	                    </tr>
 	                  </thead>
 	                  <tbody>
 	                    	{% for identification in identifications %}
 								<tr>
-									<td> {{identification.reservation.client.nom}} {{ identification.reservation.client.nom}} </td>
+									<td> {{identification.reservation.client.nom}} {{ identification.reservation.client.prenom}} </td>
 									<td> {{identification.reservation.offre.libelle}} </td>
-									<td> {{identification.nombrepersonne}} </td>
+									<td> {{identification.nombrepersonne}} personne(s) </td>
 									<td> {{identification.arrivedat|date("d/m/Y") }} </td>
-									<td> {{identification.livedat("d/m/Y") }} </td>
-									<td> {{identification.madeat("d/m/Y") }} </td>
+									<td> {{identification.livedat|date("d/m/Y") }} </td>
+									<td> {{identification.madeat|date("d/m/Y") }} </td>
+									<td>
+										<a href=" # ">consulter</a>
+									</td>
 									<td>
 										<a href=" # ">consulter</a>
 									</td>
