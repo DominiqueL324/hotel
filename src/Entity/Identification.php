@@ -95,6 +95,17 @@ class Identification
      */
     private $paiements;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $avance;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $etat;
+
+
     public function __construct()
     {
         $this->paiements = new ArrayCollection();
@@ -300,6 +311,30 @@ class Identification
                 $paiement->setIdentification(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvance(): ?int
+    {
+        return $this->avance;
+    }
+
+    public function setAvance(?int $avance): self
+    {
+        $this->avance = $avance;
+
+        return $this;
+    }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?string $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }

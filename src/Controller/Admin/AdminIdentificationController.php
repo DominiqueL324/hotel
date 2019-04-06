@@ -16,6 +16,8 @@
 	use Doctrine\Common\Persistence\ObjectManager;
 	use App\Form\identificationType;
 	use Symfony\Component\HttpFoundation\Request;
+	use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 	/**
 	 * 
@@ -67,6 +69,7 @@
 		*/
 		public function index():Response
 		{
+			$this->UpdatePriceAndAvance();
 			$identifications = $this->repositoryVar->findAll();
 			return $this->render('Identification/index.html.twig',compact('identifications')); 
 		}
@@ -89,7 +92,7 @@
 		public function tmpN2($id):Response
 		{
 			$client = $this->repositoryClient->find($id);
-			$offres = $this->repositoryOffre->findAll();
+			$offres = $this->repositoryOffre->findBy(['dispo'=>true]);
 			return $this->render('identification/nouvelleSansReservation1.html.twig',['offres'=>$offres,'client'=>$client]); 
 		}
 
@@ -99,7 +102,7 @@
 		*/
 		public function NewReservationNewClient():Response
 		{
-			$offres = $this->repositoryOffre->findAll();
+			$offres = $this->repositoryOffre->findBy(['dispo'=>true]);
 			return $this->render('identification/NewReservationNewClient.html.twig',['offres'=>$offres]); 
 		}
 
@@ -146,8 +149,9 @@
 						$client->setLieuDeNaissance($request->get('lieunaissance'));
 						$client->setCniMadeAt(new \DateTime($request->get('datecni')));
 						$this->em->flush();
-
 						$identification->setReservation($this->repositoryReservation->find($request->get('idR')));
+						$identification->setOffre($this->repositoryReservation->find($request->get('idR'))->getOffre());
+						$identification->setClient($client);
 						$identification->setUser($this->repositoryUser->find(2));
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
@@ -157,10 +161,13 @@
 						$identification->setImmatriculation($request->get('immatriculation'));
 						$identification->setMadeAt(new \DateTime());
 						$Maxid = $this->repositoryVar->getMaxId();$identification->setMadeAt(new \DateTime());
-						$result = implode($Maxid);
-						$result1 = ($result=="")?1:$result;
 						$date = new \DateTime();
-						$result1 ="CICM".date("m")."".$result1."".date("y");
+						if(is_null($Maxid)){
+							$Maxid = 1;
+							$result1 ="CICM".date("m")."".$Maxid.date("y");
+						}else{
+							$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
+						}
 						$identification->setNumeroIdentification($result1);
 						$this->em->persist($identification);
 						$this->em->flush();
@@ -243,10 +250,13 @@
 						$identification->setMadeAt(new \DateTime());
 						$identification->setOffre($this->repositoryOffre->find($request->get('offre')));
 						$Maxid = $this->repositoryVar->getMaxId();
-						//$result = implode("",$Maxid);
-						//$result1 = ($result=="")?1:$result;
 						$date = new \DateTime();
-						$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
+						if(is_null($Maxid)){
+							$Maxid = 1;
+							$result1 ="CICM".date("m")."".$Maxid.date("y");
+						}else{
+							$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
+						}
 						$identification->setNumeroIdentification($result1);
 						$this->em->persist($identification);
 						$this->em->flush();
@@ -265,4 +275,86 @@
 					return $this->redirectToRoute('recep.new_client_reserv');
 			}
 		}
+
+		/**
+		* @Route("/recep/identification_no_reserv_old_client/create", name="recep.identification_no_reserv_old_clien.new")
+		* @return Response
+		*/
+		public function newIdentificationOldClientNoReserv(Request $request):Response
+		{
+			$identification = new identification();
+			$client = new Client();
+			$client = $this->repositoryClient->find($request->get('id'));
+			if($this->isCsrfTokenValid('add',$request->get('_token')))
+			{
+				if(null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance'))
+					{
+
+						$client->setNationalite($request->get('nationalite'));
+						$client->setPaysResidence($request->get('paysresidence'));
+						$client->setProfession($request->get('profession'));
+						$client->setSexe($request->get('sexe'));
+						$client->setBornAt(new \DateTime($request->get('datenaissance')));
+						$client->setLieuDeNaissance($request->get('lieunaissance'));
+						$client->setCniMadeAt(new \DateTime($request->get('datecni')));
+						$this->em->flush();
+
+						$identification->setClient($client);
+						$identification->setUser($this->repositoryUser->find(2));
+						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
+						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
+						$identification->setNombrePersonne($request->get('nombrepersonne'));
+						$identification->setSeRendantA($request->get('serendanta'));
+						$identification->setModeReglement($request->get('reglement'));
+						$identification->setImmatriculation($request->get('immatriculation'));
+						$identification->setMadeAt(new \DateTime());
+						$identification->setOffre($this->repositoryOffre->find($request->get('offre')));
+						$Maxid = $this->repositoryVar->getMaxId();$identification->setMadeAt(new \DateTime());
+
+						$date = new \DateTime();
+						if(is_null($Maxid)){
+							$Maxid = 1;
+							$result1 ="CICM".date("m")."".$Maxid.date("y");
+						}else{
+							$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
+						}
+						$identification->setNumeroIdentification($result1);
+						$this->em->persist($identification);
+						$this->em->flush();
+						$this->addFlash('success',"Opération efféctué avec success");
+						return $this->redirectToRoute('recep.identification.index');
+					}else
+					{
+						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
+						return $this->redirectToRoute('recep.recep.noreservationidentification.etape2',['id'=>$client->getId()]);
+					}
+
+			}else{
+					$this->addFlash('erreur','Formulaire non reconnus');
+					return $this->redirectToRoute('recep.recep.noreservationidentification.etape2',['id'=>$client->getId()]);
+			}
+		}
+
+		public function UpdatePriceAndAvance(){
+			$listeIdent = $this->repositoryVar->findAll();
+			foreach ($listeIdent as $identification) {
+				$avance = 0;
+				$debut = $identification->getArrivedAt();
+				$oday = new \DateTime();
+				$difference = $debut->diff($oday)->d;
+				$cout = ($difference+1) * $identification->getOffre()->getPrix();
+				$identification->setCout($cout);
+				$listeAvance = $identification->getPaiements();
+				if($listeAvance->isEmpty()){
+					$identification->setAvance(0);	
+				}else{
+					foreach ($listeAvance as  $value) {
+						$avance = $avance + $value->getMontant();
+					}
+					$identification->setAvance($avance);
+				}
+				$this->em->flush();
+			}
+		}
+		
 	}

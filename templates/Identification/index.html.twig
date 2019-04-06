@@ -39,9 +39,9 @@
 		                    <th>Informations Client</th>
 							<th>Libellé</th>
 							<th>Nombre</th>
+							<th>Coût</th>
 							<th>Date arrivée</th>
-							<th>Date départ</th>
-							<th>Date Identification</th>
+							<th>Date Départ</th>
 							<th>Avance</th>
 							<th>Facturer</th>
 	                    </tr>
@@ -49,15 +49,13 @@
 	                  <tbody>
 	                    	{% for identification in identifications %}
 								<tr>
-									<td> {{identification.reservation.client.nom}} {{ identification.reservation.client.prenom}} </td>
-									<td> {{identification.reservation.offre.libelle}} </td>
-									<td> {{identification.nombrepersonne}} personne(s) </td>
+									<td> {{identification.client.nom}} {{ identification.client.prenom}} </td>
+									<td> {{identification.offre.libelle}} </td>
+									<td> {{identification.nombrepersonne}} </td>
+									<td> {{identification.cout }} </td>
 									<td> {{identification.arrivedat|date("d/m/Y") }} </td>
 									<td> {{identification.livedat|date("d/m/Y") }} </td>
-									<td> {{identification.madeat|date("d/m/Y") }} </td>
-									<td>
-										<a href=" # ">consulter</a>
-									</td>
+									<td>{{identification.avance }}</td>
 									<td>
 										<a href=" # ">consulter</a>
 									</td>
