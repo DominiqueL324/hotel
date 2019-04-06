@@ -126,6 +126,23 @@ use Doctrine\Common\Collections\Collection;
 			return $this->render('identification/new1.html.twig',compact('reservations')); 
 		}
 
+		/**
+		* @Route("/recep/identification/edit/{id}", name="recep.identification.edit")
+		* @return Response
+		*/
+		public function editLauncher(ReservationRepository $repositoryReserv,$id):Response
+		{
+
+			$identification = $this->repositoryVar->find($id);
+			$oday = new \DateTime();
+			if($oday > $identification->getMadeAt()){
+				$this->addFlash('erreur','Le delais de modification est excédé veuillez contacter un administrateur');
+				return $this->redirectToRoute('recep.identification.index');
+			}else{
+
+			}
+			return $this->render('identification/index.html.twig'); 
+		}
 
 		/**
 		* @Route("/recep/identification/create", name="recep.identification.new")

@@ -43,7 +43,7 @@
 							<th>Date arrivée</th>
 							<th>Date Départ</th>
 							<th>Avance</th>
-							<th>Facturer</th>
+							<th>Action</th>
 	                    </tr>
 	                  </thead>
 	                  <tbody>
@@ -57,7 +57,12 @@
 									<td> {{identification.livedat|date("d/m/Y") }} </td>
 									<td>{{identification.avance }}</td>
 									<td>
-										<a href=" # ">consulter</a>
+										<a href=" {{path('recep.paiement.identification',{id:identification.id})}} "><i class="fas fa-check"></i><span></span></a>
+										<a href=" {{path('recep.identification.edit',{id:identification.id})}} "><i class="fas fa-user-edit"></i><span></span></a>
+										<a href="#">
+								          <i class="fas fa-fw fa-address-card"></i>
+								          <span></span>
+								        </a>
 									</td>
 								</tr>
 								

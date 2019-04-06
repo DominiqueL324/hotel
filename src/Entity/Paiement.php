@@ -23,7 +23,7 @@ class Paiement
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Reservation", inversedBy="paiements")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $reservation;
 
