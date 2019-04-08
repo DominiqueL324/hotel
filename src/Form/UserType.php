@@ -6,6 +6,9 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserType extends AbstractType
@@ -19,11 +22,15 @@ class UserType extends AbstractType
             ->add('matricule')
             ->add('born_at')
             ->add('lieu_naissance')
-            ->add('login')
-            ->add('password')
-            ->add('role',ChoiceType::class,[
+            ->add('roles',ChoiceType::class,[
                 'choices'=> $this->getChoice()
             ])
+            ->add('username')
+            ->add('plainPassword', RepeatedType::class, array(
+                'type' => PasswordType::class,
+                'first_options' => array('label' => 'Password'),
+                'second_options' => array('label' => 'Repeat Password'),
+            ))
         ;
     }
 

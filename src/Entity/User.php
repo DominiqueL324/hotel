@@ -3,17 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User  implements UserInterface
 {
 
     const ROLE = [
-         'ADMIN' => 'Administrateur',
-         'RECEP' => 'Receptionniste',
-         'COMPT' => 'Comptable'
+         'ROLE_ADMIN' => 'Administrateur',
+         'ROLE_RECEP' => 'Receptionniste',
+         'ROLE_COMPT' => 'Comptable'
     ];
     /**
      * @ORM\Id()
@@ -55,17 +58,38 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $login;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="string", length=255)
+   /**
+     * @ORM\Column(type="array")
      */
-    private $role;
+    private $roles;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+     public function __construct()
+    {
+        //$this->roles = array('ROLE_ADMIN');
+    }
+
+     public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
 
     public function getId(): ?int
     {
@@ -94,6 +118,16 @@ class User
         $this->prenom = $prenom;
 
         return $this;
+    }
+
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
     }
 
     public function getCni(): ?string
@@ -144,18 +178,6 @@ class User
         return $this;
     }
 
-    public function getLogin(): ?string
-    {
-        return $this->login;
-    }
-
-    public function setLogin(string $login): self
-    {
-        $this->login = $login;
-
-        return $this;
-    }
-
     public function getPassword(): ?string
     {
         return $this->password;
@@ -168,20 +190,29 @@ class User
         return $this;
     }
 
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
     public function getRoleType(): string
     {
         return self::ROLE[$this->role];
     }
-
-    public function setRole(string $role): self
+     public function getSalt()
     {
-        $this->role = $role;
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(string $roles)
+    {
+        $tab = array($roles);
+        $this->roles = $tab;
 
         return $this;
+    }
+
+    public function eraseCredentials()
+    {
     }
 }

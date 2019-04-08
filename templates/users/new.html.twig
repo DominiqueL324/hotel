@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title user.nom %}
+{% block title "Enregistremen" %}
 {% block body %}
 
 	<div class="container mt-4">
@@ -22,9 +22,10 @@
 					
 				</div>
 				<div class="row">
-					<div class="col-md-4"> {{ form_row(form.login) }} </div>
-					<div class="col-md-4"> {{ form_row(form.password) }} </div>
-					<div class="col-md-4"> {{ form_row(form.role) }} </div>
+					<div class="col-md-3"> {{ form_row(form.username) }} </div>
+					<div class="col-md-3"> {{ form_row(form.plainPassword.first) }} </div>
+					<div class="col-md-3"> {{ form_row(form.plainPassword.second) }} </div>
+					<div class="col-md-3"> {{ form_row(form.roles) }} </div>
 				<button class="btn btn-primary"> Enregistrer </button> 
 				{{ form_end(form) }}
 				<a href=" {{path('home')}} " class="btn btn-danger">Annuler</a>
