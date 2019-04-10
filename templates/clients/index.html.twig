@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title "Utilsateur-index" %}
+{% block loguer %}{{user.nom}}  {{user.prenom}}{% endblock %}
 
 {% block body %}
 <h1 class="header mt-4" style="text-align: center;">Gestion des Utilisateurs</h1>

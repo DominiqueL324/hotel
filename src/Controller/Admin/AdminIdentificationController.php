@@ -5,7 +5,7 @@
 	use Symfony\Component\HttpFoundation\Response;
 	use Symfony\Component\Routing\Annotation\Route;
 	use App\Entity\User;
-	use App\Entity\identification;
+	use App\Entity\Identification;
 	use App\Entity\Offre;
 	use App\Entity\Client;
 	use App\Repository\UserRepository;
@@ -17,7 +17,10 @@
 	use App\Form\identificationType;
 	use Symfony\Component\HttpFoundation\Request;
 	use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+	use Doctrine\Common\Collections\Collection;
+	use  Twig\Environment;
+	use Dompdf\Dompdf;
+	use Dompdf\Options;
 
 	/**
 	 * 
@@ -70,6 +73,7 @@ use Doctrine\Common\Collections\Collection;
 		public function index():Response
 		{
 			$this->UpdatePriceAndAvance();
+			$this->checkForExtraAndAdd();
 			$identifications = $this->repositoryVar->findAll();
 			return $this->render('Identification/index.html.twig',compact('identifications')); 
 		}
@@ -352,26 +356,91 @@ use Doctrine\Common\Collections\Collection;
 			}
 		}
 
-		public function UpdatePriceAndAvance(){
+		public function UpdatePriceAndAvance()
+		{
 			$listeIdent = $this->repositoryVar->findAll();
-			foreach ($listeIdent as $identification) {
-				$avance = 0;
-				$debut = $identification->getArrivedAt();
-				$oday = new \DateTime();
-				$difference = $debut->diff($oday)->d;
-				$cout = ($difference+1) * $identification->getOffre()->getPrix();
-				$identification->setCout($cout);
-				$listeAvance = $identification->getPaiements();
-				if($listeAvance->isEmpty()){
-					$identification->setAvance(0);	
-				}else{
-					foreach ($listeAvance as  $value) {
-						$avance = $avance + $value->getMontant();
+			foreach ($listeIdent as $identification) 
+			{
+				if($identification->getEtat()!="Terminer")
+				{
+					$avance = 0;
+					$debut = $identification->getArrivedAt();
+					$oday = new \DateTime();
+					$difference = $debut->diff($oday)->d;
+					$cout = ($difference+1) * $identification->getOffre()->getPrix();
+					$identification->setCout($cout);
+					$listeAvance = $identification->getPaiements();
+					if($listeAvance->isEmpty()){
+						$identification->setAvance(0);	
+					}else{
+						foreach ($listeAvance as  $value) {
+							$avance = $avance + $value->getMontant();
+						}
+						$identification->setAvance($avance);
 					}
-					$identification->setAvance($avance);
+					$this->em->flush();
 				}
-				$this->em->flush();
+				
 			}
 		}
-		
+
+		/**
+		* @Route("/recep/identification/consult/{id<\d+>}", name="recep.identification.consult")
+		* @return Response
+		*/
+		public function Consult(Identification $identification):Response
+		{
+			return $this->render('identification/consult.html.twig',compact('identification'));
+		}
+
+		public function checkForExtraAndAdd()
+		{
+			$listeIdent = $this->repositoryVar->findAll();
+			$oday = new \DateTime();
+			foreach ($listeIdent as $identification) 
+			{
+				if($identification->getEtat()!="Terminer"){
+					if($oday>$identification->getLivedAt()){
+						$difference = $identification->getLivedAt()->diff(new \DateTime(),true)->d;
+						$identification->setCoutExtra($difference*$identification->getOffre()->getPrix());
+						$this->em->flush();
+					}else{
+						$identification->setCoutExtra(0);
+						$this->em->flush();
+					}
+				}
+				
+				
+			}
+		}
+
+		/**
+		* @Route("/recep/identification/factrurer/{id<\d+>}", name="recep.identification.facturer")
+		* @return Response
+		*/
+		public function facturer(Identification $identification):Response
+		{
+			/*$identification->setEtat("Terminer");
+			$identification->getOffre()->setDispo(true);
+			$this->em->flush();*/
+			$pdfOptions = new Options();
+	        $pdfOptions->set('defaultFont', 'Helvetica');
+	        $pdfOptions->set('isRemoteEnabled',true);
+	        // Instantiate Dompdf with our options
+	        $dompdf = new Dompdf($pdfOptions);
+	        // Retrieve the HTML generated in our twig file
+	        $html = $this->renderView('pdf/factureIdentification.html.twig',['identification'=>$identification]);
+	        // Load HTML to Dompdf
+	        $dompdf->loadHtml($html);
+	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+	        $dompdf->setPaper('A4', 'portrait');
+	        // Render the HTML as PDF
+	        $dompdf->render();
+	        // Output the generated PDF to Browser (force download)
+	        $dompdf->stream("facture.pdf", [
+	            "Attachment" => false
+	        ]);
+			//return $this->redirectToRoute('recep.identification.index');
+			//génération de la facture
+		}	
 	}

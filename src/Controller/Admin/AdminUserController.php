@@ -42,7 +42,7 @@
 		}
 
 		/**
-		* @Route("admin/user/edit/{id<\d+>}", name="admin.user.edit")
+		* @Route("/admin/user/edit/{id<\d+>}", name="admin.user.edit")
 		* @return Response
 		*/
 		public function edit(User $user,Request $request):Response

@@ -8,6 +8,7 @@
         "cocur/slugify": "^3.2",
         "dompdf/dompdf": "^0.8.3",
         "sensio/framework-extra-bundle": "^5.1",
+        "spraed/pdf-generator-bundle": "^1.6",
         "symfony/asset": "4.2.*",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",

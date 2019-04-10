@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title "Identification-index" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 
 {% block body %}
 <h1 class="header mt-4" style="text-align: center;">Liste des Identifications</h1>
@@ -59,7 +60,7 @@
 									<td>
 										<a href=" {{path('recep.paiement.identification',{id:identification.id})}} "><i class="fas fa-check"></i><span></span></a>
 										<a href=" {{path('recep.identification.edit',{id:identification.id})}} "><i class="fas fa-user-edit"></i><span></span></a>
-										<a href="#">
+										<a href="{{path('recep.identification.consult',{id:identification.id})}}">
 								          <i class="fas fa-fw fa-address-card"></i>
 								          <span></span>
 								        </a>

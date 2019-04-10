@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title "new" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 {% block body %}
 
 	<div class="container mt-4">

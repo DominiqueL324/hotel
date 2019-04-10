@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title "Reservations-index" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 
 {% block body %}
 <h1 class="header mt-4" style="text-align: center;">Détails de Reservation</h1>

@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title "Identification 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 {% block body %}
 {% for message in app.flashes('erreur') %}
 		<div class=" alert alert-danger">

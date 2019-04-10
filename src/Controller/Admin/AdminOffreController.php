@@ -83,7 +83,7 @@
 		}*/
 
 		/**
-		* @Route("admin/offre/edit/{id<\d+>}", name="admin.offre.edit",methods="POST|GET")
+		* @Route("/admin/offre/edit/{id<\d+>}", name="admin.offre.edit",methods="POST|GET")
 		* @return Response
 		*/
 		public function edit(Offre $offre,Request $request):Response

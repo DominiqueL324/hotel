@@ -105,6 +105,16 @@ class Identification
      */
     private $etat;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $cout_extra;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $remise;
+
 
     public function __construct()
     {
@@ -335,6 +345,30 @@ class Identification
     public function setEtat(?string $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getCoutExtra(): ?int
+    {
+        return $this->cout_extra;
+    }
+
+    public function setCoutExtra(?int $cout_extra): self
+    {
+        $this->cout_extra = $cout_extra;
+
+        return $this;
+    }
+
+    public function getRemise(): ?int
+    {
+        return $this->remise;
+    }
+
+    public function setRemise(?int $remise): self
+    {
+        $this->remise = $remise;
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options; 
 use App\Repository\ReservationRepository;
 use App\Entity\Reservation;
+use App\Entity\User;
 
 /**
  * 
@@ -17,12 +18,13 @@ use App\Entity\Reservation;
 class HomeController extends AbstractController
 {
 	/**
-	* @Route("/", name="home")
+	* @Route("/home", name="home")
 	* @param PropertyRepository $repository
 	* @return Response
 	*/
 	public function index(): Response{
-       return $this->render('pages/home.html.twig');
+        $user = $this->getUser();
+       return $this->render('pages/home.html.twig',compact('user'));
 	}
 
 	/**
@@ -32,7 +34,8 @@ class HomeController extends AbstractController
 	public function generatePdf(ReservationRepository $repoReservation,$id){
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('defaultFont', 'Helvetica');
+        $pdfOptions->set('isRemoteEnabled',true);
         // Instantiate Dompdf with our options
         $dompdf = new Dompdf($pdfOptions);
         // Retrieve the HTML generated in our twig file
@@ -48,9 +51,11 @@ class HomeController extends AbstractController
         // Render the HTML as PDF
         $dompdf->render();
         // Output the generated PDF to Browser (force download)
-        $dompdf->stream("mypdf.pdf", [
+        $dompdf->stream("mypdf1.pdf", [
             "Attachment" => false
         ]);
+        //$reservation = $repoReservation->find($id);
+        //return $this->render('pdf/default.html.twig',compact('reservation'));
 	}
 	
 }

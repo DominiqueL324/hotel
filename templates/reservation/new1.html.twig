@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title "Utilsateur-index" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 
 {% block body %}
 <div class="container mt-6">

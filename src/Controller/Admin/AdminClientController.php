@@ -45,12 +45,13 @@
 		*/
 		public function index():Response
 		{
+			$user = $this->getUser();
 			$clients = $this->repositoryVar->findAll();
-			return $this->render('clients/index.html.twig',compact('clients')); 
+			return $this->render('clients/index.html.twig',['clients'=>$clients,'user'=>$user]); 
 		}
 
 		/**
-		* @Route("admin/client/edit/{id<\d+>}", name="admin.client.edit",methods="POST|GET")
+		* @Route("/admin/client/edit/{id<\d+>}", name="admin.client.edit",methods="POST|GET")
 		* @return Response
 		*/
 		public function edit(Client $client,Request $request):Response
@@ -63,9 +64,11 @@
 				$this->addFlash('success','Modification effectuée avec succes');
 				return $this->redirectToRoute('admin.client.index');
 			}
+			$user = $this->getUser();
 			return $this->render('clients/edit.html.twig',[
 				'client'=> $client,
-				'form'=> $form->createView()
+				'form'=> $form->createView(),
+				'user'=>$user
 			]); 
 		}
 
@@ -75,6 +78,7 @@
 		*/
 		public function new(Request $request):Response
 		{
+			$user = $this->getUser();
 			$client = new Client();
 			$form = $this->createForm(ClientType::class, $client);
 			$form->handleRequest($request);
@@ -88,7 +92,8 @@
 			}
 			return $this->render('clients/new.html.twig',[
 				'client'=> $client,
-				'form'=> $form->createView()
+				'form'=> $form->createView(),
+				'user'=>$user
 			]);
 			
 		}

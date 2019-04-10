@@ -62,7 +62,7 @@
 		public function index():Response
 		{
 			$reservations = $this->repositoryVar->findAll();
-			$this->FreeRoom();
+			//$this->FreeRoom();
 			$this->ChangeState();
 			return $this->render('reservation/index.html.twig',compact('reservations')); 
 		}
@@ -120,7 +120,8 @@
 			{
 				if(null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
 					{
-						if(is_null($client)){
+						if(is_null($client))
+						{
 							$client = new Client();
 							$client->setCni($request->get('cni'));
 							$client->setNom($request->get('nom'));
@@ -137,11 +138,8 @@
 						$reservation->setPrix($request->get('prixtotal'));
 						$reservation->setAvance($request->get('avance'));
 						$reservation->setOffre($this->repositoryOffre->find($request->get('id_offre')));
-						$reservation->setUser($this->repositoryUser->find(2));
+						$reservation->setUser($this->repositoryUser->find($this->getUser()));
 						$this->em->persist($reservation);
-						$this->em->flush();
-						$offre = $this->repositoryOffre->find($request->get('id_offre'));
-						$offre->setDispo(0);
 						$this->em->flush();
 						return $this->redirectToRoute('recep.reservation.index');
 					}else

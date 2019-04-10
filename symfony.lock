@@ -162,6 +162,9 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "spraed/pdf-generator-bundle": {
+        "version": "v1.6"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.1.3"
     },
