@@ -533,7 +533,7 @@
 	        $dompdf->stream("facture.pdf", [
 	            "Attachment" => false
 	        ]);
-			//return $this->redirectToRoute('recep.identification.index');
+			return $this->redirectToRoute('recep.identification.consult',['id'=>$identification->getId()]);
 			//génération de la facture
 		}		
 

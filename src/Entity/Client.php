@@ -67,8 +67,6 @@ class Client
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $pays_residence;
-
-<<<<<<< Updated upstream
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      */
@@ -113,11 +111,6 @@ class Client
     {
         $this->groupes = new ArrayCollection();
         $this->identifications = new ArrayCollection();
-=======
-    public function __construct()
-    {
-        $this->groupes = new ArrayCollection();
->>>>>>> Stashed changes
     }
 
     public function getId(): ?int
@@ -248,7 +241,6 @@ class Client
 
         return $this;
     }
-<<<<<<< Updated upstream
 
     public function getNationalite(): ?string
     {
@@ -364,6 +356,4 @@ class Client
 
         return $this;
     }
-=======
->>>>>>> Stashed changes
 }

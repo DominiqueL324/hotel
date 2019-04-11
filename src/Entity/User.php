@@ -78,11 +78,6 @@ class User  implements UserInterface
      */
     private $plainPassword;
 
-     public function __construct()
-    {
-        //$this->roles = array('ROLE_ADMIN');
-    }
-
      public function getUsername()
     {
         return $this->username;
@@ -222,11 +217,9 @@ class User  implements UserInterface
         $this->roles = $tab;
         return $this;
     }
-
-<<<<<<< Updated upstream
     public function eraseCredentials()
     {
-=======
+    }
     /**
      * @return Collection|Identification[]
      */
@@ -256,6 +249,5 @@ class User  implements UserInterface
         }
 
         return $this;
->>>>>>> Stashed changes
     }
 }
