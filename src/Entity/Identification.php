@@ -115,6 +115,16 @@ class Identification
      */
     private $remise;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $venant_de;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nombre_nuite;
+
 
     public function __construct()
     {
@@ -369,6 +379,30 @@ class Identification
     public function setRemise(?int $remise): self
     {
         $this->remise = $remise;
+
+        return $this;
+    }
+
+    public function getVenantDe(): ?string
+    {
+        return $this->venant_de;
+    }
+
+    public function setVenantDe(?string $venant_de): self
+    {
+        $this->venant_de = $venant_de;
+
+        return $this;
+    }
+
+    public function getNombreNuite(): ?int
+    {
+        return $this->nombre_nuite;
+    }
+
+    public function setNombreNuite(?int $nombre_nuite): self
+    {
+        $this->nombre_nuite = $nombre_nuite;
 
         return $this;
     }

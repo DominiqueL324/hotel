@@ -4,19 +4,22 @@
 {% block body %}
 {% for message in app.flashes('erreur') %}
 		<div class=" alert alert-danger">
-			<center>{{message}}</center>
+			{{message}}
 		</div>
 {% endfor %}
 <div class="row">
 	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
-			<center>La remise accordée excède la remise prévue</center> 
+			La remise accordée excède la remise prévue 
 	</div>
-</div>
+	<div class=" alert alert-danger col-lg-12" id="erreurType" style="display: none;">
+			Veuillez choisir un type de client valide
+	</div>
 {% if offres is empty%}
 	<div class=" alert alert-warning col-lg-12" id="erreurRemise" style="display: none;">
 			<center>Aucune offre disponible</center>
 	</div>
 {% else %}
+</div>
 	<div class="container">
 		<div class="card">
 			<div class="card-header">
@@ -25,48 +28,34 @@
 						<div class="col-lg-3">
 						
 						</div>
-						<div class="col-lg-4">
-							<a href="{{path('recep.reservation.etape1')}}" class="btn btn-danger btn-icon-split" onclick="return confirm('Toutes les données saisies seront perdus')">
-				                    <span class="icon text-white-50">
-				                      <i class="fas fa-arrow-left"></i>
-				                    </span>
-				                    <span class="text">Etape 1</span>
-				                 </a>
-								<a href="#" class="btn btn-primary btn-icon-split">
-				                    <span class="icon text-white-50">
-				                      <i class="fas fa-flag"></i>
-				                    </span>
-				                    <span class="text">Etape 2</span>
-				                </a>
-						</div>
 				   </div>
 			</div>
 			<div class="card-body">
-			<form class=" form" method="post" action=" {{path('recep.identification_no_reserv_old_clien.new')}} ">
+			<form class=" form" method="post" action=" {{path('recep.new_identification_new_client')}} ">
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Nom</label>
-									<input name="nom" value=" {{client.nom}} " type="text" class="form-control" readonly="readonly">
+									<label for="exampleInputEmail1">Nom Client *</label>
+									<input name="nom" placeholder="Nom..." type="text" class="form-control" required="required">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Prenom</label>
-									<input name="prenom" type="text" value=" {{client.prenom}} " class="form-control" readonly="readonly">
+									<label for="exampleInputEmail1">Prenom Client *</label>
+									<input name="prenom" type="text" placeholder="Prenom..." class="form-control" required="required">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Téléphone</label>
-									<input name="nationalite" type="text" value=" {{client.telephone}} " class="form-control" readonly="readonly">
+									<label for="exampleInputEmail1">Téléphone client *</label>
+									<input name="telephone" type="text" placeholder="Téléphone..." class="form-control" required="required">
 								</div>
 							</div>
 							
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">CNI/Passeport *</label>
-									<input name="cni" type="text" value=" {{client.cni}} " class="form-control" readonly="readonly">
+									<label for="exampleInputEmail1">CNI/Passeport Client*</label>
+									<input name="cni" type="text" placeholder="N° CNI ou Passeport" class="form-control" required="required">
 								</div>
 							</div>
 							
@@ -84,20 +73,20 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Nationalité</label>
-									<input name="nationalite" type="text" class="form-control" required="required" value=" {{client.nationalite}} " placeholder="Nationalité du client">
+									<label for="exampleInputEmail1">Nationalité client*</label>
+									<input name="nationalite" type="text" class="form-control" required="required" placeholder="Nationalité...">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Pays résidence</label>
-									<input name="paysresidence" type="text" class="form-control" required="required" value=" {{client.paysresidence}} " placeholder="Pays de résidence du client">
+									<label for="exampleInputEmail1">Pays résidence client*</label>
+									<input name="paysresidence" type="text" class="form-control" required="required" placeholder="Pays de résidence...">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="profession">Profession </label>
-									<input name="profession" type="text" class="form-control" required="required" value=" {{client.profession}} " placeholder="Profession du client">
+									<label for="profession">Profession client*</label>
+									<input name="profession" type="text" class="form-control" required="required" placeholder="Profession...">
 								</div>
 							</div>
 							
@@ -106,28 +95,28 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Date Naissance</label>
-									<input name="datenaissance" value=" {{client.bornat | date('d/m/Y')}} " type="date" class="form-control" required="required">
+									<label for="exampleInputEmail1">Date Naissance client*</label>
+									<input name="datenaissance" type="date" class="form-control" required="required">
 								</div>
 							</div>
 							
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Lieu Naissance</label>
-									<input name="lieunaissance" type="text" class="form-control" required="required" value=" {{client.lieudenaissance}} " placeholder="Lieu de Naissance du client">
+									<label for="exampleInputEmail1">Lieu Naissance client*</label>
+									<input name="lieunaissance" type="text" class="form-control" required="required" placeholder="Lieu de Naissance...">
 								</div>
 							</div>
 							
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="profession">Date CNI/Passeport  *</label>
-									<input name="datecni" type="date"  value=" {{client.cnimadeat|date('d/m/Y')}} " class="form-control" required="required" placeholder="Profession du client">
+									<input name="datecni" type="date"class="form-control" required="required">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Immatriculation </label>
-									<input name="immatriculation" type="text" class="form-control" placeholder="Immatriculation du véhicule">
+									<label for="exampleInputEmail1">Immatriculation vehicule client </label>
+									<input name="immatriculation" type="text" class="form-control" placeholder="Immatriculation...">
 								</div>
 							</div>
 						</div>
@@ -135,14 +124,18 @@
 						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Type de client</label>
-									<input type="text" class="form-control" name="type_client" value="{{client.type}}" readonly="readonly">
+									<label for="exampleInputEmail1">Type de client *</label>
+									<select name="type_client" id="type_client"  class="form-control">
+										<option value="jondo">------------</option>
+										<option value="client">Client</option>
+										<option value="religieux">Réligieux</option>
+									</select>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Remise Ordinaire (%)</label>
-									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control" value="{{client.remise}}" readonly="readonly">
+									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control"  readonly="readonly">
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -158,27 +151,26 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Venant de :</label>
+									<label for="exampleInputEmail1">Venant de : *</label>
 									<input name="venantde" type="text" class="form-control" required="required" placeholder="Ville de provenance">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Se rendant à</label>
+									<label for="exampleInputEmail1">Se rendant à *</label>
 									<input name="serendanta" type="text" class="form-control" required="required" placeholder="Ville destination">
 									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
-									<input type="hidden" name="id" value="{{client.id}}">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="profession">Nombre de personne </label>
+									<label for="profession">Nombre de personne *</label>
 									<input name="nombrepersonne" type="number" class="form-control" required="required" value="1">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Sexe</label>
+									<label for="exampleInputEmail1">Sexe *</label>
 									<select name="sexe"  class="form-control">
 										<option value="jondo">------------</option>
 										<option value="masculin">Homme</option>
@@ -191,7 +183,7 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Mode de règlement</label>
+									<label for="exampleInputEmail1">Mode de règlement *</label>
 									<select name="reglement"  class="form-control">
 										<option value="jondo">------------</option>
 										<option value="cheque">Chèque</option>
@@ -205,6 +197,7 @@
 									<input name="nuite" type="number" class="form-control" value="0" required="required" >
 								</div>
 							</div>
+						
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Date de Arrivée</label>
@@ -244,7 +237,7 @@
 			</div>
 		
 	</div>
-	{% endif %}
+	{% elendif %}
 {% endblock %}
 
 {% block script %}
@@ -285,7 +278,7 @@
         document.getElementById("remise_accordee").onkeyup = function(){
         	var val = document.getElementById("remise_accordee").value;
         	var val1 = document.getElementById("remise_ordinaire").value;
-        	if(document.getElementById("roles").value != "ROLE_ADMIN"){
+        	if(document.getElementById("roles").value == "ROLE_ADMIN"){
         		if(val > val1 ){
         			document.getElementById("erreurRemise").style.display = "inline";
         			document.getElementById("valider").style.display = "none";
@@ -296,6 +289,22 @@
         		}
         	}
         	
-        }  
+        }
+        document.getElementById("type_client").onchange = function(){
+        	var val = document.getElementById("type_client").value;
+        	if(val == "client"){
+        		document.getElementById("remise_ordinaire").value = 5;
+        		document.getElementById("erreurType").style.display = "none";
+        	}else if(val == "religieux"){
+        		document.getElementById("remise_ordinaire").value = 10;
+        		document.getElementById("erreurType").style.display = "none";
+        	}
+        	else{
+        		document.getElementById("remise_ordinaire").value = 0;
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("erreurType").style.display = "inline";
+        	}
+        	
+        } 
     </script>
 {% endblock %}

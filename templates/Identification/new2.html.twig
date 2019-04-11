@@ -7,6 +7,14 @@
 			{{message}}
 		</div>
 {% endfor %}
+<div class="row">
+	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
+			La remise accordée excède la remise prévue 
+	</div>
+	<div class=" alert alert-danger col-lg-12" id="erreurType" style="display: none;">
+			Veuillez choisir un type de client valide
+	</div>
+</div>
 	<div class="container">
 		<div class="card">
 			<div class="card-header">
@@ -117,6 +125,31 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Type de client *</label>
+									<select name="type_client" id="type_client"  class="form-control">
+										<option value="jondo">------------</option>
+										<option value="client">Client</option>
+										<option value="religieux">Réligieux</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Remise Ordinaire (%)</label>
+									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control" value="{{reservation.client.remise}}" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Remise accordée (%)</label>
+									<input name="remise" id="remise_accordee" value="0" type="number" class="form-control" required="required" >
+								</div>
+							</div>
+						</div>
 						
 						<h4>Autres Informations</h4>
 						<hr>
@@ -171,30 +204,38 @@
 									<input name="nuite" type="number" class="form-control" value="0" required="required" >
 								</div>
 							</div>
-							<div class="col-md-3">
+²							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Date de Arrivée</label>
-									<input name="date_arrivee" type="date" class="form-control" required="required" >
+									<input name="date_arrivee" id="date1" type="date" class="form-control" required="required" >
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Date de départ</label>
-									<input name="date_depart" value="{{reservation.endat|date('d/m/Y')}} " type="date" class="form-control" required="required">
+									<input name="date_depart" id="date2" type="date" style="display: none;" class="form-control" required="required">
 								</div>
 							</div>
 						</div>
 						</div>
+						<input type="hidden" value="{{app.user.roles.0}}" name="roles" id="roles">
 
 						<div class="card-footer">
+							<div class="row">
 								<div class="col-lg-4">
-									<input type="submit" class=" btn btn-success" value="Enregistrer" name="">
+									<input type="submit" style="display: none;" id="valider" class=" btn btn-success" value="Enregistrer" name="">
 										<a href="#" class="btn btn-warning btn-icon-split">
 						                    <span class="icon text-white-50">
 						                      <i class="fas fa-flag"></i>
 						                    </span>
 						                    <span class="text">Annuler</span>
 						                </a>
+								</div>
+								<div class="col-lg-8">
+									<div class="alert alert-danger" id="errorMsg" style="display: none;">
+										Les dates ne sont pas valides veuillez les verifier pour terminer l'opération
+									</div>
+								</div>
 							</div>
 						</div>
 					</form>
@@ -215,17 +256,12 @@
         	var date = new Date();
         	var actuel = diffdate(date,date1);
         	if((actuel + 1) >= 1){
-        		document.getElementById("dtfin").style.display = "inline";
-        		document.getElementById("auday").style.display = "none";
-        		document.getElementById("diference").style.display = "none";
-        		document.getElementById("valider").style.display = "inline";
+        		document.getElementById("date2").style.display = "inline";
+        		document.getElementById("errorMsg").style.display = "none";
         	}else{
+        		document.getElementById("errorMsg").style.display = "inline";
         		document.getElementById("valider").style.display = "none";
-        		document.getElementById("dtfin").style.display = "none";
-        		document.getElementById("avnc").style.display = "none";
-        		document.getElementById("pt").style.display = "none";
-        		document.getElementById("diference").style.display = "none";
-        		document.getElementById("auday").style.display = "inline";
+        		document.getElementById("date2").style.display = "none";
         	}
         }
 
@@ -237,20 +273,43 @@
         	var jour = diffdate(date1,date2);
         	if((jour + 1) >= 1){
         		document.getElementById("valider").style.display = "inline";
-        		document.getElementById("avnc").style.display = "inline";
-        		document.getElementById("pt").style.display = "inline";
-        		document.getElementById("auday").style.display = "none";
-        		document.getElementById("diference").style.display = "none";
-        		var prx = document.getElementById("prix").value;
-        		document.getElementById("prixtotal").value = prx * jour;
+        		document.getElementById("errorMsg").style.display = "none";
         	}else{
         		document.getElementById("valider").style.display = "none";
-        		document.getElementById("avnc").style.display = "none";
-        		document.getElementById("pt").style.display = "none";
-        		document.getElementById("auday").style.display = "none";
-        		document.getElementById("diference").style.display = "inline";
-        		document.getElementById("prixtotal").value = 0;
+        		document.getElementById("errorMsg").style.display = "inline";
         	}
-        }  
+        } 
+
+        document.getElementById("remise_accordee").onkeyup = function(){
+        	var val = document.getElementById("remise_accordee").value;
+        	var val1 = document.getElementById("remise_ordinaire").value;
+        	if(document.getElementById("roles").value != "ROLE_ADMIN"){
+        		if(val > val1 ){
+        			document.getElementById("erreurRemise").style.display = "inline";
+        			document.getElementById("valider").style.display = "none";
+        		}else
+        		{
+        			document.getElementById("erreurRemise").style.display = "none";
+        			document.getElementById("valider").style.display = "inline";
+        		}
+        	}
+        	
+        } 
+         document.getElementById("type_client").onchange = function(){
+        	var val = document.getElementById("type_client").value;
+        	if(val == "client"){
+        		document.getElementById("remise_ordinaire").value = 5;
+        		document.getElementById("erreurType").style.display = "none";
+        	}else if(val == "religieux"){
+        		document.getElementById("remise_ordinaire").value = 10;
+        		document.getElementById("erreurType").style.display = "none";
+        	}
+        	else{
+        		document.getElementById("remise_ordinaire").value = 0;
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("erreurType").style.display = "inline";
+        	}
+        	
+        }
     </script>
 {% endblock %}

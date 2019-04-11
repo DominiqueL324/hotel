@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -89,6 +91,16 @@ class User  implements UserInterface
     public function setUsername($username)
     {
         $this->username = $username;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Identification", mappedBy="user")
+     */
+    private $identifications;
+
+    public function __construct()
+    {
+        $this->identifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -208,11 +220,42 @@ class User  implements UserInterface
     {
         $tab = array($roles);
         $this->roles = $tab;
+        return $this;
+    }
+
+<<<<<<< Updated upstream
+    public function eraseCredentials()
+    {
+=======
+    /**
+     * @return Collection|Identification[]
+     */
+    public function getIdentifications(): Collection
+    {
+        return $this->identifications;
+    }
+
+    public function addIdentification(Identification $identification): self
+    {
+        if (!$this->identifications->contains($identification)) {
+            $this->identifications[] = $identification;
+            $identification->setUser($this);
+        }
 
         return $this;
     }
 
-    public function eraseCredentials()
+    public function removeIdentification(Identification $identification): self
     {
+        if ($this->identifications->contains($identification)) {
+            $this->identifications->removeElement($identification);
+            // set the owning side to null (unless already changed)
+            if ($identification->getUser() === $this) {
+                $identification->setUser(null);
+            }
+        }
+
+        return $this;
+>>>>>>> Stashed changes
     }
 }

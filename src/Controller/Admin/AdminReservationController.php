@@ -120,6 +120,18 @@
 			{
 				if(null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
 					{
+						$listeIdent = $this->repositoryOffre->find($request->get('id_offre'))->getIdentifications();
+						$date = new \DateTime($request->get('begin_at'));
+						foreach ($listeIdent as $identification) {
+							if($date == $identification->getArrivedAt()){
+								$this->addFlash('erreur','Cette offre ne sera pas disponible avant le'.$request->get('begin_at'));
+								return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('id_offre')]);
+							}
+							if($identification->getArrivedAt() <= $date && $date <= $identification->getLivedAt()){
+								$this->addFlash('erreur','Cette offre ne sera pas disponible durant cette péroide elle sera libre le '.$identification->getLivedAt()->format('d-M-Y'));
+								return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('id_offre')]);
+							}
+						}
 						if(is_null($client))
 						{
 							$client = new Client();
@@ -132,13 +144,21 @@
 							$this->em->persist($client);
 							$this->em->flush();
 						}
+						if($request->get('avance')==0){
+							$reservation->setValide("non");	
+						}else{
+							$reservation->setValide("oui");	
+						}
+
 						$reservation->setClient($client);
 						$reservation->setBeginAt(new \DateTime($request->get('begin_at')));
 						$reservation->setEndAt(new \DateTime($request->get('end_at')));
 						$reservation->setPrix($request->get('prixtotal'));
 						$reservation->setAvance($request->get('avance'));
+						
 						$reservation->setOffre($this->repositoryOffre->find($request->get('id_offre')));
-						$reservation->setUser($this->repositoryUser->find($this->getUser()));
+						$reservation->setUser($this->getUser());
+						$reservation->setEtat("En cours");
 						$this->em->persist($reservation);
 						$this->em->flush();
 						return $this->redirectToRoute('recep.reservation.index');

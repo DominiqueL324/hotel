@@ -55,7 +55,11 @@ class Client
     private $groupes;
 
     /**
+<<<<<<< Updated upstream
      * @ORM\Column(type="string", length=10, nullable=true)
+=======
+     * @ORM\Column(type="string", length=20, nullable=true)
+>>>>>>> Stashed changes
      */
     private $sexe;
 
@@ -64,6 +68,7 @@ class Client
      */
     private $pays_residence;
 
+<<<<<<< Updated upstream
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      */
@@ -94,10 +99,25 @@ class Client
      */
     private $identifications;
 
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $remise;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
         $this->identifications = new ArrayCollection();
+=======
+    public function __construct()
+    {
+        $this->groupes = new ArrayCollection();
+>>>>>>> Stashed changes
     }
 
     public function getId(): ?int
@@ -228,6 +248,7 @@ class Client
 
         return $this;
     }
+<<<<<<< Updated upstream
 
     public function getNationalite(): ?string
     {
@@ -319,4 +340,30 @@ class Client
 
         return $this;
     }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getRemise(): ?int
+    {
+        return $this->remise;
+    }
+
+    public function setRemise(?int $remise): self
+    {
+        $this->remise = $remise;
+
+        return $this;
+    }
+=======
+>>>>>>> Stashed changes
 }

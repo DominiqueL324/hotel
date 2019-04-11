@@ -67,9 +67,15 @@ class Reservation
     private $etat;
 
     /**
+<<<<<<< Updated upstream
      * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $valide;
+=======
+     * @ORM\OneToOne(targetEntity="App\Entity\Identification", mappedBy="reservation", cascade={"persist", "remove"})
+     */
+    private $identification;
+>>>>>>> Stashed changes
 
     public function __construct()
     {
@@ -208,6 +214,7 @@ class Reservation
         return $this;
     }
 
+<<<<<<< Updated upstream
     public function getValide(): ?string
     {
         return $this->valide;
@@ -216,6 +223,21 @@ class Reservation
     public function setValide(?string $valide): self
     {
         $this->valide = $valide;
+=======
+    public function getIdentification(): ?Identification
+    {
+        return $this->identification;
+    }
+
+    public function setIdentification(Identification $identification): self
+    {
+        $this->identification = $identification;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $identification->getReservation()) {
+            $identification->setReservation($this);
+        }
+>>>>>>> Stashed changes
 
         return $this;
     }

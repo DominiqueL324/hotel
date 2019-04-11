@@ -96,7 +96,16 @@
 		public function tmpN2($id):Response
 		{
 			$client = $this->repositoryClient->find($id);
-			$offres = $this->repositoryOffre->findBy(['dispo'=>true]);
+			$offres1 = $this->repositoryOffre->findBy(['dispo'=>true]);
+			$offres = [];			
+			foreach ($offres1 as $offre) {
+				$of  =  $this->checkIfOffreReserveeConfirmer($offre->getId());
+				if($of != null){
+
+				}else{
+					$offres[] = $offre;
+				}
+			}
 			return $this->render('identification/nouvelleSansReservation1.html.twig',['offres'=>$offres,'client'=>$client]); 
 		}
 
@@ -106,6 +115,16 @@
 		*/
 		public function NewReservationNewClient():Response
 		{
+			$offres1 = $this->repositoryOffre->findBy(['dispo'=>true]);
+			$offres = [];			
+			foreach ($offres1 as $offre) {
+				$of  =  $this->checkIfOffreReserveeConfirmer($offre->getId());
+				if($of != null){
+
+				}else{
+					$offres[] = $offre;
+				}
+			}
 			$offres = $this->repositoryOffre->findBy(['dispo'=>true]);
 			return $this->render('identification/NewReservationNewClient.html.twig',['offres'=>$offres]); 
 		}
@@ -159,8 +178,20 @@
 			$client = $this->repositoryClient->find($request->get('id'));
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
-				if(null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance'))
+				if($this->repositoryReservation->find($request->get('idR'))->getOffre()->getDispo()){
+
+				}else{
+					$this->addFlash('erreur',"cette offre n'est pas encore libre pour le moment");
+					return $this->redirectToRoute('recep.new_client_reserv');
+				}
+				if(null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance')&& null!==$request->get('venantde')&& null!==$request->get('nuite'))
 					{
+						
+						if($request->get('remise_ordinaire')<$request->get('remise_accordee') && $request->get('roles')!= "ROLE_ADMIN" )
+						{
+							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
+							return $this->redirectToRoute('recep.new_client_reserv');
+						}
 
 						$client->setNationalite($request->get('nationalite'));
 						$client->setPaysResidence($request->get('paysresidence'));
@@ -169,11 +200,14 @@
 						$client->setBornAt(new \DateTime($request->get('datenaissance')));
 						$client->setLieuDeNaissance($request->get('lieunaissance'));
 						$client->setCniMadeAt(new \DateTime($request->get('datecni')));
+						$client->setType($request->get('type_client'));
+						$client->setRemise($request->get('remise_ordinaire'));
 						$this->em->flush();
 						$identification->setReservation($this->repositoryReservation->find($request->get('idR')));
 						$identification->setOffre($this->repositoryReservation->find($request->get('idR'))->getOffre());
 						$identification->setClient($client);
-						$identification->setUser($this->repositoryUser->find(2));
+						$identification->setRemise($request->get('remise_accordee'));
+						$identification->setUser($this->getUser());
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
 						$identification->setNombrePersonne($request->get('nombrepersonne'));
@@ -181,6 +215,9 @@
 						$identification->setModeReglement($request->get('reglement'));
 						$identification->setImmatriculation($request->get('immatriculation'));
 						$identification->setMadeAt(new \DateTime());
+						$identification->setVenantDe($request->get('venantde'));
+						$identification->setNombreNuite($request->get('nuite'));
+						$identification->setEtat("En cours");
 						$Maxid = $this->repositoryVar->getMaxId();$identification->setMadeAt(new \DateTime());
 						$date = new \DateTime();
 						if(is_null($Maxid)){
@@ -194,6 +231,8 @@
 						$this->em->flush();
 
 						$this->repositoryReservation->find($request->get('idR'))->setValide("oui");
+						$this->em->flush();
+						$this->repositoryReservation->find($request->get('idR'))->getOffre()->setDispo(false);
 						$this->em->flush();
 						$this->addFlash('success',"Opération efféctué avec success");
 						return $this->redirectToRoute('recep.identification.index');
@@ -227,14 +266,21 @@
 		* @Route("/recep/identification_new_client/create", name="recep.new_identification_new_client")
 		* @return Response
 		*/
-		public function ReservationNewClientCreate(Request $request):Response
+		public function IdentificationNewClientCreate(Request $request):Response
 		{
 			$identification = new identification();
 			$client = new Client();
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
-				if(null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance'))
+				if(null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance') && null!==$request->get('venantde')&& null!==$request->get('nuite'))
 					{
+
+						if($request->get('remise_ordinaire')<$request->get('remise_accordee') && $request->get('roles')!= "ROLE_ADMIN" )
+						{
+							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
+							return $this->redirectToRoute('recep.new_client_reserv');
+						}
+
 						$client = $this->repositoryClient->findByCni($request->get('cni'));
 						if(is_null($client))
 						{
@@ -250,7 +296,9 @@
 							$client->setBornAt(new \DateTime($request->get('datenaissance')));
 							$client->setLieuDeNaissance($request->get('lieunaissance'));
 							$client->setCniMadeAt(new \DateTime($request->get('datecni')));
-							$client->setUser($this->repositoryUser->find(2));
+							$client->setUser($this->repositoryUser->find($this->getUser()));
+							$client->setType($request->get('type_client'));
+							$client->setRemise($request->get('remise_ordinaire'));
 							$this->em->persist($client);
 							$this->em->flush();	
 						}else{
@@ -261,6 +309,7 @@
 
 						$identification->setClient($client);
 						$identification->setCout(0.0);
+						$identification->setRemise($request->get('remise_accordee'));
 						$identification->setUser($this->repositoryUser->find(2));
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
@@ -269,6 +318,9 @@
 						$identification->setModeReglement($request->get('reglement'));
 						$identification->setImmatriculation($request->get('immatriculation'));
 						$identification->setMadeAt(new \DateTime());
+						$identification->setVenantDe($request->get('venantde'));
+						$identification->setNombreNuite($request->get('nuite'));
+						$identification->setEtat("En cours");
 						$identification->setOffre($this->repositoryOffre->find($request->get('offre')));
 						$Maxid = $this->repositoryVar->getMaxId();
 						$date = new \DateTime();
@@ -310,6 +362,11 @@
 			{
 				if(null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && null!==$request->get('venantde') && null!==$request->get('serendanta') && $request->get('sexe') !=="jondo" && "jondo"!==$request->get('reglement') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) && null!==$request->get('lieunaissance'))
 					{
+						if($request->get('remise_ordinaire')<$request->get('remise_accordee') && $request->get('roles')!= "ROLE_ADMIN" )
+						{
+							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
+							return $this->redirectToRoute('recep.new_client_reserv');
+						}
 
 						$client->setNationalite($request->get('nationalite'));
 						$client->setPaysResidence($request->get('paysresidence'));
@@ -318,10 +375,13 @@
 						$client->setBornAt(new \DateTime($request->get('datenaissance')));
 						$client->setLieuDeNaissance($request->get('lieunaissance'));
 						$client->setCniMadeAt(new \DateTime($request->get('datecni')));
+						$client->setType($request->get('type_client'));
+						$client->setRemise($request->get('remise_ordinaire'));
 						$this->em->flush();
 
 						$identification->setClient($client);
-						$identification->setUser($this->repositoryUser->find(2));
+						$identification->setRemise($request->get('remise_accordee'));
+						$identification->setUser($this->getUser());
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
 						$identification->setNombrePersonne($request->get('nombrepersonne'));
@@ -329,8 +389,12 @@
 						$identification->setModeReglement($request->get('reglement'));
 						$identification->setImmatriculation($request->get('immatriculation'));
 						$identification->setMadeAt(new \DateTime());
+						$identification->setVenantDe($request->get('venantde'));
+						$identification->setNombreNuite($request->get('nuite'));
+						$identification->setEtat("En cours");
 						$identification->setOffre($this->repositoryOffre->find($request->get('offre')));
-						$Maxid = $this->repositoryVar->getMaxId();$identification->setMadeAt(new \DateTime());
+						$Maxid = $this->repositoryVar->getMaxId();
+						$identification->setMadeAt(new \DateTime());
 
 						$date = new \DateTime();
 						if(is_null($Maxid)){
@@ -341,6 +405,8 @@
 						}
 						$identification->setNumeroIdentification($result1);
 						$this->em->persist($identification);
+						$this->em->flush();
+						$this->repositoryOffre->find($request->get('offre'))->setDispo(false);
 						$this->em->flush();
 						$this->addFlash('success',"Opération efféctué avec success");
 						return $this->redirectToRoute('recep.identification.index');
@@ -420,9 +486,9 @@
 		*/
 		public function facturer(Identification $identification):Response
 		{
-			/*$identification->setEtat("Terminer");
+			$identification->setEtat("Terminer");
 			$identification->getOffre()->setDispo(true);
-			$this->em->flush();*/
+			$this->em->flush();
 			$pdfOptions = new Options();
 	        $pdfOptions->set('defaultFont', 'Helvetica');
 	        $pdfOptions->set('isRemoteEnabled',true);
@@ -442,5 +508,46 @@
 	        ]);
 			//return $this->redirectToRoute('recep.identification.index');
 			//génération de la facture
+		}
+
+		/**
+		* @Route("/recep/identification/imprimer/{id<\d+>}", name="recep.identification.imprimer")
+		* @return Response
+		*/
+		public function imprimer(Identification $identification):Response
+		{
+			$pdfOptions = new Options();
+	        $pdfOptions->set('defaultFont', 'Helvetica');
+	        $pdfOptions->set('isRemoteEnabled',true);
+	        // Instantiate Dompdf with our options
+	        $dompdf = new Dompdf($pdfOptions);
+	        // Retrieve the HTML generated in our twig file
+	        $html = $this->renderView('pdf/factureIdentification.html.twig',['identification'=>$identification]);
+	        // Load HTML to Dompdf
+	        $dompdf->loadHtml($html);
+	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+	        $dompdf->setPaper('A4', 'portrait');
+	        // Render the HTML as PDF
+	        $dompdf->render();
+	        // Output the generated PDF to Browser (force download)
+	        $dompdf->stream("facture.pdf", [
+	            "Attachment" => false
+	        ]);
+			//return $this->redirectToRoute('recep.identification.index');
+			//génération de la facture
+		}		
+
+		public function checkIfOffreReserveeConfirmer($id)
+		{
+			$date = new \DateTime();
+			$reservations= $this->repositoryReservation->findBy(['offre'=>$id]);
+			foreach ($reservations as $reservation) {
+				if($reservation->getBeginAt() <= $date && $date<= $reservation->getEndAt()){
+					if($reservation->getAvance()>0){
+						return $reservation;
+					}
+				}
+				return null;
+			}
 		}	
 	}

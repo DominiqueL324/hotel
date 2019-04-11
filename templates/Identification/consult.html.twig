@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+{% block title "Identification 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+	<div class="container">
+		<h2>Identification N° {{identification.NumeroIdentification}} ({{identification.etat}})</h2>
+		<div class="card">
+			<div class="card-header">
+
+				   <div class="row">
+						<div class="col-lg-9">
+							
+				            {% if identification.etat != 'Terminer' %}
+								<a href="{{path('recep.identification.facturer',{id:identification.id})}}" class="btn btn-primary">
+					            Facturer
+					            </a>
+					            <a href="#" class="btn btn-warning">
+					             Facture Anticipé
+					            </a>
+					            <a href="{{path('recep.paiement.identification',{id:identification.id})}} " class="btn btn-success">
+					             Avance
+					            </a>
+				            {% endif %}
+							<a href="{{path('recep.identification.imprimer',{id:identification.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10);">
+				            Imprimer
+				            </a>
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label >Nom</label>
+									<p> <strong>{{identification.client.nom}}</strong></p>  
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label >Prenom</label>
+									<p> <strong>{{identification.client.prenom}}</strong></p> 
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<p><strong>{{identification.client.telephone}}</strong></p> 
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<p><strong>{{identification.client.cni}}</strong></p>
+								</div>
+							</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">N° de chambre *</label>
+									<p><strong>{{identification.offre.porte}}</strong></p> 
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nationalité</label>
+									<p><strong>{{identification.client.nationalite}} </strong></p>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Pays résidence</label>
+									<p><strong>{{identification.client.paysresidence}}</strong></p> 
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Profession </label>
+									<p><strong>{{identification.client.profession}}</strong></p>
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date Naissance</label>
+									<p><strong>{{identification.client.bornat | date('d/m/Y')}}</strong></p> 
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Lieu Naissance</label>
+									<p><strong>{{identification.client.lieudenaissance}}</strong></p>
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Date CNI/Passeport  *</label>
+									<p><strong>{{identification.client.cnimadeat|date('d/m/Y')}}</strong></p>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Immatriculation </label>
+									<p><strong>{{identification.Immatriculation}}</strong></p>
+								</div>
+							</div>
+						</div>
+						
+						<h4>Autres Informations</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Venant de :</label>
+									<p><strong>{{identification.VenantDe}}</strong>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Se rendant à</label>
+									<p><strong>{{identification.SeRendantA}}</strong>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Nombre de personne </label>
+									<p><strong>{{identification.NombrePersonne}} Personne(s)</strong>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Sexe</label>
+									<p><strong>{{identification.client.Sexe}}</strong>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Mode de règlement</label>
+									<p><strong>{{identification.ModeReglement}}</strong>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nombre de nuitées</label>
+									<p><strong>{{identification.NombreNuite}}</strong>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de Arrivée</label>
+									<p><strong>{{identification.ArrivedAt|date('d/m/Y')}}</strong>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de départ</label>
+									<p><strong>{{identification.LivedAt|date('d/m/Y')}}</strong>
+								</div>
+							</div>
+						</div>
+						<h4>Liste des paiements</h4>
+						<hr>
+						<div class="row">
+
+					<div class="col-lg-12">
+						<table class="table table-bordered" cellspacing="0">
+	                  <thead>
+	                    <tr>
+		                    <th>Date</th>
+							<th>Montant</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+		                    	{% for paiement in identification.paiements %}
+									<tr>
+										<td> {{paiement.madeat |date("d/m/Y")}}  </td>
+										<td> {{paiement.montant}} </td>
+									</tr>
+								{% endfor %}	
+			         </tbody>
+		                </table>
+					</div>
+				</div>
+						</div>
+
+
+						<div class="card-footer">
+								 <div class="row">
+									<div class="col-lg-9">
+										{% if identification.etat != 'Terminer' %}
+											<a href="{{path('recep.identification.facturer',{id:identification.id})}}" class="btn btn-primary">
+								            Facturer
+								            </a>
+								            <a href="#" class="btn btn-warning">
+								             Facture Anticipé
+								            </a>
+								            <a href="{{path('recep.paiement.identification',{id:identification.id})}} " class="btn btn-success">
+								             Avance
+								            </a>
+							            {% endif %}
+										<a href="{{path('recep.identification.imprimer',{id:identification.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10);">
+							            Imprimer
+							            </a>
+									</div>
+				   </div>
+						</div>
+			</div>
+		
+	</div>
+{% endblock %}
