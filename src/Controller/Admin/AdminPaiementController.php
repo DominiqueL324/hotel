@@ -94,10 +94,12 @@
 		* @Route("/recep/paiement_identification/new/{id<\d+>}", name="recep.paiement.identification")
 		* @return Response
 		*/
-		public function paiement_identification($id):Response
+		public function paiement_identification(Identification $identification):Response
 		{
-			$identification = new Identification();
-			$identification = $this->repositoryIdentification->find($id);
+			if($identification->getEtat()=="Terminer"){
+				$this->addFlash('erreur','Ce Séjour est déjà Terminer il ne peut plus avoir de paiement');
+				return $this->redirectToRoute('recep.identification.index');
+			}
 			return $this->render('paiements/newPaimentIdentification.html.twig',compact('identification')); 
 		}
 
@@ -142,13 +144,13 @@
 		* @Route("/recep/paiement/add_identification/{id}", name="recep.paiement.new_identification")
 		* @return Response
 		*/
-		public function newIdentificationPaiement(Request $request):Response
+		public function newIdentificationPaiement(Request $request,$id):Response
 		{
 			$prix = $this->repositoryIdentification->find($request->get('id'))->getCout();
 			$reste = $prix - $this->repositoryIdentification->find($request->get('id'))->getAvance();
 
 			if($request->get('montant') > $prix ){
-				$this->addFlash('erreur','Avance supérieure au cout total cela est impossible'.$prix+$reste);
+				$this->addFlash('erreur','Avance supérieure au cout total cela est impossible');
 				return $this->redirectToRoute('recep.paiement.identification',array('id' => $request->get('id')));
 			}
 			

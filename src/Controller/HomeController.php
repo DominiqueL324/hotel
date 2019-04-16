@@ -11,6 +11,8 @@ use Dompdf\Options;
 use App\Repository\ReservationRepository;
 use App\Entity\Reservation;
 use App\Entity\User;
+use App\Repository\IdentificationRepository;
+use App\Entity\Identification;
 
 /**
  * 
@@ -22,9 +24,13 @@ class HomeController extends AbstractController
 	* @param PropertyRepository $repository
 	* @return Response
 	*/
-	public function index(): Response{
+	public function index(IdentificationRepository $repositoryVar): Response{
         $user = $this->getUser();
-       return $this->render('pages/home.html.twig',compact('user'));
+        $bientot = $this->warningBientot($repositoryVar);
+        $Terminer = $this->warningTerminer($repositoryVar);
+       return $this->render('pages/home.html.twig',['bientot'=>$bientot,
+        'Terminer'=>$Terminer,
+        'user'=>$user]);
 	}
 
 	/**
@@ -57,5 +63,43 @@ class HomeController extends AbstractController
         //$reservation = $repoReservation->find($id);
         //return $this->render('pdf/default.html.twig',compact('reservation'));
 	}
+
+        public function warningTerminer(IdentificationRepository $repositoryVar)
+    {
+        $listeIdent = $repositoryVar->findAll();
+            $oday = new \DateTime();
+            $final = [];
+            foreach ($listeIdent as $identification) 
+            {
+                if($identification->getEtat()!="Terminer")
+                {
+                    if($oday>$identification->getLivedAt())
+                    {
+                        $final[]= $identification;
+                    }
+                }
+                
+            }
+            return $final;
+    }
+
+    public function warningBientot(IdentificationRepository $repositoryVar)
+    {
+        $listeIdent = $repositoryVar->findAll();
+            $oday = new \DateTime();
+            $final = [];
+            foreach ($listeIdent as $identification) 
+            {
+                if($identification->getEtat()!="Terminer")
+                {
+                    $difference = $identification->getLivedAt()->diff(new \DateTime(),true)->d;
+                    if($difference<=2)
+                    {
+                        $final[]= $identification;
+                    }
+                }
+            }
+            return $final;
+    }
 	
 }

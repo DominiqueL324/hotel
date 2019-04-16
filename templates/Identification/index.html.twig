@@ -59,7 +59,7 @@
 									<td>{{identification.avance }}</td>
 									<td>
 										<a href=" {{path('recep.paiement.identification',{id:identification.id})}} "><i class="fas fa-check"></i><span></span></a>
-										<a href=" {{path('recep.identification.edit',{id:identification.id})}} "><i class="fas fa-user-edit"></i><span></span></a>
+										<a href=" {{path('recep.identification.edit',{id:identification.id,role:app.user.roles[0]})}} "><i class="fas fa-user-edit"></i><span></span></a>
 										<a href="{{path('recep.identification.consult',{id:identification.id})}}">
 								          <i class="fas fa-fw fa-address-card"></i>
 								          <span></span>

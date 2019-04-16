@@ -3,6 +3,65 @@
 {% block title "Acceuil" %}
 {% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 
+{% block alert %}
+	{% if bientot is empty%}
+
+	{% else %}
+	<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fas fa-bell fa-fw"></i>
+		                <!-- Counter - Alerts -->
+		<span class="badge badge-danger badge-counter">{{ bientot|length() }}</span>
+	</a>
+	{% for info in bientot %}
+		<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+			<h6 class="dropdown-header">
+			    Des séjours finissent dans moin de deux jours
+			</h6>
+			<a class="dropdown-item d-flex align-items-center" href="{{path('recep.identification.consult',{id:info.id})}}">
+			   	<div class="mr-3">
+				    <div class="icon-circle bg-primary">
+				        <i class="fas fa-file-alt text-white"></i>
+				    </div>
+			   	</div>
+			    <div>
+			    	<div class="small text-gray-500">{{ info.livedAt| date('d/M/Y') }}</div>
+			        <span class="font-weight-bold">Le séjour de Mr {{ info.client.nom }}</span>
+			    </div>
+			</a>
+	 	</div>
+	 {% endfor %}
+ 	{% endif %}
+{% endblock %}
+
+{% block message %} 
+	{% if Terminer is empty%}
+
+	{% else %}
+	<a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="fas fa-envelope fa-fw"></i>
+		<span class="badge badge-danger badge-counter">{{Terminer|length()}}</span>
+		              </a>
+		{% for info in Terminer %}              
+			<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+			    <h6 class="dropdown-header">
+			        séjours expirés mais  pas encore facturés
+			    </h6>
+			    <a class="dropdown-item d-flex align-items-center" href="{{path('recep.identification.consult',{id:info.id})}}">
+			        <div class="mr-3">
+					    <div class="icon-circle bg-primary">
+					        <i class="fas fa-file-alt text-white"></i>
+					    </div>
+				   	</div>
+				    <div>
+				    	<div class="small text-gray-500">{{ info.livedAt| date('d/M/Y') }}</div>
+				        <span class="font-weight-bold">Le séjour de Mr {{ info.client.nom }}</span>
+				    </div>
+			    </a>
+			</div>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+
 {% block body %}
 <h1 class="header mt-4" style="text-align: center;">Bienvenu sur Brain Hotel</h1>
 

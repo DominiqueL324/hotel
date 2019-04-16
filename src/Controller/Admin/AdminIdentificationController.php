@@ -74,6 +74,7 @@
 		{
 			$this->UpdatePriceAndAvance();
 			$this->checkForExtraAndAdd();
+
 			$identifications = $this->repositoryVar->findAll();
 			return $this->render('Identification/index.html.twig',compact('identifications')); 
 		}
@@ -150,21 +151,25 @@
 		}
 
 		/**
-		* @Route("/recep/identification/edit/{id}", name="recep.identification.edit")
+		* @Route("/recep/identification/edit/{id}/{role}", name="recep.identification.edit")
 		* @return Response
 		*/
-		public function editLauncher(ReservationRepository $repositoryReserv,$id):Response
+		public function editLauncher(ReservationRepository $repositoryReserv,$id,$role):Response
 		{
 
 			$identification = $this->repositoryVar->find($id);
+			if($identification->getEtat() == "Terminer"){
+				$this->addFlash('erreur','Ce Séjour est déjà Termineril ne peut plus être modifié');
+				return $this->redirectToRoute('recep.identification.index');
+			}
 			$oday = new \DateTime();
-			if($oday > $identification->getMadeAt()){
+			if($oday > $identification->getMadeAt() && $role != "ROLE_ADMIN"){
 				$this->addFlash('erreur','Le delais de modification est excédé veuillez contacter un administrateur');
 				return $this->redirectToRoute('recep.identification.index');
 			}else{
-				
+				return $this->render('identification/edit.html.twig',compact('identification')); 
 			}
-			return $this->render('identification/index.html.twig'); 
+			return $this->render('identification/index.html.twig');
 		}
 
 		/**
@@ -486,6 +491,11 @@
 		*/
 		public function facturer(Identification $identification):Response
 		{
+			$coutTotal = $identification->getCout()+$identification->getCoutExtra();
+			if($identification->getAvance() < $coutTotal){
+				$this->addFlash('erreur',"Ce séjour n'est pas encore totalement payé");
+				return $this->redirectToRoute('recep.identification.consult',['id'=>$identification->getId()]);
+			}
 			$identification->setEtat("Terminer");
 			$identification->getOffre()->setDispo(true);
 			$this->em->flush();
@@ -549,5 +559,52 @@
 				}
 				return null;
 			}
+		}
+
+
+
+		/**
+		* @Route("/recep/identification/edits/{id}", name="recep.identification.edits")
+		* @return Response
+		*/
+		public function edit(Request $request, Identification $identification):Response
+		{
+			if($this->isCsrfTokenValid('edit',$request->get('_token')))
+			{
+				
+				if(null!==$request->get('venantde') && null!==$request->get('serendanta') && null!==$request->get('date_depart') && null!==$request->get('date_arrivee') && is_numeric($request->get('nuite')) &&null!==$request->get('venantde'))
+					{
+						
+						if($request->get('remise_ordinaire')<$request->get('remise_accordee') && $request->get('roles')!= "ROLE_ADMIN" )
+						{
+							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
+							return $this->redirectToRoute('recep.new_client_reserv');
+						}
+						$identification->setRemise($request->get('remise_accordee'));
+						$identification->setUser($this->getUser());
+						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
+						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
+						$identification->setNombrePersonne($request->get('nombrepersonne'));
+						$identification->setSeRendantA($request->get('serendanta'));
+						$identification->setModeReglement($request->get('reglement'));
+						$identification->setMadeAt(new \DateTime());
+						$identification->setVenantDe($request->get('venantde'));
+						$identification->setNombreNuite($request->get('nuite'));
+						$this->em->flush();
+						$this->addFlash('success',"Opération efféctué avec success");
+						return $this->redirectToRoute('recep.identification.index');
+					}else
+					{
+						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
+						return $this->redirectToRoute('recep.identification.edit',['id'=>$identification->getId(),
+					 'role'=>'ROLE_ADMIN']);
+					}
+
+			}else{
+					$this->addFlash('erreur','Formulaire non reconnus');
+					return $this->redirectToRoute('recep.identification.edit',['id'=>$identification->getId(),
+					 'role'=>'ROLE_ADMIN']);
+			}
 		}	
 	}
+
