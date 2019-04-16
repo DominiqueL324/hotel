@@ -1,0 +1,277 @@
+{% extends 'base.html.twig' %}
+{% block title "Identification 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			<center>{{message}}</center>
+		</div>
+{% endfor %}
+<div class="row">
+	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
+			<center>La remise accordée excède la remise prévue</center> 
+	</div>
+</div>
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				   <div class="row">
+						<h2>Editer  Identification N° {{identification.numeroidentification}}</h2>
+						<div class="col-lg-2">
+						
+						</div>
+						<div class="col-lg-4">
+							<a href="{{path('home')}}" class="btn btn-danger btn-icon-split">
+				                    <span class="icon text-white-50">
+				                      <i class="fas fa-arrow-left"></i>
+				                    </span>
+				                    <span class="text">Annuler</span>
+				                 </a>
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+			<form class=" form" method="post" action="{{path('recep.identification.edits',{id:identification.id})}}">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nom</label>
+									<input name="nom" value=" {{identification.client.nom}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prenom</label>
+									<input name="prenom" type="text" value=" {{identification.client.prenom}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<input name="nationalite" type="text" value=" {{identification.client.telephone}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<input name="cni" type="text" value=" {{identification.client.cni}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">N° de chambre *</label>
+									<input name="nationalite" type="text" class="form-control" required="required" value=" {{identification.offre.porte}} " placeholder="Nationalité du client">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nationalité</label>
+									<input name="nationalite" type="text" class="form-control" required="required" value=" {{identification.client.nationalite}} " placeholder="Nationalité du client">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Pays résidence</label>
+									<input name="paysresidence" type="text" class="form-control" required="required" value=" {{identification.client.paysresidence}} " placeholder="Pays de résidence du client">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Profession </label>
+									<input name="profession" type="text" class="form-control" required="required" value=" {{identification.client.profession}} " placeholder="Profession du client">
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date Naissance</label>
+									<input name="datenaissance" value=" {{identification.client.bornat | date('d/m/Y')}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Lieu Naissance</label>
+									<input name="lieunaissance" type="text" class="form-control" required="required" value=" {{identification.client.lieudenaissance}} " placeholder="Lieu de Naissance du client">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Date CNI/Passeport  *</label>
+									<input name="datecni" type="text"  value=" {{identification.client.cnimadeat|date('d/m/Y')}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Immatriculation </label>
+									<input name="immatriculation" type="text" class="form-control" placeholder="Immatriculation du véhicule">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Type de client</label>
+									<input type="text" class="form-control" name="type_client" value="{{identification.client.type}}" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Remise Ordinaire (%)</label>
+									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control" value="{{identification.client.remise}}" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Remise accordée (%)</label>
+									<input name="remise_accordee" id="remise_accordee" value="0" type="number" class="form-control" required="required" >
+								</div>
+							</div>
+						</div>
+						
+						<h4>Autres Informations</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Venant de :</label>
+									<input name="venantde" type="text" class="form-control" readonly="readonly"  placeholder="Ville de provenance" value="{{identification.venantde}}">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Se rendant à</label>
+									<input name="serendanta" type="text" class="form-control" readonly="readonly" placeholder="Ville destination" value="{{identification.serendanta}}">
+									<input type="hidden" name="_token" value="{{csrf_token('edit')}}">
+									<input type="hidden" name="id" value="{{identification.client.id}}">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="profession">Nombre de personne </label>
+									<input name="nombrepersonne" type="number" class="form-control" required="required" value="1">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Sexe</label>
+									<input class="form-control" value="{{identification.client.sexe}}" readonly="readonly">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Mode de règlement</label>
+									<input class="form-control" name="reglement" value="{{identification.modereglement}}" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nombre de nuitées</label>
+									<input class="form-control" name="nuite" value="{{identification.nombrenuite}}" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de Arrivée</label>
+									<input name="date_arrivee" id="date1" type="date" class="form-control" required="required" >
+								</div>
+							</div>
+							<input type="hidden" value="{{app.user.roles.0}}" name="roles" id="roles">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de départ</label>
+									<input name="date_depart" id="date2" type="date" style="display: none;" class="form-control" required="required">
+								</div>
+							</div>
+						</div>
+						</div>
+
+						<div class="card-footer">
+							<div class="row">
+								<div class="col-lg-4">
+									<input type="submit" style="display: none;" id="valider" class=" btn btn-success" value="Enregistrer" name="">
+										<a href="#" class="btn btn-warning btn-icon-split">
+						                    <span class="icon text-white-50">
+						                      <i class="fas fa-flag"></i>
+						                    </span>
+						                    <span class="text">Annuler</span>
+						                </a>
+								</div>
+								<div class="col-lg-8">
+									<div class="alert alert-danger" id="errorMsg" style="display: none;">
+										Les dates ne sont pas valides veuillez les verifier pour terminer l'opération
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+			</div>
+		
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript">
+		function diffdate(d1,d2){
+			var jour = d2.getTime() - d1.getTime();
+			return Math.ceil(jour/(1000*60*60*24));
+		}
+        document.getElementById("date1").onchange = function() { 
+        	var dte_1 = document.getElementById("date1").value;
+        	var date1 = new Date(dte_1);
+        	var date = new Date();
+        	var actuel = diffdate(date,date1);
+        	if((actuel + 1) >= 1){
+        		document.getElementById("date2").style.display = "inline";
+        		document.getElementById("errorMsg").style.display = "none";
+        	}else{
+        		document.getElementById("errorMsg").style.display = "inline";
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("date2").style.display = "none";
+        	}
+        }
+
+        document.getElementById("date2").onchange = function() { 
+        	var dte_1 = document.getElementById("date1").value;
+        	var dte_2 = document.getElementById("date2").value;
+        	var date1 = new Date(dte_1);
+        	var date2 = new Date(dte_2);
+        	var jour = diffdate(date1,date2);
+        	if((jour + 1) >= 1){
+        		document.getElementById("valider").style.display = "inline";
+        		document.getElementById("errorMsg").style.display = "none";
+        	}else{
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("errorMsg").style.display = "inline";
+        	}
+        }
+        document.getElementById("remise_accordee").onkeyup = function(){
+        	var val = document.getElementById("remise_accordee").value;
+        	var val1 = document.getElementById("remise_ordinaire").value;
+        	if(document.getElementById("roles").value != "ROLE_ADMIN"){
+        		if(val > val1 ){
+        			document.getElementById("erreurRemise").style.display = "inline";
+        			document.getElementById("valider").style.display = "none";
+        		}else
+        		{
+        			document.getElementById("erreurRemise").style.display = "none";
+        			document.getElementById("valider").style.display = "inline";
+        		}
+        	}
+        	
+        }  
+    </script>
+{% endblock %}
