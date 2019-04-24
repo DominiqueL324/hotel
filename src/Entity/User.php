@@ -93,9 +93,15 @@ class User  implements UserInterface
      */
     private $identifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Location", mappedBy="user")
+     */
+    private $locations;
+
     public function __construct()
     {
         $this->identifications = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,6 +251,37 @@ class User  implements UserInterface
             // set the owning side to null (unless already changed)
             if ($identification->getUser() === $this) {
                 $identification->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Location[]
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->contains($location)) {
+            $this->locations->removeElement($location);
+            // set the owning side to null (unless already changed)
+            if ($location->getUser() === $this) {
+                $location->setUser(null);
             }
         }
 

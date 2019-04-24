@@ -107,10 +107,16 @@ class Client
      */
     private $remise;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Location", mappedBy="client")
+     */
+    private $locations;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
         $this->identifications = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -353,6 +359,37 @@ class Client
     public function setRemise(?int $remise): self
     {
         $this->remise = $remise;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Location[]
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->contains($location)) {
+            $this->locations->removeElement($location);
+            // set the owning side to null (unless already changed)
+            if ($location->getClient() === $this) {
+                $location->setClient(null);
+            }
+        }
 
         return $this;
     }
