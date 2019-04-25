@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+{% block title "Détails de location" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+	<div class="container">
+		<h3>Location de {{location.salle.typesalle}} ({{location.salle.places}} places) état : {{location.etat}}</h3>
+		<div class="card">
+			<div class="card-header">
+
+				   <div class="row">
+						<div class="col-lg-9">
+							
+				            {% if location.etat != 'Terminer' %}
+								<a href="{{path('recep.location.facturer',{id:location.id})}}" class="btn btn-primary">
+					            Imprimer Facture
+					            </a>
+				            {% endif %}
+							<a href="{{path('recep.location.imprimer',{id:location.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10); color: white;">
+				            Imprimer
+				            </a>
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+				<h5>Informations sur le client</h5>
+				<hr>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label >Nom</label>
+									<p> <strong>{{location.client.nom}}</strong></p>  
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label >Prenom</label>
+									<p> <strong>{{location.client.prenom}}</strong></p> 
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<p><strong>{{location.client.telephone}}</strong></p> 
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<p><strong>{{location.client.cni}}</strong></p>
+								</div>
+							</div>
+							
+						</div>
+						<h5>Informations sur la Salle</h5>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Salle </label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.salle.typesalle}}</strong>
+									</span>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Nombres de places</label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.salle.places}}</strong>
+									</span>
+									
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Prix par jours</label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.salle.prix}} FrCFA</strong>
+									</span>
+									
+								</div>
+							</div>
+						</div>
+						<h5>Informations sur la Location</h5>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="profession">Evenement </label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.motif}}</strong>
+									</span>
+									
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Date debut</label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.beginat | date('d/m/Y')}}</strong>
+									</span>
+									
+								</div>
+							</div>
+							
+							
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="profession">Date de fin</label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.endat|date('d/m/Y')}}</strong>
+									</span>
+									
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Caution </label>
+									:&nbsp;&nbsp;&nbsp;<strong>{{location.caution}} FRCFA</strong>
+									</span>
+									
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Remise:</label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.remise}} FRCFA</strong>
+									</span>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<span>
+										<label for="exampleInputEmail1">Cout Total</label>
+										:&nbsp;&nbsp;&nbsp;<strong>{{location.couttotal}} FRCFA</strong>
+									</span>
+									<p>
+								</div>
+							</div>
+							
+						</div>
+						
+				</div>
+								<div class="card-footer">
+									<div class="row">
+										<div class="col-lg-9">
+											
+								            {% if location.etat != 'Terminer' %}
+												<a href="{{path('recep.location.facturer',{id:location.id})}}" class="btn btn-primary">
+									            Imprimer Facture
+									            </a>
+								            {% endif %}
+											<a href="{{path('recep.location.imprimer',{id:location.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10);color: white;">
+								            Imprimer
+								            </a>
+										</div>
+								   </div>
+								</div>
+						</div>
+
+
+
+			</div>
+		
+	</div>
+{% endblock %}
