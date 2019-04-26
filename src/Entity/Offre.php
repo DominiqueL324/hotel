@@ -12,15 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Offre
 {
 
-    const CLIM = [
-             0 => 'Climatisée',
-             1 => 'Non Climatisée'
-        ];
-    const WIFI = [
-             0 => 'Wifi',
-             1 => 'Pas de Wifi'
-        ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -33,25 +24,6 @@ class Offre
      */
     private $libelle;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $superficie;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $etage;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $clim;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $wifi;
 
     /**
      * @ORM\Column(type="string", length=8)
@@ -70,14 +42,14 @@ class Offre
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $dispo;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Identification", mappedBy="offre")
      */
     private $identifications;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantite;
 
     public function __construct()
     {
@@ -99,64 +71,6 @@ class Offre
         $this->libelle = $libelle;
 
         return $this;
-    }
-
-    public function getSuperficie(): ?int
-    {
-        return $this->superficie;
-    }
-
-    public function setSuperficie(int $superficie): self
-    {
-        $this->superficie = $superficie;
-
-        return $this;
-    }
-
-    public function getEtage(): ?int
-    {
-        return $this->etage;
-    }
-
-    public function setEtage(int $etage): self
-    {
-        $this->etage = $etage;
-
-        return $this;
-    }
-
-    public function getClim(): ?bool
-    {
-        return $this->clim;
-    }
-
-    public function getClimType(): string
-    {
-        return self::CLIM[$this->clim];
-    }
-
-    public function setClim(bool $clim): self
-    {
-        $this->clim = $clim;
-
-        return $this;
-    }
-
-    public function getWifi(): ?bool
-    {
-        return $this->wifi;
-    }
-
-    public function setWifi(bool $wifi): self
-    {
-        $this->wifi = $wifi;
-
-        return $this;
-    }
-
-    public function getWifiType(): string
-    {
-        return self::WIFI[$this->wifi];
     }
 
     public function getPorte(): ?string
@@ -194,19 +108,6 @@ class Offre
 
         return $this;
     }
-
-    public function getDispo(): ?bool
-    {
-        return $this->dispo;
-    }
-
-    public function setDispo(bool $dispo): self
-    {
-        $this->dispo = $dispo;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Identification[]
      */
@@ -234,6 +135,18 @@ class Offre
                 $identification->setOffre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite;
+    }
+
+    public function setQuantite(?int $quantite): self
+    {
+        $this->quantite = $quantite;
 
         return $this;
     }

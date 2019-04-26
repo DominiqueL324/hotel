@@ -45,10 +45,10 @@
     <body id="page-top"> 
     	<header>
     		<img align="left" src="/ProjetSymfony/hotel/templates/pdf/logo.jpg" width="50" height="50" >
-    		<center><strong>CICM HOTEL Facture N° {{identification.numeroidentification}}</strong></center>
+    		<center><strong>Le {{"now"|date("d M Y / h:m")}} CICM HOTEL Facture N° {{identification.numeroidentification}}</strong></center>
         </header>
         <footer>
-            Yaoundé le {{"now"|date("d M Y")}}
+            Le {{"now"|date("d M Y / h:m")}}
             Facture générée par Mr/M {{app.user.nom}} {{app.user.prenom}} employé de CICM Hotel
         </footer>
         <main>
@@ -57,7 +57,7 @@
 					</center>
 					<center>Facture N°  {{identification.numeroidentification}}</center>
 						<div >
-							<center><h2 style="margin-top: 40px; margin-left: 15px;">FACTURE  DE Mr/Mme {{identification.client.nom}} {{identification.client.prenom}}</h2></center>
+							<center><h4 style="margin-top: 40px; margin-left: 15px;">FACTURE  DE Mr/Mme {{identification.client.nom}} {{identification.client.prenom}} OBJET: OCCUPATION DE LA CHAMBRE {{identification.offre.libelle}} </h4></center>
 							<table width="100%"  cellpadding="7" border="1" style="border-collapse: collapse;">
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
 									<td colspan="4">INFORMATIONS DE BASES</td>
@@ -72,7 +72,7 @@
 									<td>Date de debut</td>
 									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.arrivedat|date("d/m/Y")}}</strong></td>
 									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date de fin</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.livedat|date('m/d/Y')}}</strong></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.livedat|date('d/m/Y')}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
 									<td>Chambre</td>
@@ -126,6 +126,12 @@
 									(identification.remise*identification.cout/100 )}} FCfa</strong></td>
 								</tr>
 							</table>
+							<center>
+								<p style="font-size: 20px; margin-left: 10px; height: 100px;"> Arreté la présente à la somme de <strong>{{identification.cout + identification.coutextra - 
+									(identification.remise*identification.cout/100 )}} FCfa</strong></p>
+							</center>
+							<br>
+							<p><strong>LA DIRECTION</strong></p>
 							
 						</div>
 			</main>

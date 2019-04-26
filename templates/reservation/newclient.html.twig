@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title "test" %}
+{% block title "Réservation étape 2" %}
 {% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 {% block body %}
 {% for message in app.flashes('erreur') %}
@@ -64,10 +64,11 @@
 									<input name="telephone" type="number" class="form-control" placeholder="Telephone du client" required="required">
 								</div>
 							</div>
+							<input type="hidden" name="_token" value="{{csrf_token('add')}}">
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Email</label>
-									<input name="email" type="email" class="form-control" placeholder="Mail du client" >
+									<input name="email" type="email" class="form-control" placeholder="Mail du client" required="required">
 								</div>
 							</div>
 						</div>
@@ -82,13 +83,13 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Date debut</label>
+									<label for="exampleInputEmail1">Date Arrivée prévue</label>
 									<input id="date1" name="begin_at" type="Date" class="form-control" placeholder="Date debut" required="required">
 								</div>
 							</div>
 							<div class="col-md-3" id="dtfin" style="display: none;">
 								<div class="form-group">
-									<label for="exampleInputEmail1">Date Fin</label>
+									<label for="exampleInputEmail1">Date départ prévue</label>
 									<input id="date2" name="end_at" type="Date" class="form-control" placeholder="Date fin" required="required">
 								</div>
 							</div>
@@ -122,30 +123,28 @@
 				    	<h4>Informations de l'offre</h4>
 					<div class="card-body" >
 						<div class="row">
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
-									<label for="exampleInputEmail1">libellé</label>
-									<input  name="libelle" value=" {{offre.libelle}} " type="text" class="form-control" readonly="readonly">
+									<label >Chambre</label>
+									<select id="offre" name="offre" class="form-control">
+										{% for offre in offres %}
+											<option value="{{offre.id}}"test1 ="{{offre.prix}}"> 			{{offre.libelle}}
+											</option>
+										{% endfor %}
+									</select>
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="exampleInputEmail1">Etage</label>
-									<input name="etage" value="{{offre.etage}}" type="number" class="form-control" readonly="readonly">
-								</div>
-							</div>
-							<div class="col-md-3">
+							
+							<div class="col-md-4">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Porte</label>
-									<input name="porte" value=" {{offre.porte}}" type="text" readonly="readonly" class="form-control">
+									<input name="porte" type="text" class="form-control">
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
-									<label>Prix </label>
-									<input id="prix" name="prix" type="number" value="{{offre.prix}}" class="form-control" readonly="readonly">
-									<input name="id_offre" type="hidden" value="{{offre.id}}">
-									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
+									<label for="exampleInputEmail1">Prix</label>
+									<input name="prix" id="prix"  type="number" class="form-control" readonly="readonly">
 								</div>
 							</div>
 						</div>
@@ -203,6 +202,18 @@
 			var jour = d2.getTime() - d1.getTime();
 			return Math.ceil(jour/(1000*60*60*24));
 		}
+
+		document.getElementById("offre").onchange = function(){
+			var dte_1 = document.getElementById("date1").value;
+        	var dte_2 = document.getElementById("date2").value;
+        	var date1 = new Date(dte_1);
+        	var date2 = new Date(dte_2);
+        	var jour = diffdate(date1,date2);
+			var prix = document.getElementById("offre").options[document.getElementById("offre").selectedIndex].getAttribute("test1");
+			document.getElementById("prix").value = prix;
+			document.getElementById("prixtotal").value = prix * (jour+1);
+		}
+
         document.getElementById("date1").onchange = function() { 
         	var dte_1 = document.getElementById("date1").value;
         	var date1 = new Date(dte_1);

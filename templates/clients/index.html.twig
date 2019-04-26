@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title "Utilsateur-index" %}
+{% block title "Client-Acceuil" %}
 {% block loguer %}{{user.nom}}  {{user.prenom}}{% endblock %}
 
 {% block body %}
-<h1 class="header mt-4" style="text-align: center;">Gestion des Utilisateurs</h1>
+<h1 class="header mt-4" style="text-align: center;">LISTE DES CLIENTS</h1>
 
 <div class="container mt-6">
 		{% for message in app.flashes('success') %}

@@ -47,4 +47,18 @@ class ReservationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+     /**
+      * @return Reservation[] Returns an array of Offre Reservations
+      */
+    
+    public function findByOffre($value)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.offre = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

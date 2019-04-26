@@ -16,8 +16,8 @@
 						<div class="col-lg-9">
 							
 				            {% if location.etat != 'Terminer' %}
-								<a href="{{path('recep.location.facturer',{id:location.id})}}" class="btn btn-primary">
-					            Imprimer Facture
+								<a href="{{path('recep.location.facturer',{id:location.id})}}" class="btn btn-primary" onclick="return confirm('La location sera Terminer si vous la facturer maintenant vous pouvez cliquer sur imprimer pour une simple impression')">
+					            Facturer
 					            </a>
 				            {% endif %}
 							<a href="{{path('recep.location.imprimer',{id:location.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10); color: white;">
@@ -156,8 +156,8 @@
 										<div class="col-lg-9">
 											
 								            {% if location.etat != 'Terminer' %}
-												<a href="{{path('recep.location.facturer',{id:location.id})}}" class="btn btn-primary">
-									            Imprimer Facture
+												<a href="{{path('recep.location.facturer',{id:location.id})}}" class="btn btn-primary" onclick="return confirm('La location sera Terminer si vous la facturer maintenant vous pouvez cliquer sur imprimer pour une simple impression')">
+									           	Facturer
 									            </a>
 								            {% endif %}
 											<a href="{{path('recep.location.imprimer',{id:location.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10);color: white;">

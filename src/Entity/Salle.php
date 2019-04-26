@@ -38,6 +38,11 @@ class Salle
      */
     private $locations;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $caution;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -111,6 +116,18 @@ class Salle
                 $location->setSalle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCaution(): ?int
+    {
+        return $this->caution;
+    }
+
+    public function setCaution(?int $caution): self
+    {
+        $this->caution = $caution;
 
         return $this;
     }

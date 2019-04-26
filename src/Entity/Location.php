@@ -69,6 +69,11 @@ class Location
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $numero;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +195,18 @@ class Location
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNumero(): ?string
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(?string $numero): self
+    {
+        $this->numero = $numero;
 
         return $this;
     }

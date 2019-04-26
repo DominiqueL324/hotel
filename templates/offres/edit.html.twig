@@ -10,16 +10,9 @@
 			<div class="card-body">
 				{{ form_start(form) }}
 				<div class="row">
-					<div class="col-md-3" > {{ form_row(form.libelle) }} </div>
-					<div class="col-md-3"> {{ form_row(form.etage) }} </div>
-					<div class="col-md-3"> {{ form_row(form.porte) }} </div>
-					<div class="col-md-3"> {{ form_row(form.prix) }} </div>
-				</div>
-				
-				<div class="row">
-					<div class="col-md-4"> {{ form_row(form.clim) }} </div>
-					<div class="col-md-4"> {{ form_row(form.wifi) }} </div>
-					<div class="col-md-4"> {{ form_row(form.superficie) }} </div>
+					<div class="col-md-4" > {{ form_row(form.libelle) }} </div>
+					<div class="col-md-4"> {{ form_row(form.prix) }} </div>
+					<div class="col-md-4"> {{ form_row(form.quantite) }} </div>
 				</div>
 				<button class="btn btn-primary"> Modifier </button>
 

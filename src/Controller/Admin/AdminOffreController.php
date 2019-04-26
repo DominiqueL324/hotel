@@ -55,12 +55,8 @@
 		*/
 		public function etat():Response
 		{
-			$offresFree = $this->repositoryVar->findAllFree();
-			$offresBusy = $this->repositoryVar->findAllBusy();
-			return $this->render('offres/etat.html.twig',[
-				'offresFree'=> $offresFree,
-				'offresBusy'=> $offresBusy
-			]); 
+			$offres = $this->repositoryVar->findAll();
+			return $this->render('offres/etat.html.twig',compact('offres'));  
 		}
 
 		/**
@@ -113,8 +109,7 @@
 			$form->handleRequest($request);
 			if($form->isSubmitted() && $form->isValid())
 			{
-				$offre->setUser($this->repositoryUser->find(2));
-				$offre->setDispo(true);
+				$offre->setUser($this->getUser());
 				$this->em->persist($offre);
 				$this->em->flush();
 				$this->addFlash('success','Création effectuée avec succes');

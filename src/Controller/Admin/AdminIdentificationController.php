@@ -557,8 +557,8 @@
 						return $reservation;
 					}
 				}
-				return null;
 			}
+			return null;
 		}
 
 

@@ -15,6 +15,7 @@ class SalleType extends AbstractType
             ->add('type_salle')
             ->add('places')
             ->add('prix')
+            ->add('caution')
         ;
     }
 

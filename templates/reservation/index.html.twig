@@ -27,7 +27,6 @@
 		                    <th>Informations Client</th>
 							<th>Libellé</th>
 							<th>Porte</th>
-							<th>Niveau</th>
 							<th>Date debut</th>
 							<th>Date fin</th>
 							<th>Prix</th>
@@ -38,10 +37,9 @@
 	                  <tbody>
 	                    	{% for reservation in reservations %}
 						<tr>
-							<td> {{reservation.client.nom}} {{ reservation.client.nom}} </td>
+							<td> {{reservation.client.nom}} {{ reservation.client.prenom}} </td>
 							<td> {{reservation.offre.libelle}} </td>
 							<td> {{reservation.offre.porte}} </td>
-							<td> {{reservation.offre.etage}} </td>
 							<td> {{reservation.beginat|date("d/m/Y") }} </td>
 							<td> {{reservation.endat|date("d/m/Y") }} </td>
 							<td> {{reservation.prix }} </td>

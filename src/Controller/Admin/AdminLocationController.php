@@ -109,13 +109,15 @@
 			
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
-				$result = $this->checkIfIsBusy($request->get('id'));
-				if($result !=null){
-					$this->addFlash('erreur',"cette salle est pas occupée  pour le moment");
-					return $this->redirectToRoute('recep.location.etape2',['id'=>$request->get('id')]);
-				}
+				
 				if(null!==$request->get('date_debut') && null!==$request->get('date_fin') && null!==$request->get('motif') && null!==$request->get('caution') &&  is_numeric($request->get('cout_normal') ))
 					{
+						$debut = new \DateTime($request->get('date_debut'));
+						$result = $this->checkIfIsBusy($request->get('salleliste'),$debut);
+						if($result != null){
+							$this->addFlash('erreur',"cette salle est pas occupée  pour le moment");
+							return $this->redirectToRoute('recep.location.etape2',['id'=>$request->get('id')]);
+						}
 						if($request->get('remise')>10000&& $request->get('roles')!= "ROLE_ADMIN" )
 						{
 							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
@@ -125,11 +127,20 @@
 						$client = $this->repositoryClient->find($request->get('id'));
 						$salle = new Salle();
 						$salle = $this->repositorySalle->find($request->get('salleliste'));
-						$debut = new \DateTime($request->get('date_debut'));
 						$fin = new \DateTime($request->get('date_fin'));
 						$day = $debut->diff($fin);
 						$location = new location();
 
+						$Maxid = $this->repositoryVar->getMaxId();
+						$date = new \DateTime();
+						if(is_null($Maxid)){
+							$Maxid = 1;
+							$result1 ="CICM".date("m")."".$Maxid.date("y");
+						}else{
+							$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
+						}
+
+						$location->setNumero($result1);
 						$location->setRemise($request->get('remise'));
 						$location->setBeginAt(new \DateTime($request->get('date_debut')));
 						$location->setEndAt(new \DateTime($request->get('date_fin')));
@@ -156,8 +167,11 @@
 			}
 		}
 
-
-		public function new(Request $request):Response
+		/**
+		* @Route("/recep/location_new_client/create", name="recep.location_new_client.new")
+		* @return Response
+		*/
+		public function newClientLocation(Request $request):Response
 		{
 			
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
@@ -167,8 +181,14 @@
 					$this->addFlash('erreur',"cette salle est pas occupée  pour le moment");
 					return $this->redirectToRoute('recep.location.etape2',['id'=>$request->get('id')]);
 				}
-				if(null!==$request->get('date_debut') && null!==$request->get('date_fin') && null!==$request->get('motif') && null!==$request->get('caution') &&  is_numeric($request->get('cout_normal') ))
+				if(null!==$request->get('date_debut') && null!==$request->get('date_fin') && null!==$request->get('motif') && null!==$request->get('caution') &&  is_numeric($request->get('cout_normal')) && null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && null!==$request->get('nationalite') && null!==$request->get('paysresidence') && null!==$request->get('profession') && null!==$request->get('datenaissance') && null!==$request->get('datecni') && $request->get('sexe') !=="jondo"  && null!==$request->get('lieunaissance')  )
 					{
+						$debut = new \DateTime($request->get('date_debut'));
+						$result = $this->checkIfIsBusy($request->get('salleliste'),$debut);
+						if($result != null){
+							$this->addFlash('erreur',"cette salle est pas occupée  pour le moment");
+							return $this->redirectToRoute('recep.location.etape2',['id'=>$request->get('id')]);
+						}
 						if($request->get('remise')>10000&& $request->get('roles')!= "ROLE_ADMIN" )
 						{
 							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
@@ -200,8 +220,17 @@
 							$day = $debut->diff($fin);
 							$location = new location();
 
+						$Maxid = $this->repositoryVar->getMaxId();
+						$date = new \DateTime();
+						if(is_null($Maxid)){
+							$Maxid = 1;
+							$result1 ="CICM".date("m")."".$Maxid.date("y");
+						}else{
+							$result1 ="CICM".date("m")."".$Maxid['id']."".date("y");
+						}
+
+						$location->setNumero($result1);
 						$location->setRemise($request->get('remise'));
-						$location->setBeginAt(new \DateTime($request->get('date_debut')));
 						$location->setEndAt(new \DateTime($request->get('date_fin')));
 						$location->setEtat("En cours");
 						$location->setCaution($request->get('caution'));
@@ -243,13 +272,8 @@
 		*/
 		public function facturer(location $location):Response
 		{
-			$coutTotal = $location->getCout()+$location->getCoutExtra();
-			if($location->getAvance() < $coutTotal){
-				$this->addFlash('erreur',"Ce séjour n'est pas encore totalement payé");
-				return $this->redirectToRoute('recep.location.consult',['id'=>$location->getId()]);
-			}
+
 			$location->setEtat("Terminer");
-			$location->getOffre()->setDispo(true);
 			$this->em->flush();
 			$pdfOptions = new Options();
 	        $pdfOptions->set('defaultFont', 'Helvetica');
@@ -257,7 +281,7 @@
 	        // Instantiate Dompdf with our options
 	        $dompdf = new Dompdf($pdfOptions);
 	        // Retrieve the HTML generated in our twig file
-	        $html = $this->renderView('pdf/facturelocation.html.twig',['location'=>$location]);
+	        $html = $this->renderView('pdf/factureLocation.html.twig',['location'=>$location]);
 	        // Load HTML to Dompdf
 	        $dompdf->loadHtml($html);
 	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
@@ -265,7 +289,7 @@
 	        // Render the HTML as PDF
 	        $dompdf->render();
 	        // Output the generated PDF to Browser (force download)
-	        $dompdf->stream("facture.pdf", [
+	        $dompdf->stream("factureFinaleLocation.pdf", [
 	            "Attachment" => false
 	        ]);
 			//return $this->redirectToRoute('recep.location.index');
@@ -284,7 +308,7 @@
 	        // Instantiate Dompdf with our options
 	        $dompdf = new Dompdf($pdfOptions);
 	        // Retrieve the HTML generated in our twig file
-	        $html = $this->renderView('pdf/facturelocation.html.twig',['location'=>$location]);
+	        $html = $this->renderView('pdf/factureLocation.html.twig',['location'=>$location]);
 	        // Load HTML to Dompdf
 	        $dompdf->loadHtml($html);
 	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
@@ -292,23 +316,22 @@
 	        // Render the HTML as PDF
 	        $dompdf->render();
 	        // Output the generated PDF to Browser (force download)
-	        $dompdf->stream("facture.pdf", [
+	        $dompdf->stream("factureLocation.pdf", [
 	            "Attachment" => false
 	        ]);
 			return $this->redirectToRoute('recep.location.consult',['id'=>$location->getId()]);
 			//génération de la facture
 		}		
 
-		public function checkIfIsBusy($id)
+		public function checkIfIsBusy($id,\DateTime $debut): ?Location
 		{
-			$date = new \DateTime();
-			$locations= $this->repositoryVar->findBy(['salle'=>$id]);
+			$locations= $this->repositoryVar->findBySalle($id);
 			foreach ($locations as $location) {
-				if($location->getBeginAt() <= $date && $date<= $location->getEndAt()){
+				if($location->getBeginAt() <= $debut && $debut <= $location->getEndAt()){
 					return $location;
 				}
-				return null;
 			}
+			return null;
 		}
 
 	}

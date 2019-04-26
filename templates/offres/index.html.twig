@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title "Utilsateur-index" %}
+{% block title "Offre-Acceuil" %}
 {% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 
 {% block body %}
@@ -26,11 +26,7 @@
                   <thead>
                     <tr>
 	                    <th>Libellé</th>
-						<th>Etage</th>
-						<th>Porte</th>
-						<th>Superficie</th>
-						<th>Climatisée</th>
-						<th>Wifi</th>
+						<th>Quantité</th>
 						<th>Prix</th>
 						<th>Action</th>
                     </tr>
@@ -39,26 +35,7 @@
                     	{% for offre in offres %}
 					<tr>
 						<td> {{offre.libelle}} </td>
-						<td> {{offre.etage}} </td>
-						<td> {{offre.porte}} </td>
-						<td> {{offre.superficie}} </td>
-						{% if offre.clim == 0 %}
-					       <td> Climatisée </td>
-					    {% endif %} 
-						
-						{% if offre.clim == 1 %}
-					       <td> Non Climatisée </td>
-					    {% endif %} 
-
-					    {% if offre.wifi == 0 %}
-					       <td> Avec wifi </td>
-					    {% endif %} 
-						
-						{% if offre.wifi == 1 %}
-					       <td> Sans Wifi </td>
-					    {% endif %} 
-						
-						
+						<td> {{offre.quantite}} </td> 
 						<td> {{offre.prix}} </td>
 						<td>
 							<a href=" {{path('admin.offre.edit',{id:offre.id})}} "><i class="fas fa-fw fa-user-edit"></i></a>

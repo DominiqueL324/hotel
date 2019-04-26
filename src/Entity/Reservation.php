@@ -220,6 +220,7 @@ class Reservation
     public function setValide(?string $valide): self
     {
         $this->valide = $valide;
+        return $this;
     }
     public function getIdentification(): ?Identification
     {

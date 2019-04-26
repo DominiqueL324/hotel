@@ -71,10 +71,31 @@
 		* @Route("/recep/reservation/etape2/{id<\d+>}", name="recep.reservation.etape2")
 		* @return Response
 		*/
-		public function tmp(OffreRepository $repositoryOffre,$id):Response
+		public function oldClientRervStep1(Client $client ,OffreRepository $repositoryOffre):Response
 		{
-			$offre = $repositoryOffre->find($id);
-			return $this->render('reservation/new.html.twig',compact('offre')); 
+			$offres = $repositoryOffre->findAll();
+			return $this->render('reservation/new2.html.twig',['client'=>$client,
+			'offres'=>$offres]); 
+		}
+
+		/**
+		* @Route("/recep/reserv_new_client/etape2", name="recep.reservation_new_client.etape2")
+		* @return Response
+		*/
+		public function newClientReservStep2(OffreRepository $repositoryOffre):Response
+		{
+			$offres = $repositoryOffre->findAll();
+			return $this->render('reservation/newclient.html.twig',['offres'=>$offres]); 
+		}
+
+		/**
+		* @Route("/recep/reservation/etape1", name="recep.reservation.etape1")
+		* @return Response
+		*/
+		public function ReservStep1(ClientRepository $repositoryClient):Response
+		{
+			$clients = $repositoryClient->findAll();
+			return $this->render('reservation/new1.html.twig',compact('clients')); 
 		}
 
 		/**
@@ -113,25 +134,22 @@
 		*/
 		public function new(Request $request):Response
 		{
-			$reservation = new Reservation();
-			$client = new Client();
-			$client = $this->repositoryClient->findByCni($request->get('cni'));
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
-				if(null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
+				if(null!==$request->get('begin_at') && null!==$request->get('end_at') && null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
 					{
-						$listeIdent = $this->repositoryOffre->find($request->get('id_offre'))->getIdentifications();
+						$listeIdent = $this->repositoryOffre->find($request->get('offre'))->getIdentifications();
 						$date = new \DateTime($request->get('begin_at'));
 						foreach ($listeIdent as $identification) {
-							if($date == $identification->getArrivedAt()){
-								$this->addFlash('erreur','Cette offre ne sera pas disponible avant le'.$request->get('begin_at'));
-								return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('id_offre')]);
-							}
 							if($identification->getArrivedAt() <= $date && $date <= $identification->getLivedAt()){
 								$this->addFlash('erreur','Cette offre ne sera pas disponible durant cette péroide elle sera libre le '.$identification->getLivedAt()->format('d-M-Y'));
-								return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('id_offre')]);
+								return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
 							}
 						}
+						$reservation = new Reservation();
+						$client = new Client();
+						$client = $this->repositoryClient->findByCni($request->get('cni'));
+
 						if(is_null($client))
 						{
 							$client = new Client();
@@ -155,22 +173,22 @@
 						$reservation->setEndAt(new \DateTime($request->get('end_at')));
 						$reservation->setPrix($request->get('prixtotal'));
 						$reservation->setAvance($request->get('avance'));
-						
-						$reservation->setOffre($this->repositoryOffre->find($request->get('id_offre')));
+						$reservation->setOffre($this->repositoryOffre->find($request->get('offre')));
 						$reservation->setUser($this->getUser());
-						$reservation->setEtat("En cours");
+						$reservation->setEtat("");
 						$this->em->persist($reservation);
 						$this->em->flush();
+						$this->addFlash('success','Opération éffectuée avec succes');
 						return $this->redirectToRoute('recep.reservation.index');
 					}else
 					{
-						$offre = $this->repositoryOffre->find($request->get('id_offre'));
 						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
-						return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('id_offre')]);
+						return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
 					}
-
+			}else{
+				$this->addFlash('erreur','Formulair non reconnus');
+				return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
 			}
-			
 		}
 
 		/**
@@ -213,4 +231,88 @@
 				}		
 			}		
 		}
+
+		/**
+		* @Route("/recep/reservation_old_client/create", name="recep.reservation_old_client.new")
+		* @return Response
+		*/
+		public function newOldClient(Request $request):Response
+		{
+			if($this->isCsrfTokenValid('add',$request->get('_token')))
+			{
+				if(null!==$request->get('begin_at') && null!==$request->get('end_at') && null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
+					{
+						$date = new \DateTime($request->get('begin_at'));
+						$disp = $this->checkIfIsBusyReservation($request->get('offre'),$date);
+						if(null != $disp )
+						{
+							$this->addFlash('erreur','Cette offre est déjà réservée durant cette période');
+							return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
+						}
+						$disp = $this->checkIfIsBusyIdentification($request->get('offre'),$date);
+						if($disp != null)
+						{
+							$this->addFlash('erreur','Cette offre ne sera occupée durant cette période');
+							return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
+						}
+						$reservation = new Reservation();
+						$client = new Client();
+						$client = $this->repositoryClient->findByCni($request->get('cni'));
+						if($request->get('avance')==0){
+							$reservation->setValide("non");	
+						}else{
+							$reservation->setValide("oui");	
+						}
+						$reservation->setClient($client);
+						$reservation->setBeginAt(new \DateTime($request->get('begin_at')));
+						$reservation->setEndAt(new \DateTime($request->get('end_at')));
+						$reservation->setPrix($request->get('prixtotal'));
+						$reservation->setAvance($request->get('avance'));
+						$reservation->setOffre($this->repositoryOffre->find($request->get('offre')));
+						$reservation->setUser($this->getUser());
+						$reservation->setEtat("");
+						$this->em->persist($reservation);
+						$this->em->flush();
+						$this->addFlash('success','Opération éffectuée avec succes');
+						return $this->redirectToRoute('recep.reservation.index');
+					}else
+					{
+						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
+						return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
+					}
+			}else{
+				$this->addFlash('erreur','Formulair non reconnus');
+				return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
+			}
+		}
+
+		public function checkIfIsBusyReservation($id,\DateTime $debut): ?Reservation
+		{
+			$reservations= $this->repositoryVar->findByOffre($id);
+			foreach ($reservations as $reservation) 
+			{
+				if($reservation->getBeginAt() <= $debut && $debut <= $reservation->getEndAt()){
+					if($reservation->getValide()=="non"){
+						return $reservation;
+					}
+					
+				}
+			}
+			return null;
+		}
+
+		public function checkIfIsBusyIdentification($id,\DateTime $debut): ?Reservation
+		{
+			$listeIdent = $this->repositoryOffre->find($id)->getIdentifications();
+			foreach ($listeIdent as $identification) 
+			{
+				if($identification->getArrivedAt() <= $date && $date <= $identification->getLivedAt())
+				{
+					return $identification;
+				}
+			}
+			return null;
+		}
+
+
 	}

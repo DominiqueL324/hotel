@@ -80,7 +80,7 @@
 									<label >Type de salle</label>
 									<select id="salle" name="salleliste" class="form-control">
 										{% for salle in salles %}
-										<option value="{{salle.id}}" test1 ="{{salle.places}} " test2 ="{{salle.prix}}"> {{salle.typesalle}}  {{salle.places}}</option>
+										<option value="{{salle.id}}" test1 ="{{salle.places}} " test2 ="{{salle.prix}}" test3={{salle.caution}}> {{salle.typesalle}}  {{salle.places}}</option>
 										{% endfor %}
 									</select>
 								</div>
@@ -180,6 +180,8 @@
 		document.getElementById("salle").onchange = function(){
 			var place = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test1");
 			var prix = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test2");
+			var caution = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test3");
+			document.getElementById("caution1").value = caution;
 			document.getElementById("place").value = place;
 			document.getElementById("prix").value = prix;
 		}
