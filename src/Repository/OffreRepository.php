@@ -54,7 +54,7 @@ class OffreRepository extends ServiceEntityRepository
     public function findAllFree() : array
     {
         return $this->createQueryBuilder('o')
-                    ->where('o.dispo = true')
+                    ->andWhere('o.quantite > 0')
                     ->getQuery()
                     ->getResult();
     }
@@ -62,7 +62,7 @@ class OffreRepository extends ServiceEntityRepository
      public function findAllBusy()
     {
          return $this->createQueryBuilder('o')
-                    ->where('o.dispo = false')
+                    ->andWhere('o.dispo = false')
                     ->getQuery()
                     ->getResult();
     }

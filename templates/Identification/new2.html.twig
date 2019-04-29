@@ -73,7 +73,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">N° de chambre *</label>
-									<input name="room" type="text" value=" {{reservation.offre.porte}} " class="form-control" readonly="readonly">
+									<input name="room" type="text" value=" {{reservation.offre.libelle}} " class="form-control" readonly="readonly">
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -127,7 +127,13 @@
 						</div>
 
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prix par nuité</label>
+									<input type="number" class="form-control" id="prix_nuite" name="prix_nuite" value="{{reservation.offre.prix}}" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Type de client *</label>
 									<select name="type_client" id="type_client"  class="form-control">
@@ -137,13 +143,13 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Remise Ordinaire (%)</label>
-									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control" value="{{reservation.client.remise}}" readonly="readonly">
+									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control"  readonly="readonly">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Remise accordée (%)</label>
 									<input name="remise" id="remise_accordee" value="0" type="number" class="form-control" required="required" >
@@ -201,19 +207,39 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Nombre de nuitées</label>
-									<input name="nuite" type="number" class="form-control" value="0" required="required" >
+									<input name="nuite" type="number" id="nuite" class="form-control" value="0" required="required" >
 								</div>
 							</div>
-²							<div class="col-md-3">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Date de Arrivée</label>
 									<input name="date_arrivee" id="date1" type="date" class="form-control" required="required" >
 								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group">
+								<div class="form-group" id="date_end" style="display: none;">
 									<label for="exampleInputEmail1">Date de départ</label>
-									<input name="date_depart" id="date2" type="date" style="display: none;" class="form-control" required="required">
+									<input name="date_end" id="date_end1" type="text"  class="form-control" readonly="readonly" >
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group" id="cout_total_normal" style="display: none;">
+									<label for="exampleInputEmail1">Cout Total Normal</label>
+									<input name="cout_total_normal" id="cout_total_normal1" type="number"  class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group" id="cout_total_remise" style="display: none;">
+									<label for="exampleInputEmail1">Remise nette</label>
+									<input name="cout_total_remise" id="cout_total_remise1" type="number"  class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group" id="net_payer" style="display: none;">
+									<label for="exampleInputEmail1">Net à payer</label>
+									<input name="net_payer" id="net_payer1" type="number"  class="form-control" readonly="readonly">
 								</div>
 							</div>
 						</div>
@@ -255,61 +281,43 @@
         	var date1 = new Date(dte_1);
         	var date = new Date();
         	var actuel = diffdate(date,date1);
-        	if((actuel + 1) >= 1){
-        		document.getElementById("date2").style.display = "inline";
-        		document.getElementById("errorMsg").style.display = "none";
-        	}else{
-        		document.getElementById("errorMsg").style.display = "inline";
-        		document.getElementById("valider").style.display = "none";
-        		document.getElementById("date2").style.display = "none";
-        	}
-        }
+        	var date3 = new Date(); 
+        	var remise = document.getElementById("remise_accordee").value;
+        	var nuite = document.getElementById("nuite").value;
+        	var prix = document.getElementById("prix_nuite").value;
+        	date3.setDate(date1.getDate()+(nuite-1));
 
-        document.getElementById("date2").onchange = function() { 
-        	var dte_1 = document.getElementById("date1").value;
-        	var dte_2 = document.getElementById("date2").value;
-        	var date1 = new Date(dte_1);
-        	var date2 = new Date(dte_2);
-        	var jour = diffdate(date1,date2);
-        	if((jour + 1) >= 1){
+        	var prix = document.getElementById("prix_nuite").value;
+        	var prix_total_normal = prix * nuite;
+        	var prix_avec_remise = (remise*prix_total_normal)/100;
+        	if((actuel + 1) >= 1){
+        		document.getElementById("cout_total_normal1").value = prix_total_normal ;
+        		document.getElementById("cout_total_remise1").value = prix_avec_remise;
+        		document.getElementById("net_payer1").value = prix_total_normal-prix_avec_remise;
+        		document.getElementById("date_end1").value = date3.toLocaleDateString();
+
+        		document.getElementById("cout_total_remise").style.display = "inline";
+        		document.getElementById("net_payer").style.display = "inline";
+        		document.getElementById("cout_total_normal").style.display = "inline";
+        		document.getElementById("date_end").style.display = "inline";
         		document.getElementById("valider").style.display = "inline";
         		document.getElementById("errorMsg").style.display = "none";
         	}else{
+        		document.getElementById("cout_total_remise").style.display = "none";
+        		document.getElementById("net_payer").style.display = "none";
+        		document.getElementById("cout_total_normal").style.display = "none";
         		document.getElementById("valider").style.display = "none";
         		document.getElementById("errorMsg").style.display = "inline";
         	}
-        } 
-
-        document.getElementById("remise_accordee").onkeyup = function(){
-        	var val = document.getElementById("remise_accordee").value;
-        	var val1 = document.getElementById("remise_ordinaire").value;
-        	if(document.getElementById("roles").value != "ROLE_ADMIN"){
-        		if(val > val1 ){
-        			document.getElementById("erreurRemise").style.display = "inline";
-        			document.getElementById("valider").style.display = "none";
-        		}else
-        		{
-        			document.getElementById("erreurRemise").style.display = "none";
-        			document.getElementById("valider").style.display = "inline";
-        		}
-        	}
-        	
-        } 
-         document.getElementById("type_client").onchange = function(){
-        	var val = document.getElementById("type_client").value;
-        	if(val == "client"){
-        		document.getElementById("remise_ordinaire").value = 5;
-        		document.getElementById("erreurType").style.display = "none";
-        	}else if(val == "religieux"){
-        		document.getElementById("remise_ordinaire").value = 10;
-        		document.getElementById("erreurType").style.display = "none";
-        	}
-        	else{
-        		document.getElementById("remise_ordinaire").value = 0;
-        		document.getElementById("valider").style.display = "none";
-        		document.getElementById("erreurType").style.display = "inline";
-        	}
-        	
         }
+        document.getElementById("type_client").onchange = function(){
+        	if(document.getElementById("type_client").value == "client"){
+        		alert("ok");
+        		document.getElementById("remise_ordinaire").value = 5;
+        	}else{
+        		document.getElementById("remise_ordinaire").value = 10;
+        	}
+        	
+        }  
     </script>
 {% endblock %}

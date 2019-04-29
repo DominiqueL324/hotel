@@ -15,6 +15,7 @@ class OffreType extends AbstractType
             ->add('libelle')
             ->add('prix')
             ->add('quantite')
+            ->add('total')
         ;
     }
 

@@ -138,17 +138,25 @@
 			{
 				if(null!==$request->get('begin_at') && null!==$request->get('end_at') && null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
 					{
-						$listeIdent = $this->repositoryOffre->find($request->get('offre'))->getIdentifications();
+						//control disponibilité
 						$date = new \DateTime($request->get('begin_at'));
-						foreach ($listeIdent as $identification) {
-							if($identification->getArrivedAt() <= $date && $date <= $identification->getLivedAt()){
-								$this->addFlash('erreur','Cette offre ne sera pas disponible durant cette péroide elle sera libre le '.$identification->getLivedAt()->format('d-M-Y'));
-								return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
-							}
+						$disp = $this->checkIfIsBusyReservation($request->get('offre'),$date);
+						if(null != $disp )
+						{
+							$this->addFlash('erreur','Cette offre est déjà réservée durant cette période');
+							return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
 						}
+						$disp = $this->checkIfIsBusyIdentification($request->get('offre'),$date);
+						if($disp != null)
+						{
+							$this->addFlash('erreur','Cette offre ne sera occupée durant cette période');
+							return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
+						}
+						//création des objets
 						$reservation = new Reservation();
 						$client = new Client();
 						$client = $this->repositoryClient->findByCni($request->get('cni'));
+						$offre = $this->repositoryOffre->find($request->get('offre'));
 
 						if(is_null($client))
 						{
@@ -162,18 +170,25 @@
 							$this->em->persist($client);
 							$this->em->flush();
 						}
+						//control validité
 						if($request->get('avance')==0){
 							$reservation->setValide("non");	
 						}else{
-							$reservation->setValide("oui");	
+							$reservation->setValide("oui");
+							if($offre->getQuantite()<=0){
+								$offre->setQuantite(0);
+							}else{
+								$offre->setQuantite($offre->getQuantite()-1);	
+							}
+							$this->em->flush();	
 						}
-
+						//enrgistrement des données
 						$reservation->setClient($client);
 						$reservation->setBeginAt(new \DateTime($request->get('begin_at')));
 						$reservation->setEndAt(new \DateTime($request->get('end_at')));
 						$reservation->setPrix($request->get('prixtotal'));
 						$reservation->setAvance($request->get('avance'));
-						$reservation->setOffre($this->repositoryOffre->find($request->get('offre')));
+						$reservation->setOffre($offre);
 						$reservation->setUser($this->getUser());
 						$reservation->setEtat("");
 						$this->em->persist($reservation);
@@ -242,6 +257,7 @@
 			{
 				if(null!==$request->get('begin_at') && null!==$request->get('end_at') && null!==$request->get('nom') && null!==$request->get('prenom') && null!==$request->get('cni') && is_numeric($request->get('telephone')) && is_numeric($request->get('prix')))
 					{
+						//control disponibilité
 						$date = new \DateTime($request->get('begin_at'));
 						$disp = $this->checkIfIsBusyReservation($request->get('offre'),$date);
 						if(null != $disp )
@@ -255,14 +271,24 @@
 							$this->addFlash('erreur','Cette offre ne sera occupée durant cette période');
 							return $this->redirectToRoute('recep.reservation.etape2',['id'=>$request->get('offre')]);
 						}
+						//creation des objet
 						$reservation = new Reservation();
 						$client = new Client();
 						$client = $this->repositoryClient->findByCni($request->get('cni'));
+						$offre = $this->repositoryOffre->find($request->get('offre'));
+						//controle validité
 						if($request->get('avance')==0){
 							$reservation->setValide("non");	
 						}else{
 							$reservation->setValide("oui");	
+							if($offre->getQuantite()<=0){
+								$offre->setQuantite(0);
+							}else{
+								$offre->setQuantite($offre->getQuantite()-1);	
+							}
+							$this->em->flush();
 						}
+						//enregistrement des donnees
 						$reservation->setClient($client);
 						$reservation->setBeginAt(new \DateTime($request->get('begin_at')));
 						$reservation->setEndAt(new \DateTime($request->get('end_at')));
@@ -291,8 +317,10 @@
 			$reservations= $this->repositoryVar->findByOffre($id);
 			foreach ($reservations as $reservation) 
 			{
-				if($reservation->getBeginAt() <= $debut && $debut <= $reservation->getEndAt()){
-					if($reservation->getValide()=="non"){
+				if($reservation->getBeginAt() <= $debut && $debut <= $reservation->getEndAt())
+				{
+					if($reservation->getValide()=="oui")
+					{
 						return $reservation;
 					}
 					

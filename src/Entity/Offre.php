@@ -51,6 +51,11 @@ class Offre
      */
     private $quantite;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $total;
+
     public function __construct()
     {
         $this->identifications = new ArrayCollection();
@@ -147,6 +152,18 @@ class Offre
     public function setQuantite(?int $quantite): self
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    public function getTotal(): ?int
+    {
+        return $this->total;
+    }
+
+    public function setTotal(int $total): self
+    {
+        $this->total = $total;
 
         return $this;
     }

@@ -75,77 +75,56 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">N° de chambre *</label>
-									<select name="offre" class="form-control">
+									<select name="offre" id="offre" class="form-control">
 										{% for offre in offres %}
-										<option value=" {{offre.id}} ">Porte : {{offre.porte}} Etage : {{offre.etage}}</option>
+										<option value=" {{offre.id}} " test1={{offre.prix}}> {{offre.libelle}}</option>
 										{% endfor %}
 									</select>
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="exampleInputEmail1">Nationalité</label>
-									<input name="nationalite" type="text" class="form-control" required="required" value=" {{client.nationalite}} " placeholder="Nationalité du client">
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="exampleInputEmail1">Pays résidence</label>
-									<input name="paysresidence" type="text" class="form-control" required="required" value=" {{client.paysresidence}} " placeholder="Pays de résidence du client">
-								</div>
-							</div>
+
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="profession">Profession </label>
 									<input name="profession" type="text" class="form-control" required="required" value=" {{client.profession}} " placeholder="Profession du client">
 								</div>
 							</div>
-							
-						</div>
-
-						<div class="row">
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="exampleInputEmail1">Date Naissance</label>
-									<input name="datenaissance" value=" {{client.bornat | date('d/m/Y')}} " type="date" class="form-control" required="required">
-								</div>
-							</div>
-							
-							<div class="col-md-3">
-								<div class="form-group">
-									<label for="exampleInputEmail1">Lieu Naissance</label>
-									<input name="lieunaissance" type="text" class="form-control" required="required" value=" {{client.lieudenaissance}} " placeholder="Lieu de Naissance du client">
-								</div>
-							</div>
-							
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="profession">Date CNI/Passeport  *</label>
 									<input name="datecni" type="date"  value=" {{client.cnimadeat|date('d/m/Y')}} " class="form-control" required="required" placeholder="Profession du client">
 								</div>
 							</div>
+
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Immatriculation </label>
 									<input name="immatriculation" type="text" class="form-control" placeholder="Immatriculation du véhicule">
 								</div>
 							</div>
+							
 						</div>
 
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prix par nuité</label>
+									<input type="number" class="form-control" id="prix_nuite" name="prix_nuite"  readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Type de client</label>
 									<input type="text" class="form-control" name="type_client" value="{{client.type}}" readonly="readonly">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Remise Ordinaire (%)</label>
 									<input name="remise_ordinaire" id="remise_ordinaire" type="number" class="form-control" value="{{client.remise}}" readonly="readonly">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Remise accordée (%)</label>
 									<input name="remise_accordee" id="remise_accordee" value="0" type="number" class="form-control" required="required" >
@@ -202,7 +181,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Nombre de nuitées</label>
-									<input name="nuite" type="number" class="form-control" value="0" required="required" >
+									<input name="nuite" id="nuite" type="number" class="form-control" value="0" required="required" >
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -213,9 +192,29 @@
 							</div>
 							<input type="hidden" value="{{app.user.roles.0}}" name="roles" id="roles">
 							<div class="col-md-3">
-								<div class="form-group">
+								<div class="form-group" id="date_end" style="display: none;">
 									<label for="exampleInputEmail1">Date de départ</label>
-									<input name="date_depart" id="date2" type="date" style="display: none;" class="form-control" required="required">
+									<input name="date_end" id="date_end1" type="text"  class="form-control" readonly="readonly" >
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group" id="cout_total_normal" style="display: none;">
+									<label for="exampleInputEmail1">Cout Total Normal</label>
+									<input name="cout_total_normal" id="cout_total_normal1" type="number"  class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group" id="cout_total_remise" style="display: none;">
+									<label for="exampleInputEmail1">Remise nette</label>
+									<input name="cout_total_remise" id="cout_total_remise1" type="number"  class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group" id="net_payer" style="display: none;">
+									<label for="exampleInputEmail1">Net à payer</label>
+									<input name="net_payer" id="net_payer1" type="number"  class="form-control" readonly="readonly">
 								</div>
 							</div>
 						</div>
@@ -253,31 +252,41 @@
 			var jour = d2.getTime() - d1.getTime();
 			return Math.ceil(jour/(1000*60*60*24));
 		}
+		document.getElementById("offre").onchange = function(){
+			var prix = document.getElementById("offre").options[document.getElementById("offre").selectedIndex].getAttribute("test1");
+			document.getElementById("prix_nuite").value = prix;
+			
+		}
         document.getElementById("date1").onchange = function() { 
         	var dte_1 = document.getElementById("date1").value;
         	var date1 = new Date(dte_1);
         	var date = new Date();
         	var actuel = diffdate(date,date1);
-        	if((actuel + 1) >= 1){
-        		document.getElementById("date2").style.display = "inline";
-        		document.getElementById("errorMsg").style.display = "none";
-        	}else{
-        		document.getElementById("errorMsg").style.display = "inline";
-        		document.getElementById("valider").style.display = "none";
-        		document.getElementById("date2").style.display = "none";
-        	}
-        }
+        	var date3 = new Date(); 
+        	var remise = document.getElementById("remise_accordee").value;
+        	var nuite = document.getElementById("nuite").value;
+        	var prix = document.getElementById("prix_nuite").value;
+        	date3.setDate(date1.getDate()+(nuite-1));
 
-        document.getElementById("date2").onchange = function() { 
-        	var dte_1 = document.getElementById("date1").value;
-        	var dte_2 = document.getElementById("date2").value;
-        	var date1 = new Date(dte_1);
-        	var date2 = new Date(dte_2);
-        	var jour = diffdate(date1,date2);
-        	if((jour + 1) >= 1){
+        	var prix = document.getElementById("prix_nuite").value;
+        	var prix_total_normal = prix * nuite;
+        	var prix_avec_remise = (remise*prix_total_normal)/100;
+        	if((actuel + 1) >= 1){
+        		document.getElementById("cout_total_normal1").value = prix_total_normal ;
+        		document.getElementById("cout_total_remise1").value = prix_avec_remise;
+        		document.getElementById("net_payer1").value = prix_total_normal-prix_avec_remise;
+        		document.getElementById("date_end1").value = date3.toLocaleDateString();
+
+        		document.getElementById("cout_total_remise").style.display = "inline";
+        		document.getElementById("net_payer").style.display = "inline";
+        		document.getElementById("cout_total_normal").style.display = "inline";
+        		document.getElementById("date_end").style.display = "inline";
         		document.getElementById("valider").style.display = "inline";
         		document.getElementById("errorMsg").style.display = "none";
         	}else{
+        		document.getElementById("cout_total_remise").style.display = "none";
+        		document.getElementById("net_payer").style.display = "none";
+        		document.getElementById("cout_total_normal").style.display = "none";
         		document.getElementById("valider").style.display = "none";
         		document.getElementById("errorMsg").style.display = "inline";
         	}
