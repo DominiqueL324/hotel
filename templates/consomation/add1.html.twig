@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Repas étape 1" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Liste des clients </h1>
+
+<div class="container mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		<div class="card">
+			<h3>Liste de clients</h3>
+		<br>
+		<div class="card-body">
+			  <div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		            <thead>
+						<tr>
+							<th>Nom</th>
+							<th>Prenom</th>
+							<th>CNI</th>
+							<th>Telephone</th>
+							<th>Valider</th>
+						</tr>
+					</thead>
+			<tbody>
+				{% for client in clients %}
+					<tr>
+						<td> {{client.nom}} </td>
+						<td> {{client.prenom}} </td>
+						<td> {{client.cni}} </td>
+						<td> {{client.telephone}} </td>
+						<td>
+							<a href=" {{path('recep.consomation.etape2',{id:client.id})}} "><i class="fas fa-fw fa-user-check"></i></a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+</div>
+</div>
+	
+	
+{% endblock %}

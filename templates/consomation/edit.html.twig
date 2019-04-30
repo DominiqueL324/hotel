@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+{% block title "Repas étape 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+<div class="row">
+	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
+			On ne peut plus servir des repas de cette catégorie à cette heure
+	</div>
+</div>
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				   <div class="row">
+						<h2>Etape 2 (Repas)</h2>
+						<div class="col-lg-3">
+						
+						</div>
+						<div class="col-lg-4">
+							<a href="{{path('recep.location.etape1')}}" class="btn btn-danger btn-icon-split" onclick="return confirm('Toutes les données saisies seront perdus')">
+				                    <span class="icon text-white-50">
+				                      <i class="fas fa-arrow-left"></i>
+				                    </span>
+				                    <span class="text">Etape 1</span>
+				                 </a>
+								<a href="#" class="btn btn-primary btn-icon-split">
+				                    <span class="icon text-white-50">
+				                      <i class="fas fa-flag"></i>
+				                    </span>
+				                    <span class="text">Etape 2</span>
+				                </a>
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+				<h4>Informations du client</h4>
+				<hr>
+			<form class=" form" method="post" action=" {{path('recep.repas.new')}} ">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nom</label>
+									<input name="nom" value=" {{client.nom}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prenom</label>
+									<input name="prenom" type="text" value=" {{client.prenom}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<input name="nationalite" type="text" value=" {{client.telephone}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<input name="cni" type="text" value=" {{client.cni}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+						</div>
+						
+						<h4>Informations du repas</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Type de repas</label>
+									<select id="repa" name="repaliste" class="form-control">
+										{% for repa in repas %}
+										<option value="{{repa.id}}" test1 ="{{repa.prix}} " test2 ="{{repa.heure}}" test3 = "{{repa.type}} "> {{repa.type}} </option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Prix :</label>
+									<input name="prix"  id="prix" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Heures</label>
+									<input name="heure" type="text" class="form-control" id="heure" readonly="readonly">
+									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
+									<input type="hidden" name="id" value="{{client.id}}">
+								</div>
+							</div>
+
+						</div>
+						</div>
+						<div class="card-footer">
+							<div class="row">
+								<div class="col-lg-4">
+									<input type="submit" id="valider" class=" btn btn-success" value="Valider" name="">
+										<a href="#" class="btn btn-warning btn-icon-split">
+						                    <span class="icon text-white-50">
+						                      <i class="fas fa-flag"></i>
+						                    </span>
+						                    <span class="text">Annuler</span>
+						                </a>
+								</div>
+							</div>
+						</div>
+					</form>
+			</div>
+		
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript">
+		function diffdate(d1,d2){
+			var jour = d2.getTime() - d1.getTime();
+			return Math.ceil(jour/(1000*60*60*24));
+		}
+		document.getElementById("repa").onchange = function(){
+			var prix = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test1");
+			var heure = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test2");
+			var type = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test3");
+			document.getElementById("heure").value = heure;
+			document.getElementById("prix").value = prix;
+		}  
+    </script>
+{% endblock %}

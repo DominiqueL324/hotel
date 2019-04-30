@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Gestion des consomations" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Gestion des consomations</h1>
+
+<div class="container mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		<div class="card">
+			<div class="card-header">
+				<div class="text-right">
+					 <a class="btn btn-primary" href="{{path('recep.consomation.etape1')}}"> Ajouter  </a>
+				</div>
+			</div>
+		<br>
+		<div class="card-body">
+			  <div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		            <thead>
+						<tr>
+							<th>Type de repas</th>
+							<th>Prix du consomations</th>
+							<th>Client</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for consomation in consomations %}
+							<tr>
+								<td> {{consomation.repas.type}} </td>
+								<td> {{consomation.cout}} </td>
+								<td> {{consomation.client.nom}} {{consomation.client.prenom}} </td>
+								<td>  </td>
+								<td>
+									<a href=" {{path('recep.consomation.edit',{id:consomation.id})}} "><i class="fas fa-fw fa-user-edit"></i></a>
+									<a href=" {{path('recep.consomation.delete',{id:consomation.id}) }}" onclick="return confirm('Voulez vous vraiment continuer??')"><i class="fas fa-fw fa-trash"></i></a>
+									
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+		   </div>
+	</div>
+
+	</div>
+	
+	
+{% endblock %}

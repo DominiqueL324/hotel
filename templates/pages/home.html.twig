@@ -121,11 +121,11 @@
 	</div>	
 
 	<div class="row">
-		<div class="col-lg-4">
-			<a href="#">
+		<div class="col-lg-3">
+			<a href=" {{path('admin.repas.index')}} ">
 				<div class="card">
 				  <div class="card-header">
-				    <center>Stock</center>
+				    <center>Repas</center>
 				  </div>
 				  <div class="card-body">
 				    <center><img width="150" height="150"  src=" {{asset('stock.png')}} " alt=""></center>
@@ -133,7 +133,19 @@
 				</div>
 			</a>
 		</div>
-		<div class="col-lg-4">
+		<div class="col-lg-3">
+			<a href="{{path('recep.consomation.index')}}">
+				<div class="card">
+				  <div class="card-header">
+				    <center>Consomation</center>
+				  </div>
+				  <div class="card-body">
+				    <center><img width="150" height="150"  src=" {{asset('stock.png')}} " alt=""></center>
+				  </div>
+				</div>
+			</a>
+		</div>
+		<div class="col-lg-3">
 			<a href="{{path('recep.reservation.index')}}">
 				<div class="card">
 				  <div class="card-header">
@@ -145,7 +157,7 @@
 				</div>
 			</a>
 		</div>
-		<div class="col-lg-4">
+		<div class="col-lg-3">
 			<a href="{{path('recep.location.index')}}">
 				<div class="card">
 				  <div class="card-header">

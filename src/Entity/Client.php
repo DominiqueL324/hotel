@@ -112,11 +112,23 @@ class Client
      */
     private $locations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Repas", mappedBy="client")
+     */
+    private $repas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Consomation", mappedBy="client")
+     */
+    private $consomations;
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
         $this->identifications = new ArrayCollection();
         $this->locations = new ArrayCollection();
+        $this->repas = new ArrayCollection();
+        $this->consomations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -388,6 +400,68 @@ class Client
             // set the owning side to null (unless already changed)
             if ($location->getClient() === $this) {
                 $location->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Repas[]
+     */
+    public function getRepas(): Collection
+    {
+        return $this->repas;
+    }
+
+    public function addRepa(Repas $repa): self
+    {
+        if (!$this->repas->contains($repa)) {
+            $this->repas[] = $repa;
+            $repa->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRepa(Repas $repa): self
+    {
+        if ($this->repas->contains($repa)) {
+            $this->repas->removeElement($repa);
+            // set the owning side to null (unless already changed)
+            if ($repa->getClient() === $this) {
+                $repa->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Consomation[]
+     */
+    public function getConsomations(): Collection
+    {
+        return $this->consomations;
+    }
+
+    public function addConsomation(Consomation $consomation): self
+    {
+        if (!$this->consomations->contains($consomation)) {
+            $this->consomations[] = $consomation;
+            $consomation->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsomation(Consomation $consomation): self
+    {
+        if ($this->consomations->contains($consomation)) {
+            $this->consomations->removeElement($consomation);
+            // set the owning side to null (unless already changed)
+            if ($consomation->getClient() === $this) {
+                $consomation->setClient(null);
             }
         }
 

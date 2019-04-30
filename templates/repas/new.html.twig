@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title "Enregistrement de Repas" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+
+	<div class="container mt-4">
+		<div class="card" style="padding-left: 2; padding-right: 2;padding-bottom: 2">
+			<div class="card-header">
+				    <center><h2>Ajouter un Repas</h2></center>
+			</div>
+			<div class="card-body">
+				{{ form_start(form) }}
+				<div class="row">
+					<div class="col-md-4" > {{ form_row(form.type) }} </div>
+					<div class="col-md-4"> {{ form_row(form.heure) }} </div>
+					<div class="col-md-4"> {{ form_row(form.prix) }} </div>
+				</div>
+				<div class="row">
+				<button class="btn btn-primary"> Enregistrer </button> 
+				{{ form_end(form) }}
+				<a href=" {{path('home')}} " class="btn btn-danger">Annuler</a>
+				</div>
+		</div>
+		
+	</div>
+{% endblock %}

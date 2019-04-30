@@ -294,7 +294,7 @@
 						
 
 						$identification->setClient($client);
-						$identification->setCout(0.0);
+						$identification->setCout($request->get('net_payer'));
 						$identification->setRemise($request->get('remise_accordee'));
 						$identification->setUser($this->repositoryUser->find(2));
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
@@ -550,6 +550,7 @@
 							return $this->redirectToRoute('recep.new_client_reserv');
 						}
 						$identification->setRemise($request->get('remise_accordee'));
+						$identification->setCout($request->get(''));
 						$identification->setUser($this->getUser());
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));
