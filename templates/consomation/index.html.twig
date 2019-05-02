@@ -36,10 +36,13 @@
 								<td> {{consomation.repas.type}} </td>
 								<td> {{consomation.cout}} </td>
 								<td> {{consomation.client.nom}} {{consomation.client.prenom}} </td>
-								<td>  </td>
 								<td>
-									<a href=" {{path('recep.consomation.edit',{id:consomation.id})}} "><i class="fas fa-fw fa-user-edit"></i></a>
+									<a href=" {{path('recep.consomation.editLauncher',{id:consomation.id})}} "><i class="fas fa-fw fa-user-edit"></i></a>
 									<a href=" {{path('recep.consomation.delete',{id:consomation.id}) }}" onclick="return confirm('Voulez vous vraiment continuer??')"><i class="fas fa-fw fa-trash"></i></a>
+									<a href="{{path('recep.consomation.consult',{id:consomation.id})}}">
+								          <i class="fas fa-fw fa-address-card"></i>
+								          <span></span>
+								        </a>
 									
 								</td>
 							</tr>

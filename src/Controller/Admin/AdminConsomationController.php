@@ -88,6 +88,26 @@
 		{
 			$repas = $this->repositoryRepas->findAll();
 			return $this->render('consomation/add2.html.twig',['repas'=>$repas,'client'=>$client]); 
+		}
+
+
+		/**
+		* @Route("/recep/consomation/editLauncher/{id<\d+>}", name="recep.consomation.editLauncher")
+		* @return Response
+		*/
+		public function editLauncher(Consomation $consomation):Response
+		{
+			$repas = $this->repositoryRepas->findAll();
+			return $this->render('consomation/edit.html.twig',['repas'=>$repas,'consomation'=>$consomation]); 
+		}
+
+		/**
+		* @Route("/recep/consomation/consult/{id<\d+>}", name="recep.consomation.consult")
+		* @return Response
+		*/
+		public function consult(Consomation $consomation):Response
+		{
+			return $this->render('consomation/consult.html.twig',['consomation'=>$consomation]); 
 		}	
 
 		/**
@@ -107,7 +127,7 @@
 						$consomation = new consomation();
 
 						$consomation->setRepas($repas);
-						$consomation->setCout($request->get('cout'));
+						$consomation->setCout($repas->getPrix());
 						$consomation->setCLient($client);
 						$consomation->setMadeAt(new \DateTime());
 						$consomation->setUser($this->getUser());
@@ -125,6 +145,78 @@
 					$this->addFlash('erreur','Formulaire non reconnus');
 					return $this->redirectToRoute('recep.consomation.etape2',['id'=>$request->get('client')]);
 			}
+		}
+
+		/**
+		* @Route("/recep/consomation/edit/{id}", name="recep.consomation.edit")
+		* @return Response
+		*/
+		public function edit(Consomation $consomation,Request $request):Response
+		{
+			if($this->isCsrfTokenValid('edit',$request->get('_token')))
+			{
+				if(null!==$request->get('client') && null!==$request->get('repas'))
+					{
+						$client = new Client();
+						$client = $this->repositoryClient->find($request->get('client'));
+						$repas = new Repas();
+						$repas = $this->repositoryRepas->find($request->get('repas'));
+						$consomation->setRepas($repas);
+						$consomation->setCout($repas->getPrix());
+						$consomation->setCLient($client);
+						$consomation->setMadeAt(new \DateTime());
+						$consomation->setUser($this->getUser());
+						$this->em->flush();
+						$this->addFlash('success',"Opération efféctué avec success");
+						return $this->redirectToRoute('recep.consomation.index');
+					}else
+					{
+						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
+						return $this->redirectToRoute('recep.consomation.editLauncher',['id'=>$consomation->getId()]);
+					}
+
+			}else{
+					$this->addFlash('erreur','Formulaire non reconnus');
+					return $this->redirectToRoute('recep.consomation.editLauncher',['id'=>$consomation->getId()]);
+			}
+		}
+
+		/**
+		* @Route("/recep/consomation/delete/{id}", name="recep.consomation.delete")
+		* @return Response
+		*/
+		public function delete(Consomation $consomation,Request $request):Response
+		{
+			
+		}
+
+		/**
+		* @Route("/recep/consomation/print/{id<\d+>}", name="recep.consomation.print")
+		* @return Response
+		*/
+		public function facturer(Consomation $consomation):Response
+		{
+			
+			$this->em->flush();
+			$pdfOptions = new Options();
+	        $pdfOptions->set('defaultFont', 'Helvetica');
+	        $pdfOptions->set('isRemoteEnabled',true);
+	        // Instantiate Dompdf with our options
+	        $dompdf = new Dompdf($pdfOptions);
+	        // Retrieve the HTML generated in our twig file
+	        $html = $this->renderView('pdf/factureRepas.html.twig',['consomation'=>$consomation]);
+	        // Load HTML to Dompdf
+	        $dompdf->loadHtml($html);
+	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+	        $dompdf->setPaper('A4', 'portrait');
+	        // Render the HTML as PDF
+	        $dompdf->render();
+	        // Output the generated PDF to Browser (force download)
+	        $dompdf->stream("factureRepas.pdf", [
+	            "Attachment" => true
+	        ]);
+			//return $this->redirectToRoute('recep.identification.index');
+			//génération de la facture
 		}
 	}
 

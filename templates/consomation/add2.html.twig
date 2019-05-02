@@ -8,7 +8,7 @@
 		</div>
 {% endfor %}
 <div class="row">
-	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
+	<div class=" alert alert-danger col-lg-12" id="erreurHeure" style="display: none;">
 			On ne peut plus servir des repas de cette catégorie à cette heure
 	</div>
 </div>
@@ -130,6 +130,21 @@
 			var type = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test3");
 			document.getElementById("heure").value = heure;
 			document.getElementById("cout").value = prix;
+			if(heure !== ""){
+				var date = new Date();
+				hour = date.getHours();	
+				parseInt(heure,10);
+				if(hour>heure){
+					document.getElementById("erreurHeure").style.display = 'inline';
+					document.getElementById("valider").style.display = 'none';
+				}else{
+					document.getElementById("erreurHeure").style.display = 'none';	
+					document.getElementById("valider").style.display = 'inline';					
+				}			
+			}else{
+				document.getElementById("erreurHeure").style.display = 'none';
+				document.getElementById("valider").style.display = 'inline';	
+			}
 		}  
     </script>
 {% endblock %}

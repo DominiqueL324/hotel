@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+{% block title "Repas étape 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+<div class="row">
+	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
+			On ne peut plus servir des repas de cette catégorie à cette heure
+	</div>
+</div>
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				   <div class="row">
+						<h2>Details du repas de Mr/Mdm {{consomation.client.nom}}</h2>
+						<div class="col-lg-3">
+						
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+				<h4>Informations du client</h4>
+				<hr>
+			<form class=" form" method="post" action="#">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nom</label>
+									<input name="nom" value=" {{consomation.client.nom}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prenom</label>
+									<input name="prenom" type="text" value=" {{consomation.client.prenom}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<input name="nationalite" type="text" value=" {{consomation.client.telephone}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<input name="cni" type="text" value=" {{consomation.client.cni}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+						</div>
+						
+						<h4>Informations du repas</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Type de repas</label>
+									<input name="type" value="{{consomation.repas.type}}"  id="type" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Prix :</label>
+									<input name="prix" value="{{consomation.repas.prix}}"  id="prix" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Heures</label>
+									<input name="heure" value="{{consomation.repas.heure}}" type="text" class="form-control" id="heure" readonly="readonly">
+								</div>
+							</div>
+
+						</div>
+						</div>
+						<div class="card-footer">
+							<div class="row">
+								<div class="col-lg-4">
+										<a href="{{path('recep.consomation.print',{id:consomation.id})}}" class="btn btn-primary btn-icon-split">
+						                    <span class="icon text-white-50">
+						                      <i class="fas fa-flag"></i>
+						                    </span>
+						                    <span class="text">Facture</span>
+						                </a>
+								</div>
+							</div>
+						</div>
+					</form>
+			</div>
+		
+	</div>
+{% endblock %}
