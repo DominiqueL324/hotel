@@ -116,15 +116,14 @@
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">NET A PAYER: </td>
-									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{identification.cout + identification.coutextra - 
-									(identification.remise*identification.cout/100 )}} FCfa</strong></td>
+									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{((identification.cout + identification.coutextra) - 
+								(identification.remise*identification.cout/100))-identification.avance}} FCfa</strong></td>
 								</tr>
 							</table>
 							<center>
-								<p style="font-size: 20px; margin-left: 10px; height: 100px;"> Arreté la présente à la somme de <strong>{{identification.cout + identification.coutextra - 
-									(identification.remise*identification.cout/100 )}} FCfa</strong></p>
+								<p style="font-size: 20px; margin-left: 10px; height: 100px;"> Arreté la présente à la somme de <strong>{{((identification.cout + identification.coutextra) - 
+								(identification.remise*identification.cout/100))-identification.avance}} FCfa</strong></p>
 							</center>
-							<br>
 							<p><strong>LA DIRECTION</strong></p>
 							
 						</div>

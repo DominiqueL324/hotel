@@ -47,4 +47,19 @@ class ConsomationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function finder( array $indice)
+    {
+        $query = $this->createQueryBuilder('c');
+        $i = 0;
+       foreach ($indice as $key => $value) {
+            if($value !== "john do"){
+               $i = $i+1;
+               $query->andWhere('c.'.$key.' = :val'.$i);
+               $query->setParameter('val'.$i, $value); 
+            }
+        }
+        return $query->getQuery()->getResult();
+    }
+    
 }

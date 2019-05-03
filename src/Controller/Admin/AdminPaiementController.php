@@ -117,9 +117,9 @@
 				return $this->redirectToRoute('recep.paiement.index',array('id' => $request->get('id')));
 			}
 			
-			if($reste<$prix AND ($request->get('montant') + $reste)  > $prix ){
+			if($request->get('montant') > $reste ){
 				$this->addFlash('erreur','Une telle avance excède sur le coup Total cela est impossible'.$reste );
-				return $this->redirectToRoute('recep.paiement.index',array('id' => $request->get('id')));
+				return $this->redirectToRoute('recep.paiement.identification',array('id' => $request->get('id')));
 			}
 
 			$paiement = new Paiement();
@@ -147,6 +147,7 @@
 		public function newIdentificationPaiement(Request $request,$id):Response
 		{
 			$prix = $this->repositoryIdentification->find($request->get('id'))->getCout();
+			$prix = $prix + $this->repositoryIdentification->find($request->get('id'))->getCoutExtra();
 			$reste = $prix - $this->repositoryIdentification->find($request->get('id'))->getAvance();
 
 			if($request->get('montant') > $prix ){
@@ -154,7 +155,7 @@
 				return $this->redirectToRoute('recep.paiement.identification',array('id' => $request->get('id')));
 			}
 			
-			if($reste<$prix AND $request->get('montant') + $reste  > $prix ){
+			if($request->get('montant') > $reste ){
 				$this->addFlash('erreur','Une telle avance excède sur le coup Total cela est impossible'.$reste );
 				return $this->redirectToRoute('recep.paiement.identification',array('id' => $request->get('id')));
 			}
