@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Gestion des consomations" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">Inventaires des consomations</h1>
+
+<div class="container mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		<div class="card">
+			<div class="card-header">
+				<form method="post" action="{{path('admin.consomation.inventaire.find')}}" class="form">
+					<div class="row">
+						<div class="col-md-2">
+								<div class="form-group">
+									Date debut
+									<input name="date1" type="date" class="form-control">
+								</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								Date fin
+								<input name="date2" type="date" class="form-control">
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								Clients
+									<select id="client" name="client" class="form-control">
+										<option value="john do"> ************* </option>
+										{% for client in clients %}
+										<option value="{{client.id}}" > {{client.nom}} {{client.prenom}} </option>
+										{% endfor %}
+									</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								   Type de repas
+									<select id="repas" name="repas" class="form-control">
+										<option value="john do"> ************* </option>
+										{% for repa in repas %}
+										<option value="{{repa.id}}"> {{repa.type}} {{repa.prix}} </option>
+										{% endfor %}
+									</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								    Employé
+									<select id="users" name="users" class="form-control">
+										<option value="john do"> ************* </option>
+										{% for user in users %}
+										<option value="{{user.id}}"> {{user.nom}} {{user.prenom}} </option>
+										{% endfor %}
+									</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								Receptioniste
+								<input value="Rechercher" type="submit" class="btn btn-primary">
+							</div>
+						</div>
+					</div>
+					
+				</form>
+			</div>
+		<br>
+		<div class="card-body">
+			  <div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		            <thead>
+						<tr>
+							<th>Type de repas</th>
+							<th>Prix du consomations</th>
+							<th>Client</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for consomation in consomations %}
+							<tr>
+								<td> {{consomation.repas.type}} </td>
+								<td> {{consomation.cout}} </td>
+								<td> {{consomation.client.nom}} {{consomation.client.prenom}} </td>
+								<td>
+									<a href=" {{path('recep.consomation.editLauncher',{id:consomation.id})}} "><i class="fas fa-fw fa-user-edit"></i></a>
+									<a href=" {{path('recep.consomation.delete',{id:consomation.id}) }}" onclick="return confirm('Voulez vous vraiment continuer??')"><i class="fas fa-fw fa-trash"></i></a>
+									<a href="{{path('recep.consomation.consult',{id:consomation.id})}}">
+								          <i class="fas fa-fw fa-address-card"></i>
+								          <span></span>
+								        </a>
+									
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+		   </div>
+	</div>
+
+	</div>
+	
+	
+{% endblock %}
