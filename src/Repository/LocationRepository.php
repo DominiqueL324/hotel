@@ -68,4 +68,39 @@ class LocationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function getPrixTotal(){
+        return $this->createQueryBuilder('l')
+            ->select('SUM(l.cout_total) as cout')
+            ->getQuery()
+            ->getSingleScalarResult();
+        ;
+    }
+
+    public function finder( array $indice)
+    {
+        $query = $this->createQueryBuilder('l');
+        $i = 0;
+       foreach ($indice as $key => $value) {
+                 $i = $i+1;
+                if($key == "date1" and $value !== "vide")
+                {
+                    $query->andWhere('l.begin_at >= :debut');
+                    $query->setParameter('debut', $value); 
+                }
+                if($key == "date2" and $value !== "vide")
+                {
+                    $query->andWhere('l.end_at <= :fin');
+                    $query->setParameter('fin', $value); 
+                }
+                if($value !== "john do" and $key !=="date1" and $key!=="date2"){
+                    $query->andWhere('l.'.$key.' = :val'.$i);
+                    $query->setParameter('val'.$i, $value);  
+                }
+              
+        }
+        return $query->getQuery()->getResult();
+    }
+    
 }

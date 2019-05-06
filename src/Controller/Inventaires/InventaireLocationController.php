@@ -6,12 +6,12 @@
 	use Symfony\Component\Routing\Annotation\Route;
 	use App\Entity\User;
 	use App\Entity\Client;
-	use App\Entity\Repas;
-	use App\Entity\Consomation;
+	use App\Entity\Salle;
+	use App\Entity\Location;
 	use App\Repository\UserRepository;
 	use App\Repository\ClientRepository;
-	use App\Repository\RepasRepository;
-	use App\Repository\ConsomationRepository;
+	use App\Repository\SalleRepository;
+	use App\Repository\LocationRepository;
 	use Doctrine\Common\Persistence\ObjectManager;
 	use Symfony\Component\HttpFoundation\Request;
 	use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +23,7 @@
 	/**
 	 * 
 	 */
-	class InventaireConsomationController extends AbstractController
+	class InventaireLocationController extends AbstractController
 	{
 
 		/**
@@ -32,7 +32,7 @@
 		private $em;
 
 		 /**
-		 * @var ConsomationRepository
+		 * @var LocationRepository
 		 */
 		private $repositoryVar;
 
@@ -47,41 +47,41 @@
 		private $repositoryUser;
 
 		/**
-		 * @var RepasRepository
+		 * @var SalleRepository
 		 */
-		private $repositoryRepas;
+		private $repositorySalle;
 		
-		function __construct(ClientRepository $c,UserRepository $u,RepasRepository$r,ConsomationRepository $repository,ObjectManager $em)
+		function __construct(ClientRepository $c,UserRepository $u,SalleRepository$r,LocationRepository $repository,ObjectManager $em)
 		{
 			$this->repositoryVar = $repository;
 			$this->repositoryClient = $c;
 			$this->repositoryUser = $u;
-			$this->repositoryRepas = $r;
+			$this->repositorySalle = $r;
 			$this->em = $em;
 		}
 
 		/**
-		* @Route("/admin/consomation/inventaire", name="admin.consomation.inventaire")
+		* @Route("/admin/location/inventaire", name="admin.location.inventaire")
 		* @return Response
 		*/
 		public function index():Response
 		{
-			$consomations = $this->repositoryVar->findAll();
+			$locations = $this->repositoryVar->findAll();
 			$clients = $this->repositoryClient->findAll();
-			$repas = $this->repositoryRepas->findAll();
+			$salles = $this->repositorySalle->findAll();
 			$users = $this->repositoryUser->findAll();
 			$cout = $this->repositoryVar->getPrixTotal();
-			return $this->render('consomation/inventaire.html.twig',[
-				'consomations'=>$consomations,
+			return $this->render('location/inventaire.html.twig',[
+				'locations'=>$locations,
 				'users'=>$users,
-				'repas'=>$repas,
+				'salles'=>$salles,
 				'clients'=>$clients,
 				'cout'=>$cout,
 			]); 
 		}
 
 		/**
-		* @Route("/admin/consomation/inventaire/recherche", name="admin.consomation.inventaire.find")
+		* @Route("/admin/location/inventaire/recherche", name="admin.location.inventaire.find")
 		* @return Response
 		*/
 		public function find(Request $request):Response
@@ -98,18 +98,18 @@
 			$result=[
 				'client'=>$request->get('client'),
 				'user'=>$request->get('users'),
-				'repas'=>$request->get('repas'),
+				'salle'=>$request->get('salles'),
 				'date1'=>$date1,
 				'date2'=>$date2,			];
-			$consomations = $this->repositoryVar->finder($result);
+			$locations = $this->repositoryVar->finder($result);
 			$clients = $this->repositoryClient->findAll();
-			$repas = $this->repositoryRepas->findAll();
+			$salles = $this->repositorySalle->findAll();
 			$users = $this->repositoryUser->findAll();
 			$cout = $this->repositoryVar->getPrixTotal();
-			return $this->render('consomation/inventaire.html.twig',[
-				'consomations'=>$consomations,
+			return $this->render('location/inventaire.html.twig',[
+				'locations'=>$locations,
 				'users'=>$users,
-				'repas'=>$repas,
+				'salles'=>$salles,
 				'clients'=>$clients,
 				'cout'=>$cout,
 			]);

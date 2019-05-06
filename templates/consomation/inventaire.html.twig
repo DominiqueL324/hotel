@@ -7,11 +7,11 @@
 <h1 class="header mt-4" style="text-align: center;">Inventaires des consomations</h1>
 
 <div class="container mt-6">
-		{% for message in app.flashes('success') %}
+	{% set total = 0 %}
 		<div class=" alert alert-success">
-			{{message}}
+			Vente  total  de <strong> {{cout|number_format}}  Frs Cfa</strong> 
 		</div>
-		{% endfor %}
+		
 		<div class="card">
 			<div class="card-header">
 				<form method="post" action="{{path('admin.consomation.inventaire.find')}}" class="form">
@@ -63,7 +63,7 @@
 						</div>
 						<div class="col-md-2">
 							<div class="form-group">
-								Receptioniste
+								<a href="{{path('admin.consomation.inventaire')}}">Voir le tout</a>
 								<input value="Rechercher" type="submit" class="btn btn-primary">
 							</div>
 						</div>
@@ -85,6 +85,7 @@
 					</thead>
 					<tbody>
 						{% for consomation in consomations %}
+						{% set total=total+ consomation.cout %}
 							<tr>
 								<td> {{consomation.repas.type}} </td>
 								<td> {{consomation.cout}} </td>
@@ -102,10 +103,18 @@
 						{% endfor %}
 					</tbody>
 				</table>
+				
 		   </div>
+	</div>
+	<div class="card-footer">
+			<div class=" alert alert-success" style="margin-top: 2">
+				Vente total de {{consomations|length}} repas pour un total financier de <strong> {{total|number_format}}  Frs Cfa</strong> 
+			</div>
 	</div>
 
 	</div>
-	
+
+</div>
+					
 	
 {% endblock %}

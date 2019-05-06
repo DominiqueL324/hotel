@@ -48,16 +48,35 @@ class ConsomationRepository extends ServiceEntityRepository
     }
     */
 
+    public function getPrixTotal(){
+        return $this->createQueryBuilder('c')
+            ->select('SUM(c.cout) as cout')
+            ->getQuery()
+            ->getSingleScalarResult();
+        ;
+    }
+
     public function finder( array $indice)
     {
         $query = $this->createQueryBuilder('c');
         $i = 0;
        foreach ($indice as $key => $value) {
-            if($value !== "john do"){
-               $i = $i+1;
-               $query->andWhere('c.'.$key.' = :val'.$i);
-               $query->setParameter('val'.$i, $value); 
-            }
+                 $i = $i+1;
+                if($key == "date1" and $value !== "vide")
+                {
+                    $query->andWhere('c.made_at >= :debut');
+                    $query->setParameter('debut', $value); 
+                }
+                if($key == "date2" and $value !== "vide")
+                {
+                    $query->andWhere('c.made_at <= :fin');
+                    $query->setParameter('fin', $value); 
+                }
+                if($value !== "john do" and $key !=="date1" and $key!=="date2"){
+                    $query->andWhere('c.'.$key.' = :val'.$i);
+                    $query->setParameter('val'.$i, $value);  
+                }
+              
         }
         return $query->getQuery()->getResult();
     }

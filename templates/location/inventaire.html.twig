@@ -6,29 +6,68 @@
 {% block body %}
 <h1 class="header mt-4" style="text-align: center;">Liste des Locations</h1>
 <div class=" mt-6">
-		{% for message in app.flashes('success') %}
+		{% set total = 0 %}
 		<div class=" alert alert-success">
-			{{message}}
+			Location totales de <strong> {{cout|number_format}}  Frs Cfa</strong> 
 		</div>
-		{% endfor %}
-		
-		{% for message in app.flashes('erreur') %}
-		<div class=" alert alert-danger">
-			{{message}}
-		</div>
-		{% endfor %}
 		<br>
 		<div class="card">
 		<div class="card-header">
-			<div class="row">
-				<div class="text-right">
-					 <a class="btn btn-success" href=" {{path('recep.location.etape1')}} ">Nouvelle Location</a>
-				</div>
-				<div class="text-left">
-					 <a class="btn btn-primary" href=" {{path('admin.location.inventaire')}} ">Inventaire</a>
-				</div>
-
-			</div>
+			<form method="post" action="{{path('admin.location.inventaire.find')}}" class="form">
+				<div class="row">
+							<div class="col-md-2">
+									<div class="form-group">
+										Date debut
+										<input name="date1" type="date" class="form-control">
+									</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									Date fin
+									<input name="date2" type="date" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									Clients
+										<select id="client" name="client" class="form-control">
+											<option value="john do"> ************* </option>
+											{% for client in clients %}
+											<option value="{{client.id}}" > {{client.nom}} {{client.prenom}} </option>
+											{% endfor %}
+										</select>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									   Type de salles
+										<select id="salles" name="salles" class="form-control">
+											<option value="john do"> ************* </option>
+											{% for salle in salles %}
+											<option value="{{salle.id}}"> {{salle.typesalle}} {{salle.prix}} </option>
+											{% endfor %}
+										</select>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									    Employé
+										<select id="users" name="users" class="form-control">
+											<option value="john do"> ************* </option>
+											{% for user in users %}
+											<option value="{{user.id}}"> {{user.nom}} {{user.prenom}} </option>
+											{% endfor %}
+										</select>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<a href="{{path('admin.location.inventaire')}}">Voir le tout</a>
+									<input value="Rechercher" type="submit" class="btn btn-primary">
+								</div>
+							</div>
+						</div>
+					</form>
 			
 		</div>
 		<br>
@@ -50,6 +89,7 @@
 	                  </thead>
 	                  <tbody>
 	                    	{% for location in locations %}
+	                    	{% set total = total + location.couttotal %}
 								<tr>
 									<td> {{location.client.nom}} {{ location.client.prenom}} </td>
 									<td> {{location.salle.typesalle}} </td>
@@ -75,6 +115,11 @@
 	            	</div>
 					
 	            </div>
+	            <div class="card-footer">
+						<div class=" alert alert-success" style="margin-top: 2">
+							 {{locations|length}} Location pour un total financier de <strong> {{total|number_format}}  Frs Cfa</strong> 
+						</div>
+				</div>
         </div>
 		
 
