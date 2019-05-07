@@ -45,7 +45,8 @@
 							<td> {{reservation.prix }} </td>
 							<td>{{reservation.etat }}  </td>
 							<td>
-								<a href=" {{path('recep.reservation.details',{id:reservation.id})}} ">consulter</a>
+								<a href=" {{path('recep.reservation.details',{id:reservation.id})}} "><i class="fas fa-fw fa-address-card"></i></a>
+								<a href="#" onclick="return confirm('Voulez vous vraiment continuer??')"><i class="fas fa-fw fa-trash"></i></a>
 							</td>
 							<input id="date2" type="hidden" value="{{reservation.endat|date('m/d/Y')}}" name="">
 						</tr>

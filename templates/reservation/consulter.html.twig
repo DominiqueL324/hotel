@@ -30,6 +30,7 @@
 					        <span class="text">retour</span>
 					    </a>
 				    </div>
+				    {% if reservation.etat =="En cours"  %}
 				    <div class="col-lg-2">
 						<a href=" {{path('recep.paiement.index',{id:reservation.id})}} "  class="btn btn-primary btn-icon-split">
 					        <span class="icon text-white-50">
@@ -38,6 +39,7 @@
 					        <span class="text">Paiement</span>
 					    </a>
 				    </div>
+				    {% endif %}
 				</div>
 			</div>
 			<h4>Informations de bases</h4>
@@ -153,6 +155,7 @@
 					        <span class="text">retour</span>
 					    </a>
 				    </div>
+				     {% if reservation.etat =="En cours"  %}
 				    <div class="col-lg-2">
 						<a href=" {{path('recep.paiement.index',{id:reservation.id})}} "  class="btn btn-primary btn-icon-split">
 					        <span class="icon text-white-50">
@@ -161,6 +164,7 @@
 					        <span class="text">Paiement</span>
 					    </a>
 				    </div>
+				     {% endif %}
 				    <div class="col-lg-2">
 						<a href=" {{path('print',{id:reservation.id})}} "  class="btn btn-success btn-icon-split">
 					        <span class="icon text-white-50">

@@ -55,4 +55,37 @@ class IdentificationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+     public function getPrixTotal(){
+        return $this->createQueryBuilder('i')
+            ->select('SUM(i.cout) as cout')
+            ->getQuery()
+            ->getSingleScalarResult();
+        ;
+    }
+
+    public function finder( array $indice)
+    {
+        $query = $this->createQueryBuilder('i');
+        $i = 0;
+       foreach ($indice as $key => $value) {
+                 $i = $i+1;
+                if($key == "date1" and $value !== "vide")
+                {
+                    $query->andWhere('i.arrived_at >= :debut');
+                    $query->setParameter('debut', $value); 
+                }
+                if($key == "date2" and $value !== "vide")
+                {
+                    $query->andWhere('i.lived_at <= :fin');
+                    $query->setParameter('fin', $value); 
+                }
+                if($value !== "john do" and $key !=="date1" and $key!=="date2"){
+                    $query->andWhere('i.'.$key.' = :val'.$i);
+                    $query->setParameter('val'.$i, $value);  
+                }
+              
+        }
+        return $query->getQuery()->getResult();
+    }
 }

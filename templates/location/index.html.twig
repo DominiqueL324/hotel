@@ -61,7 +61,7 @@
 									<td>{{location.caution }}</td>
 									<td>
 										<a href=" # "><i class="fas fa-check"></i><span></span></a>
-										<a href=" # "><i class="fas fa-user-edit"></i><span></span></a>
+										<a href=" {{path('recep.location.modification',{id:location.id})}} "><i class="fas fa-user-edit"></i><span></span></a>
 										<a href="{{path('recep.location.consult',{id:location.id})}}">
 								          <i class="fas fa-fw fa-address-card"></i>
 								          <span></span>

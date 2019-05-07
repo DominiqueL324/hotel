@@ -45,10 +45,10 @@
     <body id="page-top"> 
     	<header>
     		<img align="left" src="/ProjetSymfony/hotel/templates/pdf/logo.jpg" width="50" height="50" >
-    		<center><strong>Le {{"now"|date("d M Y / h:m")}} CICM HOTEL Facture N° {{identification.numeroidentification}}</strong></center>
+    		<center><strong>Le {{"now"|date("d M Y / H:m:s")}} CICM HOTEL Facture N° {{identification.numeroidentification}}</strong></center>
         </header>
         <footer>
-            Le {{"now"|date("d M Y / h:m")}}
+            Le {{"now"|date("d M Y / H:m:s")}}
             Facture générée par Mr/M {{app.user.nom}} {{app.user.prenom}} employé de CICM Hotel
         </footer>
         <main>
@@ -92,7 +92,7 @@
 												<td>Date</td>
 												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{paiement.madeat |date("d/m/Y")}} </strong></td>
 												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Montant</td>
-												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{paiement.montant}} Cfa</strong></td>
+												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{paiement.montant|number_format}} Cfa</strong></td>
 											</tr>
 								{% endfor %}
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
@@ -100,29 +100,29 @@
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Coût Total: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.cout }} FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.cout|number_format }} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Remise: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.remise }} % soit {{identification.remise*identification.cout/100 }} FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.remise }} % soit {{(identification.remise*identification.cout/100)|number_format }} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Avance Totale: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.avance}} FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.avance|number_format}} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Coût extra (Jours en plus): </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.coutextra}} FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{identification.coutextra|number_format}} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">NET A PAYER: </td>
-									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{((identification.cout + identification.coutextra) - 
-								(identification.remise*identification.cout/100))-identification.avance}} FCfa</strong></td>
+									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{(((identification.cout + identification.coutextra) - 
+								(identification.remise*identification.cout/100))-identification.avance)|number_format}} FCfa</strong></td>
 								</tr>
 							</table>
 							<center>
-								<p style="font-size: 20px; margin-left: 10px; height: 100px;"> Arreté la présente à la somme de <strong>{{((identification.cout + identification.coutextra) - 
-								(identification.remise*identification.cout/100))-identification.avance}} FCfa</strong></p>
+								<p style="font-size: 20px; margin-left: 10px;"> Arreté la présente à la somme de <strong>{{(((identification.cout + identification.coutextra) - 
+								(identification.remise*identification.cout/100))-identification.avance)|number_format}} FCfa</strong></p>
 							</center>
 							<p><strong>LA DIRECTION</strong></p>
 							

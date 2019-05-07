@@ -264,6 +264,16 @@
 			return $this->render('location/consult.html.twig',compact('location'));
 		}
 
+		/**
+		* @Route("/recep/location/modification/{id<\d+>}", name="recep.location.modification")
+		* @return Response
+		*/
+		public function modification(Location $location):Response
+		{
+			$salles = $this->repositorySalle->findAll();		
+			return $this->render('location/edit.html.twig',['location'=>$location,'salles'=>$salles]);
+		}
+
 
 
 		/**
@@ -332,6 +342,62 @@
 				}
 			}
 			return null;
+		}
+
+
+		/**
+		* @Route("/admin/location/edit/{id}", name="admin.location.edit")
+		* @return Response
+		*/
+		public function edit(Request $request,Location $location):Response
+		{
+			
+			if($this->isCsrfTokenValid('edit',$request->get('_token')))
+			{
+
+				if(null!==$request->get('date_debut') && null!==$request->get('date_fin') && null!==$request->get('motif') && null!==$request->get('caution') &&  is_numeric($request->get('cout_normal') ))
+					{
+						$debut = new \DateTime($request->get('date_debut'));
+						$result = $this->checkIfIsBusy($request->get('salleliste'),$debut);
+						if($result != null and $location->getClient()->getId()!= $request->get('id')){
+							$this->addFlash('erreur',"cette salle est pas occupée  pour le moment");
+							return $this->redirectToRoute('recep.location.modification',['id'=>$request->get('id')]);
+						}
+						if($request->get('remise')>10000&& $request->get('roles')!= "ROLE_ADMIN" )
+						{
+							$this->addFlash('erreur','Vous ne pouvez accorder une remise de ce montant contacter un administrateurpour cela');
+							return $this->redirectToRoute('recep.location.etape2',['id'=>$request->get('id')]);
+						}
+						$client = new Client();
+						$client = $this->repositoryClient->find($request->get('id'));
+						$salle = new Salle();
+						$salle = $this->repositorySalle->find($request->get('salleliste'));
+						$fin = new \DateTime($request->get('date_fin'));
+						$day = $debut->diff($fin);
+
+						$location->setRemise($request->get('remise'));
+						$location->setBeginAt(new \DateTime($request->get('date_debut')));
+						$location->setEndAt(new \DateTime($request->get('date_fin')));
+						$location->setEtat("En cours");
+						$location->setCaution($request->get('caution'));
+						$location->setSalle($salle);
+						$location->setCoutTotal(($day->d+1) * $salle->getPrix());
+						//$location->setCLient($client);
+						$location->setMotif($request->get('motif'));
+						$location->setUser($this->getUser());
+						$this->em->flush();
+						$this->addFlash('success',"Opération efféctué avec success");
+						return $this->redirectToRoute('recep.location.index');
+					}else
+					{
+						$this->addFlash('erreur','Toutes les données sont obliagtoires et doivent être valides');
+						return $this->redirectToRoute('recep.location.modification',['id'=>$request->get('id')]);
+					}
+
+			}else{
+					$this->addFlash('erreur','Formulaire non reconnus');
+					return $this->redirectToRoute('recep.location.modification',['id'=>$request->get('id')]);
+			}
 		}
 
 	}

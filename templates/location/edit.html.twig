@@ -1,0 +1,228 @@
+{% extends 'base.html.twig' %}
+{% block title "Location étape 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+<div class="row">
+	<div class=" alert alert-danger col-lg-12" id="erreurRemise" style="display: none;">
+			La remise accordée excède la remise prévue 
+	</div>
+	<div class=" alert alert-danger col-lg-12" id="erreurType" style="display: none;">
+			Veuillez choisir un type de client valide
+	</div>
+</div>
+	<div class="container">
+		<div class="card">
+			<div class="card-header">
+				   <div class="row">
+						<h3>Modification de la location de la {{location.salle.typesalle}}
+						 Par Mr {{location.client.nom}} {{location.client.prenom}}</h3>
+				   </div>
+			</div>
+			<div class="card-body">
+				<h4>Informations du client</h4>
+				<hr>
+			<form class=" form" method="post" action=" {{path('admin.location.edit',{id:location.id})}} ">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Nom</label>
+									<input name="nom" value=" {{location.client.nom}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Prenom</label>
+									<input name="prenom" type="text" value=" {{location.client.prenom}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Téléphone</label>
+									<input name="nationalite" type="text" value=" {{location.client.telephone}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="exampleInputEmail1">CNI/Passeport *</label>
+									<input name="cni" type="text" value=" {{location.client.cni}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+						</div>
+						
+						<h4>Informations sur la salle</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Type de salle</label>
+									<select id="salle" name="salleliste" class="form-control">
+										{% for salle in salles %}
+										<option value="{{salle.id}}" test1 ="{{salle.places}} " test2 ="{{salle.prix}}" test3={{salle.caution}}> {{salle.typesalle}}  {{salle.places}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Place :</label>
+									<input name="places" id="place" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Prix/jours</label>
+									<input name="prix_jour" type="number" class="form-control" id="prix" readonly="readonly">
+									<input type="hidden" name="_token" value="{{csrf_token('edit')}}">
+									<input type="hidden" name="id" value="{{location.client.id}}">
+								</div>
+							</div>
+
+						</div>
+						<h4>Informations sur la Location</h4>
+						<hr>
+						<div class="row" id="info_loca">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date de début</label>
+									<input name="date_debut" id="date1" type="date" class="form-control" required="required" >
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Date de fin</label>
+									<input name="date_fin" id="date2" type="date" style="display: none;" class="form-control" required="required">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group" id="motif" style="display: none;" >
+									<label >Objet de la location</label>
+									<input  name="motif" type="text" class="form-control" required="required" value="{{location.motif}}" >
+								</div>
+							</div>	
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group" id="caution" style="display: none;">
+									<label >Caution</label>
+									<input name="caution" id="caution1" value="0" type="number" class="form-control" required="required" value="{{location.caution}}" >
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group" id="remise" style="display: none;">
+									<label >Remise accordée(FCFA)</label>
+									<input name="remise" id="remise_accordee" value="0" type="number" class="form-control" required="required" value="{{location.remise}}" >
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group " id="cout_normal" style="display: none;">
+									<label >Cout total Normal (sans la remise)</label>
+									<input name="cout_normal" id="cout_normal1" type="number" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							
+						</div>
+						</div>
+						<input type="hidden" value="{{app.user.roles.0}}" name="roles" id="roles">
+
+						<div class="card-footer">
+							<div class="row">
+								<div class="col-lg-4">
+									<input type="submit" style="display: none;" id="valider" class=" btn btn-success" value="Modifier" name="">
+										<a href="#" class="btn btn-warning btn-icon-split">
+						                    <span class="icon text-white-50">
+						                      <i class="fas fa-flag"></i>
+						                    </span>
+						                    <span class="text">Annuler</span>
+						                </a>
+								</div>
+								<div class="col-lg-8">
+									<div class="alert alert-danger" id="errorMsg" style="display: none;">
+										Les dates ne sont pas valides veuillez les verifier pour terminer l'opération
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+			</div>
+		
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript">
+		function diffdate(d1,d2){
+			var jour = d2.getTime() - d1.getTime();
+			return Math.ceil(jour/(1000*60*60*24));
+		}
+		document.getElementById("salle").onchange = function(){
+			var place = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test1");
+			var prix = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test2");
+			var caution = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test3");
+			document.getElementById("caution1").value = caution;
+			document.getElementById("place").value = place;
+			document.getElementById("prix").value = prix;
+		}
+        document.getElementById("date1").onchange = function() { 
+        	var dte_1 = document.getElementById("date1").value;
+        	var date1 = new Date(dte_1);
+        	var date = new Date();
+        	var actuel = diffdate(date,date1);
+        	if((actuel + 1) >= 1){
+        		document.getElementById("date2").style.display = "inline";
+        		document.getElementById("errorMsg").style.display = "none";
+        	}else{
+        		document.getElementById("errorMsg").style.display = "inline";
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("date2").style.display = "none";
+        	}
+        }
+
+        document.getElementById("date2").onchange = function() { 
+        	var dte_1 = document.getElementById("date1").value;
+        	var dte_2 = document.getElementById("date2").value;
+        	var date1 = new Date(dte_1);
+        	var date2 = new Date(dte_2);
+        	var jour = diffdate(date1,date2);
+        	if((jour + 1) >= 1){
+        		document.getElementById("motif").style.display = "inline";
+        		document.getElementById("caution").style.display = "inline";
+        		document.getElementById("remise").style.display = "inline";
+        		document.getElementById("cout_normal").style.display = "inline";
+        		document.getElementById("valider").style.display = "inline";
+        		document.getElementById("errorMsg").style.display = "none";
+        		var prix = document.getElementById("prix").value
+        		document.getElementById("cout_normal1").value = prix*(jour + 1) ;
+        	}else{
+        		document.getElementById("motif").style.display = "none";
+        		document.getElementById("caution").style.display = "none";
+        		document.getElementById("remise").style.display = "none";
+        		document.getElementById("cout_normal").style.display = "none";
+        		document.getElementById("valider").style.display = "none";
+        		document.getElementById("errorMsg").style.display = "inline";
+        	}
+        } 
+
+        document.getElementById("remise_accordee").onkeyup = function(){
+        	var val = document.getElementById("remise_accordee").value;
+        	var val1 = 10000
+        	if(document.getElementById("roles").value != "ROLE_ADMIN"){
+        		if(val > val1 ){
+        			document.getElementById("erreurRemise").style.display = "inline";
+        			document.getElementById("valider").style.display = "none";
+        		}else
+        		{
+        			document.getElementById("erreurRemise").style.display = "none";
+        			document.getElementById("valider").style.display = "inline";
+        		}
+        	}
+        	
+        } 
+    </script>
+{% endblock %}

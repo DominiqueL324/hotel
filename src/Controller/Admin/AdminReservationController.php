@@ -334,7 +334,7 @@
 			$listeIdent = $this->repositoryOffre->find($id)->getIdentifications();
 			foreach ($listeIdent as $identification) 
 			{
-				if($identification->getArrivedAt() <= $date && $date <= $identification->getLivedAt())
+				if($identification->getArrivedAt() <= $debut && $debut <= $identification->getLivedAt())
 				{
 					return $identification;
 				}

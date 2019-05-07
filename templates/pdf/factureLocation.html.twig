@@ -45,10 +45,10 @@
     <body id="page-top"> 
     	<header>
     		<img align="left" src="/ProjetSymfony/hotel/templates/pdf/logo.jpg" width="50" height="50" >
-    		<center><strong> Le {{"now"|date("d M Y / H:m")}} CICM HOTEL Facture N° {{location.numero}}</strong></center>
+    		<center><strong> Le {{"now"|date("d M Y / H:m:s")}} CICM HOTEL Facture N° {{location.numero}}</strong></center>
         </header>
         <footer>
-             Le {{"now"|date("d M Y / H:m")}} 
+             Le {{"now"|date("d M Y / H:m:s")}} 
             Facture générée par Mr/M {{app.user.nom}} {{app.user.prenom}} employé de CICM Hotel
         </footer>
         <main>
@@ -84,38 +84,37 @@
 									<td>Motif</td>
 									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{location.motif}}</strong></td>
 									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prix/jours</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{location.salle.prix}} Cfa</strong></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{location.salle.prix|number_format}} Cfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td>Caution</td>
-									<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{location.caution}} Cfa</strong></td>
+									<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{location.caution|number_format}} Cfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
 									<td colspan="4">RECAPITULATIF</td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Coût Total Normal: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{location.couttotal }} FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{location.couttotal|number_format }} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Remise: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{location.remise }}  FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{location.remise|number_format }}  FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">Caution: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{location.caution}} FCfa</strong></td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{location.caution|number_format}} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
 									<td colspan="2">NET A PAYER: </td>
-									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{(location.couttotal + location.caution) - 
-									location.remise}} FCfa</strong></td>
+									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{((location.couttotal + location.caution) - 
+									location.remise)|number_format}} FCfa</strong></td>
 								</tr>
 							</table>
 							<center>
-								<p style="font-size: 20px; margin-left: 10px; height: 100px;"> Arreté la présente à la somme de <strong>{{(location.couttotal + location.caution) - 
-									location.remise}} FCfa</strong></p>
+								<p style="font-size: 20px; margin-left: 10px;"> Arreté la présente à la somme de <strong>{{((location.couttotal + location.caution) - 
+									location.remise)|number_format}} FCfa</strong></p>
 							</center>
-							<br>
 							<p><strong>LA DIRECTION</strong></p>
 							
 						</div>

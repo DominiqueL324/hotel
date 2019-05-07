@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
 
 class UserType extends AbstractType
 {
@@ -20,12 +22,17 @@ class UserType extends AbstractType
             ->add('prenom')
             ->add('cni')
             ->add('matricule')
-            ->add('born_at')
+            ->add('born_at',DateType::class,[
+                'label'=>'Né le',
+                'widget'=>'single_text'
+            ])
             ->add('lieu_naissance')
             ->add('roles',ChoiceType::class,[
                 'choices'=> $this->getChoice()
             ])
-            ->add('username')
+            ->add('username',null,[
+                'label'=>"Nom d'utilisateur"
+            ])
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options' => array('label' => 'Password'),
