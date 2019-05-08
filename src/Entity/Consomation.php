@@ -42,6 +42,11 @@ class Consomation
      */
     private $repas;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantite;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class Consomation
     public function setRepas(?Repas $repas): self
     {
         $this->repas = $repas;
+
+        return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite;
+    }
+
+    public function setQuantite(?int $quantite): self
+    {
+        $this->quantite = $quantite;
 
         return $this;
     }

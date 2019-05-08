@@ -19,6 +19,7 @@
 	use Twig\Environment;
 	use Dompdf\Dompdf;
 	use Dompdf\Options;
+	use Symfony\Component\HttpFoundation\JsonResponse;
 
 	/**
 	 * 
@@ -118,6 +119,10 @@
 		{
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
+				if($request->get('quantite')<=0){
+					$this->addFlash('erreur','quantite non valide');
+					return $this->redirectToRoute('recep.consomation.etape2',['id'=>$request->get('client')]);
+				}
 				if(null!==$request->get('client') && null!==$request->get('repas'))
 					{
 						$client = new Client();
@@ -125,9 +130,9 @@
 						$repas = new Repas();
 						$repas = $this->repositoryRepas->find($request->get('repas'));
 						$consomation = new consomation();
-
 						$consomation->setRepas($repas);
-						$consomation->setCout($repas->getPrix());
+						$consomation->setQuantite($request->get('quantite'));
+						$consomation->setCout($repas->getPrix()*$consomation->getQuantite());
 						$consomation->setCLient($client);
 						$consomation->setMadeAt(new \DateTime());
 						$consomation->setUser($this->getUser());
@@ -155,6 +160,10 @@
 		{
 			if($this->isCsrfTokenValid('edit',$request->get('_token')))
 			{
+				if($request->get('quantite')<=0){
+					$this->addFlash('erreur','quantite non valide');
+					return $this->redirectToRoute('recep.consomation.etape2',['id'=>$request->get('client')]);
+				}
 				if(null!==$request->get('client') && null!==$request->get('repas'))
 					{
 						$client = new Client();
@@ -162,7 +171,8 @@
 						$repas = new Repas();
 						$repas = $this->repositoryRepas->find($request->get('repas'));
 						$consomation->setRepas($repas);
-						$consomation->setCout($repas->getPrix());
+						$consomation->setQuantite($request->get('quantite'));
+						$consomation->setCout($repas->getPrix()*$consomation->getQuantite());
 						$consomation->setCLient($client);
 						$consomation->setMadeAt(new \DateTime());
 						$consomation->setUser($this->getUser());
@@ -218,5 +228,17 @@
 			//return $this->redirectToRoute('recep.identification.index');
 			//génération de la facture
 		}
+
+		/**
+		* @Route("/login/consomation/json",methods={"POST"})
+		* @return Response
+		*/
+		public function testApi(Request $request)
+		{
+			$data = json_decode($request->getContent(),true);
+			exit(\Doctrine\Common\Util\Debug::dump($data));
+			return new JsonResponse(['status' => 'ok',],JsonResponse::HTTP_CREATED);
+		}
+
 	}
 

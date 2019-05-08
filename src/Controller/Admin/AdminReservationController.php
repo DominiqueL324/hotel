@@ -281,11 +281,11 @@
 							$reservation->setValide("non");	
 						}else{
 							$reservation->setValide("oui");	
-							if($offre->getQuantite()<=0){
+							/*if($offre->getQuantite()<=0){
 								$offre->setQuantite(0);
 							}else{
 								$offre->setQuantite($offre->getQuantite()-1);	
-							}
+							}*/
 							$this->em->flush();
 						}
 						//enregistrement des donnees
@@ -329,14 +329,19 @@
 			return null;
 		}
 
-		public function checkIfIsBusyIdentification($id,\DateTime $debut): ?Reservation
+		public function checkIfIsBusyIdentification($id,\DateTime $debut): ?Identification
 		{
 			$listeIdent = $this->repositoryOffre->find($id)->getIdentifications();
 			foreach ($listeIdent as $identification) 
 			{
+				$offre =  $this->repositoryOffre->find($identification->getOffre()->getId());
 				if($identification->getArrivedAt() <= $debut && $debut <= $identification->getLivedAt())
 				{
-					return $identification;
+					if($offre->getQuantite()==0)
+					{
+						return $identification;
+					}
+					
 				}
 			}
 			return null;

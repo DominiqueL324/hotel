@@ -72,7 +72,13 @@
 						<h4>Informations du repas</h4>
 						<hr>
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Quantité :</label>
+									<input name="quantite"  id="quantite" type="number" required="required" class="form-control" value="1">
+								</div>
+							</div>
+							<div class="col-md-3">
 								<div class="form-group">
 									<label >Type de repas</label>
 									<select id="repa" name="repas" class="form-control">
@@ -82,13 +88,13 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label>Prix :</label>
 									<input name="prix"  id="prix" type="text" readonly="readonly" class="form-control">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
 								<div class="form-group">
 									<label>Heures</label>
 									<input name="heure" type="text" class="form-control" id="heure" readonly="readonly">
@@ -128,8 +134,11 @@
 			var prix = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test1");
 			var heure = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test2");
 			var type = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test3");
+			var quantite = document.getElementById("quantite").value;
 			document.getElementById("heure").value = heure;
 			document.getElementById("prix").value = prix;
+			document.getElementById("cout").value = prix * quantite;
+
 		}  
     </script>
 {% endblock %}

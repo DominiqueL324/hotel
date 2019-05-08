@@ -176,7 +176,8 @@
 			
 			if($this->isCsrfTokenValid('add',$request->get('_token')))
 			{
-				$result = $this->checkIfIsBusy($request->get('id'));
+				$date = new \DateTime($request->get('date_debut'));
+				$result = $this->checkIfIsBusy($request->get('id'),$date);
 				if($result !=null){
 					$this->addFlash('erreur',"cette salle est pas occupée  pour le moment");
 					return $this->redirectToRoute('recep.location.etape2',['id'=>$request->get('id')]);
