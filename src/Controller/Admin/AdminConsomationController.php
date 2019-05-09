@@ -230,14 +230,16 @@
 		}
 
 		/**
-		* @Route("/login/consomation/json",methods={"POST"})
+		* @Route("/recep/consomation/json",methods={"POST"})
 		* @return Response
 		*/
 		public function testApi(Request $request)
 		{
 			$data = json_decode($request->getContent(),true);
-			exit(\Doctrine\Common\Util\Debug::dump($data));
+			//exit(\Doctrine\Common\Util\Debug::dump($data));
 			return new JsonResponse(['status' => 'ok',],JsonResponse::HTTP_CREATED);
+			$this->addFlash('success',"Opération efféctué avec success");
+			//return $this->redirectToRoute('recep.consomation.index');*/
 		}
 
 	}

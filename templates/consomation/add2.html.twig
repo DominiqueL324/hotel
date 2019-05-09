@@ -12,8 +12,9 @@
 			On ne peut plus servir des repas de cette catégorie à cette heure
 	</div>
 </div>
+<div></div>
 	<div class="container">
-		<div class="card">
+		<div class="card" ng-app="hotelApp" ng-controller="addFoodController">
 			<div class="card-header">
 				   <div class="row">
 						<h2>Etape 2 (Repas)</h2>
@@ -36,7 +37,7 @@
 						</div>
 				   </div>
 			</div>
-			<div class="card-body">
+			<div class="card-body" ng-init="depart()">
 				<h4>Informations du client</h4>
 				<hr>
 			<form class=" form" method="post" action=" {{path('recep.consomation.new')}} ">
@@ -75,13 +76,13 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Quantité :</label>
-									<input name="quantite"  id="quantite" type="number" required="required" class="form-control" value="1">
+									<input name="quantite"  id="quantite" type="number" required="required" class="form-control" ng-model="quantite" value="1">
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									<label >Type de repas</label>
-									<select id="repa" name="repas" class="form-control">
+									<select ng-model="id" id="repa" name="repas" class="form-control">
 										{% for repa in repas %}
 										<option value="{{repa.id}}" test1 ="{{repa.prix}} " test2 ="{{repa.heure}}" test3 = "{{repa.type}} "> {{repa.type}} {{repa.prix}} </option>
 										{% endfor %}
@@ -91,7 +92,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Prix :</label>
-									<input name="cout"  id="cout" type="text" readonly="readonly" class="form-control">
+									<input name="cout" ng-model="prix"  id="cout" type="text" readonly="readonly" class="form-control">
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -99,16 +100,50 @@
 									<label>Heures</label>
 									<input name="heure" type="text" class="form-control" id="heure" readonly="readonly">
 									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
-									<input type="hidden" name="client" value="{{client.id}}">
+									<input type="hidden" name="client" id="client" value="{{client.id}}">
+									<input type="hidden" name="client" id="type" ng-mode="type">
+									<input type="hidden" name="client" id="prix" ng-model="prix">
 								</div>
 							</div>
 
 						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<button type="button" ng-click="addPlat()" class="btn btn-primary ">Ajouter le Plat</button>
+							</div>
+						</div>
+						<hr>
+						
+						<h4>Liste des plats</h4>
+						<table datatable="ng" dt-options="vm.dtOptions" class="table table-bordered"  width="100%">
+						            <thead>
+										<tr>
+											<th>Type</th>
+											<th>Prix</th>
+											<th>Quantité</th>
+											<th>Cout</th>
+											<th>Retirer</th>
+										</tr>
+									</thead>
+							<tbody>
+
+									<tr ng-repeat="plat in listePlat">
+
+										<td> {{ '{{plat.type}}' }} </td>
+										<td> {{ '{{plat.prix}}' }} </td>
+										<td> {{ '{{plat.quantite}}' }} </td>
+										<td> {{ '{{plat.total}}' }} </td>
+										<td>
+											<a href  ng-click="remove($index)"><i class="fas fa-fw fa-user-check"></i></a>
+										</td>
+									</tr>
+							</tbody>
+						</table>
 						</div>
 						<div class="card-footer">
 							<div class="row">
 								<div class="col-lg-4">
-									<input type="submit" id="valider" class=" btn btn-success" value="Valider" name="">
+									<button type="button" ng-click="sendData()" class="btn btn-primary ">Enregistrer le repas</button>
 										<a href="#" class="btn btn-warning btn-icon-split">
 						                    <span class="icon text-white-50">
 						                      <i class="fas fa-flag"></i>
@@ -125,6 +160,66 @@
 {% endblock %}
 
 {% block script %}
+	<script src=" {{ asset('angular.min.js')}}"></script>
+	<script src=" {{ asset('angular-datatables.min.js')}}"></script>
+	<script type="text/javascript">
+		var app = angular.module('hotelApp',['datatables']);
+		app.controller('addFoodController',function($window,$scope,$http){
+			$scope.depart = function(){
+				$scope.listePlat=[];
+				$scope.position = 0;
+			};
+			$scope.addPlat = function(){
+				var cout = angular.element('#cout').val();
+				var type = angular.element('#type').val();
+				var prix = angular.element('#prix').val();
+				$scope.position = $scope.position + 1;
+				$scope.plat = {
+					'id':$scope.id,
+					'type':type,
+					'prix':prix,
+					'quantite':$scope.quantite,
+					'total':cout,
+				}
+				$scope.listePlat.push($scope.plat);
+				$scope.quantite = 1;
+				$scope.id="";
+
+			};
+			$scope.remove = function(indice){
+				alert(indice);
+				$scope.listePlat.splice(indice,1);
+			}
+			$scope.sendData= function(){
+
+				var longuer = $scope.listePlat.length;
+				if(longuer <= 0){
+					alert("Impossible d'Enregistrer un repas vide");
+					return;
+				}
+				var client = angular.element('#client').val();
+				var donnee = [];
+				$scope.listePlat.forEach(function(element){
+					donnee.push({
+						'repas':parseInt(element.id,10),
+						'client':parseInt(client,10),
+						'quantite':parseInt(element.quantite,10),
+					})
+				})
+				$http({
+					method:"POST",
+					url:"http://127.0.0.1:8000/recep/consomation/json",
+					data: donnee,
+
+				}).then(function(data){
+					$window.location.href = 'http://127.0.0.1:8000/recep/consomation';
+				}).catch(function(data){
+
+				});
+			}
+
+		});
+	</script>
 	<script type="text/javascript">
 		function diffdate(d1,d2){
 			var jour = d2.getTime() - d1.getTime();
@@ -136,22 +231,10 @@
 			var type = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test3");
 			var quantite = document.getElementById("quantite").value;
 			document.getElementById("heure").value = heure;
+			document.getElementById("type").value = type;
+			document.getElementById("prix").value = prix;
 			document.getElementById("cout").value = prix * quantite;
-			/*if(heure !== ""){
-				var date = new Date();
-				hour = date.getHours();	
-				parseInt(heure,10);
-				if(hour>heure){
-					document.getElementById("erreurHeure").style.display = 'inline';
-					document.getElementById("valider").style.display = 'none';
-				}else{
-					document.getElementById("erreurHeure").style.display = 'none';	
-					document.getElementById("valider").style.display = 'inline';					
-				}			
-			}else{
-				document.getElementById("erreurHeure").style.display = 'none';
-				document.getElementById("valider").style.display = 'inline';	
-			}*/
+			
 		}  
     </script>
 {% endblock %}
