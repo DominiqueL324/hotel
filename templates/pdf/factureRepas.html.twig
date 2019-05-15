@@ -57,7 +57,7 @@
 					</center>
 					<center>Facture N°  {{consomation.id}}/CONSO</center>
 						<div >
-							<center><h4 style="margin-top: 40px; margin-left: 15px;">FACTURE  DE Mr/Mme {{consomation.client.nom}} {{consomation.client.prenom}} OBJET: REPAS {{consomation.repas.type}} {{consomation.repas.prix}}  Frs Cfa</h4></center>
+							<center><h4 style="margin-top: 40px; margin-left: 15px;">FACTURE  DE Mr/Mme {{consomation.client.nom}} {{consomation.client.prenom}} OBJET: REPAS A HATEUR DE {{consomation.cout}}  Frs Cfa</h4></center>
 							<table width="100%"  cellpadding="7" border="1" style="border-collapse: collapse;">
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
 									<td colspan="4">INFORMATIONS DE BASES</td>
@@ -69,17 +69,22 @@
 									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.client.prenom}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
-									<td>Date </td>
+									<td>Quantité </td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.quantite|number_format}} Plat(s)</strong></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date </td>
 									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.madeat|date("d/m/Y")}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Observation </td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong></strong></td>
 								</tr>
-								<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
-									<td>repas</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.repas.type}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prix</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.repas.prix|number_format}}</strong> Frcfa</td>
+								<tr style="font-size: 20px;text-align: center; height: 150px;">
+									<td colspan="4">LISTE DES PLATS</td>
 								</tr>
+								{% for plat in consomation.repas %}
+									<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
+										<td>Plat</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{plat.type}}</strong></td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prix</td>
+										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{plat.prix|number_format}}</strong> Frcfa</td>
+									</tr>
+								{% endfor %}
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
 									<td colspan="4">RECAPITULATIF</td>
 								</tr>

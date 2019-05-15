@@ -2,6 +2,7 @@
 {% block title "Repas étape 2" %}
 {% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
 {% block body %}
+<div ng-app="hotelApp" ng-controller="addFoodController"  ng-init="depart()">
 {% for message in app.flashes('erreur') %}
 		<div class=" alert alert-danger">
 			{{message}}
@@ -11,10 +12,13 @@
 	<div class=" alert alert-danger col-lg-12" id="erreurHeure" style="display: none;">
 			On ne peut plus servir des repas de cette catégorie à cette heure
 	</div>
+	<div class=" alert alert-danger col-lg-12" ng-show="vue">
+			Echec de l'opération veuillez vérifier la connexion au serveur
+	</div>
 </div>
 <div></div>
 	<div class="container">
-		<div class="card" ng-app="hotelApp" ng-controller="addFoodController">
+		<div class="card" >
 			<div class="card-header">
 				   <div class="row">
 						<h2>Etape 2 (Repas)</h2>
@@ -37,10 +41,10 @@
 						</div>
 				   </div>
 			</div>
-			<div class="card-body" ng-init="depart()">
+			<div class="card-body">
 				<h4>Informations du client</h4>
 				<hr>
-			<form class=" form" method="post" action=" {{path('recep.consomation.new')}} ">
+			<form class=" form" method="post" action="#">
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
@@ -157,6 +161,31 @@
 			</div>
 		
 	</div>
+
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="crudmodal">
+	 <div class="modal-dialog" role="document">
+	     <div class="modal-content">
+	         <div class="modal-header">
+	         	<h4 class="modal-title">Opération en cours</h4>
+	         </div>
+	         <div class="modal-body">
+	         	<h3 class="small font-weight-bold">Opération en cours</h3>
+                  <div class="progress mb-4">
+                    <div id="barre" class="progress-bar bg-succes" role="progressbar" style="width: 100%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+	         </div>
+	         <div class="modal-footer">
+
+	         </div>
+	     </div>
+	   </div>
+	</div>
+
+
+
+
+</div>
 {% endblock %}
 
 {% block script %}
@@ -168,6 +197,7 @@
 			$scope.depart = function(){
 				$scope.listePlat=[];
 				$scope.position = 0;
+				$scope.vue = false;
 			};
 			$scope.addPlat = function(){
 				var cout = angular.element('#cout').val();
@@ -191,7 +221,7 @@
 				$scope.listePlat.splice(indice,1);
 			}
 			$scope.sendData= function(){
-
+				$scope.vue = false;
 				var longuer = $scope.listePlat.length;
 				if(longuer <= 0){
 					alert("Impossible d'Enregistrer un repas vide");
@@ -206,15 +236,24 @@
 						'quantite':parseInt(element.quantite,10),
 					})
 				})
+				var modal_popup = angular.element('#crudmodal');
+  				modal_popup.modal('show');
 				$http({
 					method:"POST",
 					url:"http://127.0.0.1:8000/recep/consomation/json",
 					data: donnee,
-
 				}).then(function(data){
-					$window.location.href = 'http://127.0.0.1:8000/recep/consomation';
+					if(data.data.status == "ok"){
+						$window.location.href = 'http://127.0.0.1:8000/recep/consomation';
+					}else{
+						$scope.vue = true;
+					}
+					var modal_popup = angular.element('#crudmodal');
+ 					modal_popup.modal('hide'); 
 				}).catch(function(data){
-
+					$scope.vue = true;	
+					var modal_popup = angular.element('#crudmodal');
+ 					modal_popup.modal('hide'); 
 				});
 			}
 

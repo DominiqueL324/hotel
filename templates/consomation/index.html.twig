@@ -33,16 +33,16 @@
 				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 		            <thead>
 						<tr>
-							<th>Type de repas</th>
-							<th>Prix du consomations</th>
+							<th>Quantité</th>
+							<th>Cout Total </th>
 							<th>Client</th>
-							<th>Action</th>
+							<th>Détails</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for consomation in consomations %}
 							<tr>
-								<td> {{consomation.repas.type}} </td>
+								<td> {{consomation.quantite}} </td>
 								<td> {{consomation.cout}} </td>
 								<td> {{consomation.client.nom}} {{consomation.client.prenom}} </td>
 								<td>

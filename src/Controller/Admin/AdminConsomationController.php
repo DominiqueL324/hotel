@@ -20,6 +20,15 @@
 	use Dompdf\Dompdf;
 	use Dompdf\Options;
 	use Symfony\Component\HttpFoundation\JsonResponse;
+	use Symfony\Component\Serializer\Encoder\JsonEncoder;
+	use Symfony\Component\Serializer\Encoder\XmlEncoder;
+	use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+	use Symfony\Component\Serializer\Serializer;
+	use JMS\Serializer\SerializationContext;
+	use Doctrine\Common\Annotations\AnnotationReader;
+	use Symfony\Component\Serializer\Annotation\MaxDepth;
+	use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+	use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 
 	/**
 	 * 
@@ -50,9 +59,19 @@
 		 * @var ObjectManager
 		 */
 		private $em;
+
+		/**
+		 * @var serilizer
+		 */
+		private $serial;
 		
 		function __construct(ClientRepository $repoClient, ConsomationRepository $repository,RepasRepository $repositoryrepas, UserRepository $userRepository ,ObjectManager $em)
 		{
+			$encoders = [new XmlEncoder(), new JsonEncoder()];
+			$normalizers = [new ObjectNormalizer()];
+			$serializer = new Serializer($normalizers, $encoders);
+
+			$this->serial = $serializer;
 			$this->repositoryVar = $repository;
 			$this->repositoryRepas = $repositoryrepas;
 			$this->repositoryClient = $repoClient;
@@ -236,11 +255,44 @@
 		public function testApi(Request $request)
 		{
 			$data = json_decode($request->getContent(),true);
+			if(count($data)>=1){
+				$consomation = new Consomation();
+				$client = new Client();
+				$repas = new Repas();
+				$cout = 0;
+				$quantite = 0;
+				foreach ($data as $donnees) {
+					$repas = $this->repositoryRepas->find($donnees["repas"]);
+					$consomation->addRepa($repas);
+					$cout = $cout + ($repas->getPrix()*$donnees["quantite"]);
+					$quantite = $quantite + $donnees["quantite"];
+				}
+				$client = $this->repositoryClient->find($data[0]["client"]);
+				$consomation->setCLient($client);
+				$consomation->setCout($cout);
+				$consomation->setMadeAt(new \DateTime());
+				$consomation->setUser($this->getUser());
+				$consomation->setQuantite($quantite);
+				$this->em->persist($consomation);
+				$this->em->flush();
+				return new JsonResponse(['status' => 'ok',],JsonResponse::HTTP_CREATED);
+				}else{
+					return new JsonResponse(['status' => 'erreur tableau vide',],JsonResponse::HTTP_CREATED);
+				}
+			
 			//exit(\Doctrine\Common\Util\Debug::dump($data));
-			return new JsonResponse(['status' => 'ok',],JsonResponse::HTTP_CREATED);
-			$this->addFlash('success',"Opération efféctué avec success");
-			//return $this->redirectToRoute('recep.consomation.index');*/
 		}
 
+		/**
+		* @Route("/recep/consomation/get/plats/{id}",methods={"GET"})
+		* @return Response
+		*/
+		public function getRepasinit(Request $request,$id)
+		{
+			
+			$consomation = $this->repositoryVar->find($id);
+			$final = $consomation->getRepas();
+			//$final = $this->serial->serialize($final,'json', ['enable_max_depth' => true]);
+			return new JsonResponse($final,JsonResponse::HTTP_CREATED);
+		}
 	}
-

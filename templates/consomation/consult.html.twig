@@ -27,63 +27,70 @@
 				<hr>
 			<form class=" form" method="post" action="#">
 						<div class="row">
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Nom</label>
 									<input name="nom" value=" {{consomation.client.nom}} " type="text" class="form-control" readonly="readonly">
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Prenom</label>
 									<input name="prenom" type="text" value=" {{consomation.client.prenom}} " class="form-control" readonly="readonly">
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
 									<label for="exampleInputEmail1">Téléphone</label>
 									<input name="nationalite" type="text" value=" {{consomation.client.telephone}} " class="form-control" readonly="readonly">
 								</div>
 							</div>
 							
-							<div class="col-md-3">
+						</div>
+
+						<div class="row">
+							<div class="col-md-4">
 								<div class="form-group">
-									<label for="exampleInputEmail1">CNI/Passeport *</label>
-									<input name="cni" type="text" value=" {{consomation.client.cni}} " class="form-control" readonly="readonly">
+									<label for="exampleInputEmail1">Cout Total</label>
+									<input  value=" {{consomation.cout}} " type="text" class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date</label>
+									<input  type="text" value=" {{consomation.madeat|date('d/m/Y')}} " class="form-control" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Quantité  Totale de plats</label>
+									<input  type="text" value=" {{consomation.quantite}} " class="form-control" readonly="readonly">
 								</div>
 							</div>
 							
 						</div>
 						
-						<h4>Informations du repas</h4>
+						<h4>Liste de plats</h4>
 						<hr>
-						<div class="row">
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>Quantité :</label>
-									<input name="quantite"  id="quantite" type="number" required="required" class="form-control" readonly="readonly" value="{{consomation.quantite}}">
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label >Type de repas</label>
-									<input name="type" value="{{consomation.repas.type}}"  id="type" type="text" readonly="readonly" class="form-control">
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>Prix :</label>
-									<input name="prix" value="{{consomation.repas.prix}}"  id="prix" type="text" readonly="readonly" class="form-control">
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>Heures</label>
-									<input name="heure" value="{{consomation.repas.heure}}" type="text" class="form-control" id="heure" readonly="readonly">
-								</div>
-							</div>
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+						            <thead>
+										<tr>
+											<th>Type</th>
+											<th>Prix</th>
+											<th>Heure</th>
+										</tr>
+									</thead>
+							<tbody>
+								{% for plat in consomation.repas %}
 
-						</div>
+									<tr>
+										<td> {{plat.type}} </td>
+										<td> {{plat.prix}} </td>
+										<td> {{plat.heure}} </td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
 						</div>
 						<div class="card-footer">
 							<div class="row">
@@ -101,4 +108,9 @@
 			</div>
 		
 	</div>
+{% endblock %}
+
+{% block script %}
+	<script src=" {{ asset('angular.min.js')}}"></script>
+	<script src=" {{ asset('angular-datatables.min.js')}}"></script>
 {% endblock %}

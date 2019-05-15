@@ -56,6 +56,11 @@ class Offre
      */
     private $total;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ProformatOffre", mappedBy="offre", cascade={"persist", "remove"})
+     */
+    private $proformatOffre;
+
     public function __construct()
     {
         $this->identifications = new ArrayCollection();
@@ -164,6 +169,23 @@ class Offre
     public function setTotal(int $total): self
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    public function getProformatOffre(): ?ProformatOffre
+    {
+        return $this->proformatOffre;
+    }
+
+    public function setProformatOffre(ProformatOffre $proformatOffre): self
+    {
+        $this->proformatOffre = $proformatOffre;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $proformatOffre->getOffre()) {
+            $proformatOffre->setOffre($this);
+        }
 
         return $this;
     }

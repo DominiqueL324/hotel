@@ -40,9 +40,14 @@ class Repas
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Consomation", mappedBy="repas")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Consomation", mappedBy="repas")
      */
     private $consomations;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ProformatRepas", mappedBy="repas", cascade={"persist", "remove"})
+     */
+    private $proformatRepas;
 
     public function __construct()
     {
@@ -114,7 +119,7 @@ class Repas
     {
         if (!$this->consomations->contains($consomation)) {
             $this->consomations[] = $consomation;
-            $consomation->setRepas($this);
+            $consomation->addRepa($this);
         }
 
         return $this;
@@ -124,10 +129,24 @@ class Repas
     {
         if ($this->consomations->contains($consomation)) {
             $this->consomations->removeElement($consomation);
-            // set the owning side to null (unless already changed)
-            if ($consomation->getRepas() === $this) {
-                $consomation->setRepas(null);
-            }
+            $consomation->removeRepa($this);
+        }
+
+        return $this;
+    }
+
+    public function getProformatRepas(): ?ProformatRepas
+    {
+        return $this->proformatRepas;
+    }
+
+    public function setProformatRepas(ProformatRepas $proformatRepas): self
+    {
+        $this->proformatRepas = $proformatRepas;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $proformatRepas->getRepas()) {
+            $proformatRepas->setRepas($this);
         }
 
         return $this;

@@ -69,6 +69,7 @@ class User  implements UserInterface
 
    /**
      * @ORM\Column(type="array")
+     * 
      */
     private $roles;
 
@@ -108,12 +109,18 @@ class User  implements UserInterface
      */
     private $consomations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Proformat", mappedBy="user")
+     */
+    private $proformats;
+
     public function __construct()
     {
         $this->identifications = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->repas = new ArrayCollection();
         $this->consomations = new ArrayCollection();
+        $this->proformats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,10 +222,10 @@ class User  implements UserInterface
         return $this;
     }
 
-    public function getRoleType(): string
+    /*public function getRoleType(): string
     {
-        return self::ROLE[$this->role];
-    }
+        return self::ROLE[$this->roles];
+    }*/
      public function getSalt()
     {
         return null;
@@ -226,6 +233,7 @@ class User  implements UserInterface
 
     public function getRoles()
     {
+        $tab = array();
         return $this->roles;
     }
 
@@ -356,6 +364,37 @@ class User  implements UserInterface
             // set the owning side to null (unless already changed)
             if ($consomation->getUser() === $this) {
                 $consomation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Proformat[]
+     */
+    public function getProformats(): Collection
+    {
+        return $this->proformats;
+    }
+
+    public function addProformat(Proformat $proformat): self
+    {
+        if (!$this->proformats->contains($proformat)) {
+            $this->proformats[] = $proformat;
+            $proformat->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProformat(Proformat $proformat): self
+    {
+        if ($this->proformats->contains($proformat)) {
+            $this->proformats->removeElement($proformat);
+            // set the owning side to null (unless already changed)
+            if ($proformat->getUser() === $this) {
+                $proformat->setUser(null);
             }
         }
 

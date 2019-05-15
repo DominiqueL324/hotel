@@ -1,0 +1,525 @@
+{% extends 'base.html.twig' %}
+{% block title "Repas étape 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+<div ng-app="hotelApp" ng-controller="addFoodController"  ng-init="depart()">
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+<div class="row">
+	<div class=" alert alert-danger col-lg-12" id="erreurHeure" style="display: none;">
+			On ne peut plus servir des repas de cette catégorie à cette heure
+	</div>
+	<div class=" alert alert-danger col-lg-12" ng-show="vue">
+			Echec de l'opération veuillez vérifier la connexion au serveur
+	</div>
+</div>
+<div></div>
+	<div class="container">
+		<div class="card" >
+			<div class="card-header">
+				   <div class="row">
+						<h2>Eléments de la proformat</h2>
+				   </div>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-lg-10">
+						<h4>Liste des salles</h4>
+					</div>
+					<div class="col-lg-2">
+						<button type="button" ng-click="loadSalle()" class="btn btn-primary ">Ajouter</button>
+					</div>
+				</div>
+				<hr>
+				<table datatable="ng" dt-options="vm.dtOptions" class="table table-bordered"  width="100%">
+						            <thead>
+										<tr>
+											<th>Type</th>
+											<th>Place</th>
+											<th>Prix</th>
+											<th>Caution</th>
+											<th>Nombre Jours</th>
+											<th>Cout Total</th>
+											<th>Retirer</th>
+										</tr>
+									</thead>
+							<tbody>
+
+									<tr ng-repeat="salle in salles">
+
+										<td> {{ '{{salle.type}}' }} </td>
+										<td> {{ '{{salle.places}}' }} </td>
+										<td> {{ '{{salle.prix}}' }} </td>
+										<td> {{ '{{salle.caution}}' }} </td>
+										<td> {{ '{{salle.jours}}' }} </td>
+										<td> {{ '{{salle.total}}' }} </td>
+										<td>
+											<a href  ng-click="removeSalle($index)"><i class="fas fa-fw fa-user-check"></i></a>
+										</td>
+									</tr>
+							</tbody>
+						</table>
+						<hr>
+						<div class="row">
+								<div class="col-lg-10">
+									<h4>Liste des Chambres</h4>
+								</div>
+							<div class="col-lg-2">
+								<button type="button" ng-click="loadOffre()" class="btn btn-primary ">Ajouter</button>
+							</div>
+						</div>
+						<hr>
+					<table datatable="ng" dt-options="vm.dtOptions" class="table table-bordered"  width="100%">
+						            <thead>
+										<tr>
+											<th>Libelle</th>
+											<th>Prix</th>
+											<th>Nuité(s)</th>
+											<th>Cout Total</th>
+											<th>Retirer</th>
+										</tr>
+									</thead>
+							<tbody>
+
+									<tr ng-repeat="chambre in chambres">
+
+										<td> {{ '{{chambre.libelle}}' }} </td>
+										<td> {{ '{{chambre.prix}}' }} </td>
+										<td> {{ '{{chambre.nuite}}' }} </td>
+										<td> {{ '{{chambre.total}}' }} </td>
+										<td>
+											<a href  ng-click="removeOffre($index)"><i class="fas fa-fw fa-user-check"></i></a>
+										</td>
+									</tr>
+							</tbody>
+					</table>
+				<hr>
+					<div class="row">
+						<div class="col-lg-10">
+							<h4>Liste des Repas</h4>
+						</div>
+						<div class="col-lg-2">
+							<button type="button" ng-click="loadPlat()" class="btn btn-primary ">Ajouter</button>
+						</div>
+					</div>
+				
+				<hr>
+					<table datatable="ng" dt-options="vm.dtOptions" class="table table-bordered"  width="100%">
+						            <thead>
+										<tr>
+											<th>Type</th>
+											<th>Prix</th>
+											<th>Quanité</th>
+											<th>Cout Total</th>
+											<th>Retirer</th>
+										</tr>
+									</thead>
+							<tbody>
+
+									<tr ng-repeat="repa in repas">
+
+										<td> {{ '{{repa.type}}' }} </td>
+										<td> {{ '{{repa.prix}}' }} </td>
+										<td> {{ '{{repa.quantite}}' }} </td>
+										<td> {{ '{{repa.total}}' }} </td>
+										<td>
+											<a href  ng-click="remove($index)"><i class="fas fa-fw fa-user-check"></i></a>
+										</td>
+									</tr>
+							</tbody>
+						</table>
+				</div>
+						<div class="card-footer">
+							<div class="row">
+								<div class="col-lg-4">
+									<button type="button" ng-click="sendData()" class="btn btn-primary ">Enregistrer le repas</button>
+										<a href="#" class="btn btn-warning btn-icon-split">
+						                    <span class="icon text-white-50">
+						                      <i class="fas fa-flag"></i>
+						                    </span>
+						                    <span class="text">Annuler</span>
+						                </a>
+								</div>
+							</div>
+						</div>
+					
+			</div>
+		
+	</div>
+
+
+	<div class="modal fade " tabindex="-1" role="dialog" id="repasmodal">
+	 <div class="modal-dialog modal-lg" role="document">
+	     <div class="modal-content col-lg-12">
+	         <div class="modal-header">
+	         	<h4 class="modal-title">Ajouter un repas</h4>
+	         </div>
+	         <div class="modal-body">
+	         	<form class=" form" method="post" action="#">
+						<h4>Informations du repas</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Quantité :</label>
+									<input name="quantite"  id="quantite" type="number" required="required" class="form-control" ng-model="quantite" value="1">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label >Type de repas</label>
+									<select ng-model="id" id="repa" name="repas" class="form-control">
+										{% for repa in repas %}
+										<option value="{{repa.id}}" test1 ="{{repa.prix}} " test2 ="{{repa.heure}}" test3 = "{{repa.type}} "> {{repa.type}} {{repa.prix}} </option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Prix :</label>
+									<input name="cout" ng-model="prix"  id="cout" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Heures</label>
+									<input name="heure" type="text" class="form-control" id="heure" readonly="readonly">
+									<input type="hidden" name="_token" value="{{csrf_token('add')}}">
+									<input type="hidden" name="client" id="type" ng-mode="type">
+									<input type="hidden" name="client" id="prix" ng-model="prix">
+								</div>
+							</div>
+
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<button type="button" ng-click="addPlat()" class="btn btn-primary ">Ajouter le Plat</button>
+							</div>
+						</div>
+			</form>
+	         </div>
+	     </div>
+	   </div>
+	</div>
+
+	<div class="modal fade " tabindex="-1" role="dialog" id="offresmodal">
+	 <div class="modal-dialog modal-lg" role="document">
+	     <div class="modal-content col-lg-12">
+	         <div class="modal-header">
+	         	<h4 class="modal-title">Ajouter une Chambre</h4>
+	         </div>
+	         <div class="modal-body">
+	         	<form class=" form" method="post" action="#">
+						<h4>Informations de la  chambre</h4>
+						<hr>
+						
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Nombre nuités :</label>
+									<input name="nuite" ng-model="nuite"  id="nuite" type="number" required="required" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label >Liste des chambres</label>
+									<select ng-model="idO" id="offre" name="offre" class="form-control">
+										{% for offre in offres %}
+										<option value="{{offre.id}}" test1 ="{{offre.prix}}" test2 ="{{offre.libelle}}" > {{offre.libelle}} {{offre.prix}} </option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Prix :</label>
+									<input name="prixO" ng-model="prixO"  id="prixO" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Total</label>
+									<input name="coutO" type="text" class="form-control" id="coutO" readonly="readonly">
+									<input type="hidden" name="client" id="prixO" ng-model="prix">
+									<input type="hidden" name="libelleO" id="libelleO" ng-model="libelleO">
+								</div>
+							</div>
+
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<button type="button" ng-click="addOffre()" class="btn btn-primary ">Ajouter la Chambre</button>
+							</div>
+						</div>
+			</form>
+	         </div>
+	     </div>
+	   </div>
+	</div>
+
+	<div class="modal fade " tabindex="-1" role="dialog" id="sallesmodal">
+	 <div class="modal-dialog modal-lg" role="document">
+	     <div class="modal-content col-lg-12">
+	         <div class="modal-header">
+	         	<h4 class="modal-title">Ajouter une Salle</h4>
+	         </div>
+	         <div class="modal-body">
+	         	<form class=" form" method="post" action="#">
+						<h4>Informations sur la Salle</h4>
+						<hr>
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Nombre de jours:</label>
+									<input name="jours" ng-model="jours"  id="jours" type="number" required="required" class="form-control">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Liste des salles</label>
+									<select ng-model="idS" id="salle" name="salle" class="form-control">
+										{% for salle in salles %}
+										<option value="{{salle.id}}" test1 ="{{salle.prix}}" test2 ="{{salle.caution}}"  test3 ="{{salle.typesalle}}" test4 ="{{salle.places}}" > {{salle.typesalle}}  {{salle.places}} </option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label>Prix :</label>
+									<input name="prixS" ng-model="prixS"  id="prixS" type="text" readonly="readonly" class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Caution</label>
+									<input name="caution" type="text" class="form-control" id="caution" readonly="readonly">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>Total</label>
+									<input name="coutS" type="text" class="form-control" id="coutS" readonly="readonly">
+									<input type="hidden" name="type" id="type" ng-model="type">
+									<input type="hidden" name="places" id="places" ng-model="places">
+								</div>
+							</div>
+						</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-lg-3">
+								<button type="button" ng-click="addSalle()" class="btn btn-primary ">Ajouter la Salle</button>
+							</div>
+						</div>
+			</form>
+	         </div>
+	     </div>
+	   </div>
+	</div>
+
+
+
+
+</div>
+{% endblock %}
+
+{% block script %}
+	<script src=" {{ asset('angular.min.js')}}"></script>
+	<script src=" {{ asset('angular-datatables.min.js')}}"></script>
+	<script type="text/javascript">
+		var app = angular.module('hotelApp',['datatables']);
+		app.controller('addFoodController',function($window,$scope,$http){
+			$scope.depart = function(){
+				$scope.repas=[];
+				$scope.salles=[];
+				$scope.chambres=[];
+				$scope.vue = false;
+			};
+			$scope.addPlat = function(){
+				var cout = angular.element('#cout').val();
+				var type = angular.element('#type').val();
+				var prix = angular.element('#prix').val();
+				$scope.position = $scope.position + 1;
+				$scope.plat = {
+					'id':$scope.id,
+					'type':type,
+					'prix':prix,
+					'quantite':$scope.quantite,
+					'total':cout,
+				}
+				$scope.repas.push($scope.plat);
+				$scope.quantite = 1;
+				$scope.id="";
+				var modal_popup = angular.element('#repasmodal');
+  				modal_popup.modal('hide');
+
+			};
+
+			$scope.addOffre = function(){
+				var cout = angular.element('#coutO').val();
+				var prix = angular.element('#prixO').val();
+				var libelle = angular.element('#libelleO').val();
+				$scope.position = $scope.position + 1;
+				$scope.offre = {
+					'id':$scope.idO,
+					'libelle':libelle,
+					'prix':prix,
+					'nuite':$scope.nuite,
+					'total':cout,
+				}
+				$scope.chambres.push($scope.offre);
+				$scope.nuite = 1;
+				$scope.idO="";
+				var modal_popup = angular.element('#offresmodal');
+  				modal_popup.modal('hide');
+
+			};
+
+			$scope.addSalle = function(){
+				var cout = angular.element('#coutS').val();
+				var prix = angular.element('#prixS').val();
+				var type = angular.element('#type').val();
+				var places = angular.element('#places').val();
+				$scope.salle = {
+					'id':$scope.idS,
+					'type':type,
+					'prix':prix,
+					'jours':$scope.jours,
+					'places':places,
+					'total':cout,
+				}
+				$scope.salles.push($scope.salle);
+				$scope.jours = 1;
+				$scope.idS="";
+				var modal_popup = angular.element('#sallesmodal');
+  				modal_popup.modal('hide');
+
+			};
+			$scope.remove = function(indice){
+				$scope.repas.splice(indice,1);
+			}
+			$scope.removeOffre = function(indice){
+				$scope.chambres.splice(indice,1);
+			}
+			$scope.removeSalle= function(indice){
+				$scope.salles.splice(indice,1);
+			}
+			$scope.loadPlat = function(){
+				var modal_popup = angular.element('#repasmodal');
+  				modal_popup.modal('show');
+			}
+			$scope.loadOffre = function(){
+				var modal_popup = angular.element('#offresmodal');
+  				modal_popup.modal('show');
+			}
+			$scope.loadSalle = function(){
+				var modal_popup = angular.element('#sallesmodal');
+  				modal_popup.modal('show');
+			}
+			$scope.sendData= function(){
+				$scope.vue = false;
+				var donnee=[];
+				var listeSalles=[];
+				var listeChambres=[];
+				var listeRepas=[];
+				if($scope.salles.length > 0){
+					$scope.salles.forEach(function(element){
+						listeSalles.push({
+							'salle':parseInt(element.id,10),
+							'jours':parseInt(element.jours,10),
+						});
+					});
+					
+				}
+				if($scope.chambres.length > 0){
+					$scope.chambres.forEach(function(element){
+						listeChambres.push({
+							'chambre':parseInt(element.id,10),
+							'nuite':parseInt(element.nuite,10),
+						});
+					});
+				}
+				if($scope.repas.length > 0){
+					$scope.repas.forEach(function(element){
+						listeRepas.push({
+							'repas':parseInt(element.id,10),
+							'quantite':parseInt(element.quantite,10),
+						});
+					});
+				}
+				donnee.push({
+					'salles':listeSalles,
+					'chambres':listeChambres,
+					'repas':listeRepas,
+				});
+				$http({
+					method:"POST",
+					url:"http://127.0.0.1:8000/recep/proformat/json",
+					data: donnee,
+				}).then(function(data){
+					if(data.data.status == "ok"){
+						//$window.location.href = 'http://127.0.0.1:8000/recep/consomation';
+					}else{
+						$scope.vue = true;
+					}
+					/*var modal_popup = angular.element('#crudmodal');
+ 					modal_popup.modal('hide');*/ 
+				}).catch(function(data){
+					$scope.vue = true;	
+					/*var modal_popup = angular.element('#crudmodal');
+ 					modal_popup.modal('hide'); */
+				});
+			}
+
+		});
+	</script>
+	<script type="text/javascript">
+		function diffdate(d1,d2){
+			var jour = d2.getTime() - d1.getTime();
+			return Math.ceil(jour/(1000*60*60*24));
+		}
+		document.getElementById("repa").onchange = function(){
+			var prix = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test1");
+			var heure = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test2");
+			var type = document.getElementById("repa").options[document.getElementById("repa").selectedIndex].getAttribute("test3");
+			var quantite = document.getElementById("quantite").value;
+			document.getElementById("heure").value = heure;
+			document.getElementById("type").value = type;
+			document.getElementById("prix").value = prix;
+			document.getElementById("cout").value = prix * quantite;
+		}
+
+		document.getElementById("offre").onchange = function(){
+			var prix = document.getElementById("offre").options[document.getElementById("offre").selectedIndex].getAttribute("test1");
+			var libelle = document.getElementById("offre").options[document.getElementById("offre").selectedIndex].getAttribute("test2");
+			var nuite = document.getElementById("nuite").value;
+			document.getElementById("prixO").value = prix;
+			document.getElementById("libelleO").value = libelle;
+			document.getElementById("coutO").value = prix * nuite;
+			
+		}
+		document.getElementById("salle").onchange = function(){
+
+			var prix = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test1");
+			var type = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test3");
+			var caution = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test2");
+			var places = document.getElementById("salle").options[document.getElementById("salle").selectedIndex].getAttribute("test4");
+
+			var jours = document.getElementById("jours").value;
+
+			document.getElementById("prixS").value = prix;
+			document.getElementById("places").value = places;
+			document.getElementById("caution").value = caution;
+			document.getElementById("type").value = type;
+			document.getElementById("coutS").value = (prix * jours) + parseInt(caution,10);
+		}  
+    </script>
+{% endblock %}

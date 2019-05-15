@@ -43,6 +43,11 @@ class Salle
      */
     private $caution;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ProformatSalle", mappedBy="salle", cascade={"persist", "remove"})
+     */
+    private $proformatSalle;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
@@ -128,6 +133,23 @@ class Salle
     public function setCaution(?int $caution): self
     {
         $this->caution = $caution;
+
+        return $this;
+    }
+
+    public function getProformatSalle(): ?ProformatSalle
+    {
+        return $this->proformatSalle;
+    }
+
+    public function setProformatSalle(ProformatSalle $proformatSalle): self
+    {
+        $this->proformatSalle = $proformatSalle;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $proformatSalle->getSalle()) {
+            $proformatSalle->setSalle($this);
+        }
 
         return $this;
     }
