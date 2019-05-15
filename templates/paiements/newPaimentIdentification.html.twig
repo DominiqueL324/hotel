@@ -16,17 +16,22 @@
 			<div class="card-body">
 				<form class="form" method="post" action="{{path('recep.paiement.new_identification',{id:identification.id})}}">
 					<div class="row">
-						<div class="col-md-4"> 
+						<div class="col-md-3"> 
 							<label>Prix Total</label>  
 							<input class="form-control" type="text" name="prix" value=" {{identification.cout+identification.coutextra}} " readonly="readonly">
 						 </div>
-						<div class="col-md-4"> 
+						 <div class="col-md-3"> 
+							<label>Remise</label>  
+							<input class="form-control" type="text" name="remise" value=" {{(identification.cout*identification.remise)/100}} " readonly="readonly">
+						 </div>
+						 {% set remise = (identification.cout*identification.remise)/100 %}
+						<div class="col-md-3"> 
 							<label>Avance Actuelle</label> 
 							 <input class="form-control" type="text" name="" value=" {{identification.avance}} " readonly="readonly">
 						 </div>
-						<div class="col-md-4"> 
+						<div class="col-md-3"> 
 							<label>Reste</label>  
-							<input class="form-control" type="text" name="reste" value=" {{(identification.cout+identification.coutextra) - identification.avance}} " readonly="readonly"> 
+							<input class="form-control" type="text" name="reste" value=" {{((identification.cout+identification.coutextra) - identification.avance) - remise}} " readonly="readonly"> 
 						</div>
 						<div class="col-md-4"> 
 							<input class="form-control" type="hidden" name="id" value=" {{identification.id}} " readonly="readonly"> 

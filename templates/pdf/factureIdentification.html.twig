@@ -63,36 +63,36 @@
 									<td colspan="4">INFORMATIONS DE BASES</td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;">
-									<td>Nom du client</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.client.nom}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prenom </td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.client.prenom}}</strong></td>
+									<td>&nbsp;Nom du client</td>
+									<td>&nbsp;<strong>{{identification.client.nom}}</strong></td>
+									<td>&nbsp;Prenom </td>
+									<td>&nbsp;<strong>{{identification.client.prenom}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
-									<td>Date de debut</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.arrivedat|date("d/m/Y")}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date de fin</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.livedat|date('d/m/Y')}}</strong></td>
+									<td>&nbsp;Date de debut</td>
+									<td>&nbsp;<strong>{{identification.arrivedat|date("d/m/Y")}}</strong></td>
+									<td>&nbsp;Date de fin</td>
+									<td>&nbsp;<strong>{{identification.livedat|date('d/m/Y')}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
-									<td>Chambre</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.offre.libelle}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Porte</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.offre.porte}}</strong></td>
+									<td>&nbsp;Chambre</td>
+									<td>&nbsp;<strong>{{identification.offre.libelle}}</strong></td>
+									<td>&nbsp;Porte</td>
+									<td>&nbsp;<strong>{{identification.offre.porte}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-									<td>Avance</td>
-									<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{identification.avance}} Cfa</strong></td>
+									<td>&nbsp;Avance</td>
+									<td colspan="3">&nbsp;<strong>{{identification.avance}} Cfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
 									<td colspan="4">LISTE DES AVANCES</td>
 								</tr>
 								{% for paiement in identification.paiements %}
 											<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-												<td>Date</td>
-												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{paiement.madeat |date("d/m/Y")}} </strong></td>
-												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Montant</td>
-												<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{paiement.montant|number_format}} Cfa</strong></td>
+												<td>&nbsp;Date</td>
+												<td>&nbsp;<strong>{{paiement.madeat |date("d/m/Y")}} </strong></td>
+												<td>&nbsp;Montant</td>
+												<td>&nbsp;<strong>{{paiement.montant|number_format}} Cfa</strong></td>
 											</tr>
 								{% endfor %}
 								<tr style="font-size: 20px;text-align: center; height: 150px;">

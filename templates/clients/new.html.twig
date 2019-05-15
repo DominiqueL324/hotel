@@ -2,6 +2,16 @@
 {% block title client.nom %}
 {% block loguer %}{{user.nom}}  {{user.prenom}}{% endblock %}
 {% block body %}
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+		{% endfor %}
 	<div class="container mt-4">
 		<div class="card">
 			<div class="card-header">

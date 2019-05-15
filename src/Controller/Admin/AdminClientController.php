@@ -60,6 +60,15 @@
 			$form->handleRequest($request);
 			if($form->isSubmitted() && $form->isValid())
 			{
+				/*$client1 = $this->repositoryVar->findOneBy(['cni'=>$client->getCni()]);
+				if($client1!=null and ){
+					$this->addFlash('erreur','Un client avec cette cni existe dejà');
+					return $this->render('clients/new.html.twig',[
+												'client'=> $client,
+												'form'=> $form->createView(),
+												'user'=>$user
+											]);
+				}*/
 				$this->em->flush();
 				$this->addFlash('success','Modification effectuée avec succes');
 				return $this->redirectToRoute('admin.client.index');
@@ -84,7 +93,16 @@
 			$form->handleRequest($request);
 			if($form->isSubmitted() && $form->isValid())
 			{
-				$client->setUser($this->repositoryUser->find(2));
+				$client1 = $this->repositoryVar->findOneBy(['cni'=>$client->getCni()]);
+				if($client1!=null){
+					$this->addFlash('erreur','Un client avec cette cni existe dejà');
+					return $this->render('clients/new.html.twig',[
+												'client'=> $client,
+												'form'=> $form->createView(),
+												'user'=>$user
+											]);
+				}
+				$client->setUser($this->getUser());
 				$this->em->persist($client);
 				$this->em->flush();
 				$this->addFlash('success','Création effectuée avec succes');

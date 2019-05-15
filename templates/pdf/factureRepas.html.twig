@@ -63,26 +63,26 @@
 									<td colspan="4">INFORMATIONS DE BASES</td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;">
-									<td>Nom du client</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.client.nom}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prenom </td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.client.prenom}}</strong></td>
+									<td>&nbsp;Nom du client</td>
+									<td>&nbsp;<strong>{{consomation.client.nom}}</strong></td>
+									<td>&nbsp;Prenom </td>
+									<td>&nbsp;;<strong>{{consomation.client.prenom}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
 									<td>Quantité </td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.quantite|number_format}} Plat(s)</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date </td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{consomation.madeat|date("d/m/Y")}}</strong></td>
+									<td>&nbsp;<strong>{{consomation.quantite|number_format}} Plat(s)</strong></td>
+									<td>&nbsp;Date </td>
+									<td>&nbsp;<strong>{{consomation.madeat|date("d/m/Y")}}</strong></td>
 								</tr>
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
 									<td colspan="4">LISTE DES PLATS</td>
 								</tr>
 								{% for plat in consomation.repas %}
 									<tr style="font-size: 20px; margin-left: 10px;height: 100px;">
-										<td>Plat</td>
-										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{plat.type}}</strong></td>
-										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Prix</td>
-										<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{plat.prix|number_format}}</strong> Frcfa</td>
+										<td>&nbsp;Plat</td>
+										<td>&nbsp;<strong>{{plat.type}}</strong></td>
+										<td>&nbsp;Prix</td>
+										<td>&nbsp;<strong>{{plat.prix|number_format}}</strong> Frcfa</td>
 									</tr>
 								{% endfor %}
 								<tr style="font-size: 20px;text-align: center; height: 150px;">

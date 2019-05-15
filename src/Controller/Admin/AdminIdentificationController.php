@@ -196,7 +196,7 @@
 						$identification->setRemise($request->get('remise_accordee'));
 						$identification->setUser($this->getUser());
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
-						$identification->setCout($request->get('net_payer'));
+						$identification->setCout($request->get('cout_total_normal'));
 						$identification->setLivedAt(new \DateTime($request->get('date_end')));
 						$identification->setNombrePersonne($request->get('nombrepersonne'));
 						$identification->setSeRendantA($request->get('serendanta'));
@@ -307,7 +307,7 @@
 						
 
 						$identification->setClient($client);
-						$identification->setCout($request->get('net_payer'));
+						$identification->setCout($request->get('cout_total_normal'));
 						$identification->setRemise($request->get('remise_accordee'));
 						$identification->setUser($this->repositoryUser->find(2));
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
@@ -382,7 +382,7 @@
 						
 						$identification->setClient($client);
 						$identification->setRemise($request->get('remise_accordee'));
-						$identification->setCout($request->get('net_payer'));
+						$identification->setCout($request->get('cout_total_normal'));
 						$identification->setUser($this->getUser());
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_end')));
@@ -584,7 +584,7 @@
 							return $this->redirectToRoute('recep.new_client_reserv');
 						}
 						$identification->setRemise($request->get('remise_accordee'));
-						$identification->setCout($request->get('net_payer'));
+						$identification->setCout($request->get('cout_total_normal'));
 						$identification->setUser($this->getUser());
 						$identification->setArrivedAt(new \DateTime($request->get('date_arrivee')));
 						$identification->setLivedAt(new \DateTime($request->get('date_depart')));

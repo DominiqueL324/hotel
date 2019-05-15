@@ -104,10 +104,10 @@
 		}
 
 		/**
-		* @Route("/recep/paiement/add/{reservation}", name="recep.paiement.new")
+		* @Route("/recep/paiement/add/{id}", name="recep.paiement.new")
 		* @return Response
 		*/
-		public function new(Request $request,$reservation=0):Response
+		public function new(Request $request,Reservation $reservation):Response
 		{
 			$prix = $this->repositoryVar->find($request->get('id'))->getPrix();
 			$reste = $prix - $this->repositoryVar->find($request->get('id'))->getAvance();
@@ -130,8 +130,7 @@
 				$paiement->setMontant($request->get('montant'));
 				$this->em->persist($paiement);
 				$this->em->flush();
-				$reservations = $this->repositoryVar->find($request->get('id'));
-				$offre = $this->repositoryOffre->find($reservations->getOffre()->getId());
+				$offre = $this->repositoryOffre->find($reservation->getOffre()->getId());
 				/*if($reservation->getAvance()==0)
 				{
 					if($offre->getQuantite()<=0){
@@ -140,8 +139,8 @@
 						$offre->setQuantite($offre->getQuantite()-1);	
 					}
 				}*/
-				$reservations->setAvance($reservations->getAvance() + $paiement->getMontant());
-				$reservations->addPaiement($paiement);
+				$reservation->setAvance($reservation->getAvance() + $paiement->getMontant());
+				$reservation->addPaiement($paiement);
 				$reservation->setValide("oui");
 				$this->em->flush();
 				$this->addFlash('success','Avance effectuée avec succes');
@@ -157,7 +156,9 @@
 		public function newIdentificationPaiement(Request $request,$id):Response
 		{
 			$prix = $this->repositoryIdentification->find($request->get('id'))->getCout();
+			$avance = ($this->repositoryIdentification->find($request->get('id'))->getCout()*$this->repositoryIdentification->find($request->get('id'))->getRemise())/100;
 			$prix = $prix + $this->repositoryIdentification->find($request->get('id'))->getCoutExtra();
+			$prix = $prix - $avance;
 			$reste = $prix - $this->repositoryIdentification->find($request->get('id'))->getAvance();
 
 			if($request->get('montant') > $prix ){
