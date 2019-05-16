@@ -22,6 +22,13 @@
 			<div class="card-header">
 				   <div class="row">
 						<h2>Eléments de la proformat</h2>
+						<div class="col-lg-1">
+							
+						</div>
+						<div class="col-lg-6">
+							<label>Motif de la proforma</label>
+							<input type="text" class="form-control" name="motif" ng-model="motif" id="motif">
+						</div>
 				   </div>
 			</div>
 			<div class="card-body">
@@ -326,6 +333,22 @@
 	</div>
 
 
+	<div class="modal fade " tabindex="-1" role="dialog" id="erreurmodal">
+	 <div class="modal-dialog" role="document">
+	     <div class="modal-content col-lg-12">
+	         <div class="modal-header">
+	         	<h4 class="modal-title">ERREUR</h4>
+	         </div>
+	         <div class="modal-body">
+	         	<div class="alert alert-danger">
+	         		Vous devez saisir un motif valide
+	         	</div>
+	         </div>
+	     </div>
+	   </div>
+	</div>
+
+
 
 
 </div>
@@ -430,6 +453,12 @@
 				var listeSalles=[];
 				var listeChambres=[];
 				var listeRepas=[];
+				if($scope.motif==null)
+				{
+					var modal_popup = angular.element('#erreurmodal');
+  					modal_popup.modal('show');
+					return;
+				}
 				if($scope.salles.length > 0){
 					$scope.salles.forEach(function(element){
 						listeSalles.push({
@@ -459,6 +488,7 @@
 					'salles':listeSalles,
 					'chambres':listeChambres,
 					'repas':listeRepas,
+					'motif':$scope.motif,
 				});
 				$http({
 					method:"POST",
