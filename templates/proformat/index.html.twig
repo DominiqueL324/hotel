@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Proforma-Acceuil" %}
+{% block loguer %}{{app.user.nom}}  {{app.user.prenom}}{% endblock %}
+
+{% block body %}
+<h1 class="header mt-4" style="text-align: center;">LISTE DES PROFORMATS</h1>
+
+<div class="container mt-6">
+		{% for message in app.flashes('success') %}
+		<div class=" alert alert-success">
+			{{message}}
+		</div>
+		{% endfor %}
+		{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+		{% endfor %}
+		<div class="card">
+			<div class="card-header">
+				<div class="text-right">
+					 <a class="btn btn-primary" href="{{path('recep.proformat.add.launcher')}}"> Ajouter  </a>
+				</div>
+			</div>
+		<br>
+		<div class="card-body">
+			  <div class="table-responsive">
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		            <thead>
+						<tr>
+							<th>Motif</th>
+							<th>Date</th>
+							<th>Cout</th>
+							<th>Détails</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+			<tbody>
+				{% for proformat in proformats %}
+					<tr>
+						<td> {{proformat.motif}} </td>
+						<td> {{proformat.madeat|date('d/m/Y')}} </td>
+						<td> {{proformat.cout|number_format}} </td>
+						<td><a href="{{path('recep.proformat.consult',{id:proformat.id})}}"> <i class="fas fa-fw fa-address-card"></i></a> </td>
+						<td>
+							<a href="#" onclick="return confirm('Voulez vous vraiment continuer??')"><i class="fas fa-fw fa-trash"></i></a>
+							
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	</div>
+</div>
+</div>
+</div>
+	
+	
+{% endblock %}

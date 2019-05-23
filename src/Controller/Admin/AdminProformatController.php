@@ -102,6 +102,39 @@
 		*/
 		public function index():Response
 		{
+			$proformats = $this->repositoryProformat->findAll();
+			$user = $this->getUser();
+			/*$proformatOffres = $this->repositoryOffre->findBy();
+			$proformatSalles = $this->repositoryOffre->findAll();
+			$proformatRepas = $this->repositorySalle->findAll();
+			$repas = $this->repositoryRepas->findAll();*/
+			return $this->render('proformat/index.html.twig',['user'=>$user,'proformats'=>$proformats,]); 
+		}
+
+
+		/**
+		* @Route("/recep/proformat/consult/{id}", name="recep.proformat.consult",methods={"GET"})
+		* @return Response
+		*/
+		public function consult(Proformat $proformat):Response
+		{
+
+			$proformatO = $this->repositoryProformatOffre->findBy(['proformat'=>$proformat->getId()]);
+			$proformatS = $this->repositoryProformatSalle->findBy(['proformat'=>$proformat->getId()]);
+			$proformatR = $this->repositoryProformatRepas->findBy(['proformat'=>$proformat->getId()]);
+			return $this->render('proformat/consult.html.twig',[
+				'proformat'=>$proformat,
+				'proformato'=>$proformatO,
+				'proformatS'=>$proformatS,
+				'proformatR'=>$proformatR,]); 
+		}
+
+		/**
+		* @Route("/recep/proformat/add/launcher", name="recep.proformat.add.launcher")
+		* @return Response
+		*/
+		public function launcher():Response
+		{
 			$user = $this->getUser();
 			$clients = $this->repositoryVar->findAll();
 			$offres = $this->repositoryOffre->findAll();
@@ -111,7 +144,7 @@
 		}
 
 		/**
-		* @Route("/recep/proformat/json")
+		* @Route("/recep/proformat/json",methods={"POST"})
 		* @return Response
 		*/
 		public function testApi(Request $request)
@@ -172,6 +205,33 @@
 			//exit(\Doctrine\Common\Util\Debug::dump($chambres));
 			return new JsonResponse(['status' => 'ok',],JsonResponse::HTTP_CREATED);
 			
+		}
+
+		/**
+		* @Route("/recep/proformat/print/{id}", name="recep.proformat.imprimer",methods={"GET"})
+		* @return Response
+		*/
+		public function print(Proformat $proformat):Response
+		{
+			$pdfOptions = new Options();
+	        $pdfOptions->set('defaultFont', 'Helvetica');
+	        $pdfOptions->set('isRemoteEnabled',true);
+	        // Instantiate Dompdf with our options
+	        $dompdf = new Dompdf($pdfOptions);
+	        // Retrieve the HTML generated in our twig file
+	        $html = $this->renderView('pdf/factureProformat.html.twig',['location'=>$location]);
+	        // Load HTML to Dompdf
+	        $dompdf->loadHtml($html);
+	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+	        $dompdf->setPaper('A4', 'portrait');
+	        // Render the HTML as PDF
+	        $dompdf->render();
+	        // Output the generated PDF to Browser (force download)
+	        $dompdf->stream("factureLocation.pdf", [
+	            "Attachment" => false
+	        ]);
+			return $this->redirectToRoute('recep.location.consult',['id'=>$location->getId()]);
+			//génération de la facture
 		}
 
 	}

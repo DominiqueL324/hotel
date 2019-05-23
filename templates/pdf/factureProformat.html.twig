@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<style>
+    		@page {
+                margin: 100px 25px;
+            }
+
+            header {
+                position: fixed;
+                top: -90px;
+                left: 0px;
+                right: 0px;
+                height: 50px;
+
+                /** Extra personal styles **/
+                background-color: #03a9f4;
+                color: white;
+                text-align: center;
+                line-height: 35px;
+            }
+
+            footer {
+                position: fixed; 
+                bottom: -90px; 
+                left: 0px; 
+                right: 0px;
+                height: 50px; 
+
+                /** Extra personal styles **/
+                background-color: #03a9f4;
+                color: white;
+                text-align: center;
+                line-height: 35px;
+            }
+        </style>
+
+        <meta charset="UTF-8">
+        <title>Title of the PDF</title>
+        <link href=" {{asset('all.min.css')}} " rel="stylesheet" type="text/css">
+		  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+		  <link href="{{asset('sb-admin-2.min.css')}}" rel="stylesheet">
+		  <link href="{{asset('dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+    </head>
+    <body id="page-top"> 
+    	<header>
+    		<img align="left" src="/ProjetSymfony/hotel/templates/pdf/logo.jpg" width="50" height="50" >
+    		<center><strong> Le {{"now"|date("d M Y / H:m:s")}} CICM HOTEL Facture N° CICM/{{proformat.id}}/PRO</strong></center>
+        </header>
+        <footer>
+             Le {{"now"|date("d M Y / H:m:s")}} 
+            Facture générée par Mr/M {{app.user.nom}} {{app.user.prenom}} employé de CICM Hotel
+        </footer>
+        <main>
+					<center>
+						<img src="/ProjetSymfony/hotel/templates/pdf/logo.jpg" width="100" height="100" >
+					</center>
+					<center>Facture N°  CICM/{{proformat.id}}/PRO</center>
+						<div >
+							<center><h4 style="margin-top: 40px; margin-left: 15px;">FACTURE PROFORMAT POUR l'EVENEMENT {{proformat.motif}}</h4></center>
+							<table width="100%"  cellpadding="7" border="1" style="border-collapse: collapse;">
+								<tr style="font-size: 20px;text-align: center; height: 150px;">
+									<td colspan="4">INFORMATIONS DE BASES</td>
+								</tr>
+								<tr style="font-size: 20px; margin-left: 10px;">
+									<td>Motif de la proforma</td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{proformat.motif}}</strong></td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date </td>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{proformat.madeat|date('d/m/y')}}</strong></td>
+								</tr>
+								<tr style="font-size: 20px;text-align: center; height: 150px;">
+									<td colspan="4">LISTE DES SALLES</td>
+								</tr>
+								{% for proformatSalle in proformatS %}
+										<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+											<td>&nbsp;Salle</td>
+											<td><strong> {{proformatSalle.salle.typesalle}}  </strong></td>
+											<td>&nbsp;Prix</td>
+											<td><strong> {{proformatSalle.salle.prix|number_format}}</strong> </td>
+											<td>&nbsp;Places</td>
+											<td><strong> {{proformatSalle.salle.places}}</strong> </td>
+											<td>&nbsp;Nombre jours</td>
+											<td><strong> {{proformatSalle.day}}</strong> </td>
+											<td>&nbsp;Cout Total</td>
+											<td><strong> {{proformatSalle.cout|number_format}}</strong> </td>
+										</tr>
+								{% endfor %}
+
+								<tr style="font-size: 20px;text-align: center; height: 150px;">
+									<td colspan="4">LISTE DES CHAMBRES</td>
+								</tr>
+								{% for proformatOffre in proformatO %}
+										<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+											<td>&nbsp;Chambre</td>
+											<td><strong> {{proformatOffre.offre.libelle}}  </strong></td>
+											<td>&nbsp;Prix</td>
+											<td><strong> {{proformatOffre.offre.prix|number_format}}</strong> </td>
+											<td>&nbsp;Places</td>
+											<td><strong> {{proformatOffre.offre.places}}</strong> </td>
+											<td>&nbsp;Nombre nuités</td>
+											<td><strong> {{proformatOffre.nuite}}</strong> </td>
+											<td>&nbsp;Cout Total</td>
+											<td><strong> {{proformatOffre.cout|number_format}}</strong> </td>
+										</tr>
+								{% endfor %}
+								<tr style="font-size: 20px;text-align: center; height: 150px;">
+									<td colspan="4">RECAPITULATIF</td>
+								</tr>
+								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+									<td colspan="2">Coût Total Normal: </td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{proformat.couttotal|number_format }} FCfa</strong></td>
+								</tr>
+								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+									<td colspan="2">Remise: </td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{proformat.remise|number_format }}  FCfa</strong></td>
+								</tr>
+								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+									<td colspan="2">Caution: </td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{proformat.caution|number_format}} FCfa</strong></td>
+								</tr>
+								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+									<td colspan="2">NET A PAYER: </td>
+									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{((proformat.couttotal + proformat.caution) - 
+									proformat.remise)|number_format}} FCfa</strong></td>
+								</tr>
+							</table>
+							<center>
+								<p style="font-size: 20px; margin-left: 10px;"> Arreté la présente à la somme de <strong>{{((proformat.couttotal + proformat.caution) - 
+									proformat.remise)|number_format}} FCfa</strong></p>
+							</center>
+							<p><strong>LA DIRECTION</strong></p>
+							
+						</div>
+			</main>
+    </body>
+</html>

@@ -1,0 +1,129 @@
+{% extends 'base.html.twig' %}
+{% block title "proformat 2" %}
+{% block loguer %} {{app.user.nom}}  {{app.user.prenom}} {% endblock %}
+{% block body %}
+{% for message in app.flashes('erreur') %}
+		<div class=" alert alert-danger">
+			{{message}}
+		</div>
+{% endfor %}
+	<div class="container">
+		<h2>Proformat N° CICM/{{proformat.id}}/PRO})</h2>
+		<div class="card">
+			<div class="card-header">
+
+				   <div class="row">
+						<div class="col-lg-9">
+							<a href="{{path('recep.proformat.imprimer',{id:proformat.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10);">
+				            Imprimer
+				            </a>
+						</div>
+				   </div>
+			</div>
+			<div class="card-body">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Motif</label>
+									<p> <strong>{{proformat.motif}}</strong></p>  
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label >Cout Total</label>
+									<p> <strong>{{proformat.cout|number_format}}</strong></p> 
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="exampleInputEmail1">Date</label>
+									<p><strong>{{proformat.madeat|date('d/m/Y')}}</strong></p> 
+								</div>
+							</div>
+						</div>
+						<h4>LISTE DES SALLES </h4>
+						<hr>
+							<table class="table table-bordered" cellspacing="0">
+				                  <thead>
+				                    <tr>
+					                    <th>Type</th>
+										<th>Prix</th>
+										<th>Jours</th>
+										<th>Places</th>
+										<th>Cout Total</th>
+				                    </tr>
+				                  </thead>
+				                  <tbody>
+					                    	{% for proformatSalle in proformatS %}
+												<tr>
+													<td> {{proformatSalle.salle.typesalle}}  </td>
+													<td> {{proformatSalle.salle.prix|number_format}} </td>
+													<td> {{proformatSalle.salle.places}} </td>
+													<td> {{proformatSalle.day}} </td>
+													<td> {{proformatSalle.cout|number_format}} </td>
+												</tr>
+											{% endfor %}	
+						         </tbody>
+				            </table>
+
+				        <h4>LISTE DES CHAMBRES </h4>
+						<hr>
+							<table class="table table-bordered" cellspacing="0">
+				                  <thead>
+				                    <tr>
+					                    <th>Libelle</th>
+										<th>Prix</th>
+										<th>nuités</th>
+										<th>Cout Total</th>
+				                    </tr>
+				                  </thead>
+				                  <tbody>
+					                    	{% for proformatoffre in proformato %}
+												<tr>
+													<td> {{proformatoffre.offre.libelle}}  </td>
+													<td> {{proformatoffre.offre.prix|number_format}} </td>
+													<td> {{proformatoffre.nuite}} </td>
+													<td> {{proformatoffre.cout|number_format}} </td>
+												</tr>
+											{% endfor %}	
+						         </tbody>
+				            </table>
+
+				        <h4>LISTE DES REPAS </h4>
+						<hr>
+							<table class="table table-bordered" cellspacing="0">
+				                  <thead>
+				                    <tr>
+					                    <th>Type</th>
+										<th>Prix</th>
+										<th>Quantités</th>
+										<th>Cout Total</th>
+				                    </tr>
+				                  </thead>
+				                  <tbody>
+					                    	{% for proformatRepa in proformatR %}
+												<tr>
+													<td> {{proformatRepa.repas.type}}  </td>
+													<td> {{proformatRepa.repas.prix|number_format}} </td>
+													<td> {{proformatRepa.quantite}} </td>
+													<td> {{proformatRepa.cout|number_format}} </td>
+												</tr>
+											{% endfor %}	
+						         </tbody>
+				            </table>
+						</div>
+
+
+						<div class="card-footer">
+								 <div class="row">
+									<div class="col-lg-9">
+										<a href="{{path('recep.proformat.imprimer',{id:proformat.id})}}" class="btn btn-default" style="background-color: rgb(140,10,10);">
+							            Imprimer
+							            </a>
+									</div>
+				   </div>
+						</div>
+			</div>
+		
+	</div>
+{% endblock %}
