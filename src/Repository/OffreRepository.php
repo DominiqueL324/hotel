@@ -66,4 +66,26 @@ class OffreRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getResult();
     }
+
+    /**
+    * @return Array[]
+    */
+    public function findOffre()
+    {
+        $fields = array('o.libelle');
+        $query = $this->createQueryBuilder('o');
+        $query->select($fields);
+         return $query->getQuery()->getResult();
+    }
+
+    /**
+    * @return Array[]
+    */
+    public function findOffreId()
+    {
+        $fields = array('o.id,o.libelle');
+        $query = $this->createQueryBuilder('o');
+        $query->select($fields);
+        return $query->getQuery()->getResult();
+    }
 }

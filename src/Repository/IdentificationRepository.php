@@ -64,6 +64,15 @@ class IdentificationRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getTotal($ide)
+    {
+        $query = $this->createQueryBuilder('i');
+        $query->select('count(i.id)');  
+        $query->andWhere('i.offre = :offre');
+        $query->setParameter('offre',$ide);
+        return $query->getQuery()->getSingleScalarResult();
+    }
+
     public function finder( array $indice)
     {
         $query = $this->createQueryBuilder('i');

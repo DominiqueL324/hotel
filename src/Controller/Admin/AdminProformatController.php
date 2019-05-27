@@ -25,6 +25,8 @@
 	use Doctrine\Common\Persistence\ObjectManager;
 	use Symfony\Component\HttpFoundation\Request;
 	use Symfony\Component\HttpFoundation\JsonResponse;
+	use Dompdf\Dompdf;
+	use Dompdf\Options;
 
 
 	/**
@@ -213,13 +215,20 @@
 		*/
 		public function print(Proformat $proformat):Response
 		{
+			$proformatO = $this->repositoryProformatOffre->findBy(['proformat'=>$proformat->getId()]);
+			$proformatS = $this->repositoryProformatSalle->findBy(['proformat'=>$proformat->getId()]);
+			$proformatR = $this->repositoryProformatRepas->findBy(['proformat'=>$proformat->getId()]);
 			$pdfOptions = new Options();
 	        $pdfOptions->set('defaultFont', 'Helvetica');
 	        $pdfOptions->set('isRemoteEnabled',true);
 	        // Instantiate Dompdf with our options
 	        $dompdf = new Dompdf($pdfOptions);
 	        // Retrieve the HTML generated in our twig file
-	        $html = $this->renderView('pdf/factureProformat.html.twig',['location'=>$location]);
+	        $html = $this->renderView('pdf/factureProformat.html.twig',[
+				'proformat'=>$proformat,
+				'proformatO'=>$proformatO,
+				'proformatS'=>$proformatS,
+				'proformatR'=>$proformatR,]);
 	        // Load HTML to Dompdf
 	        $dompdf->loadHtml($html);
 	        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
@@ -230,7 +239,7 @@
 	        $dompdf->stream("factureLocation.pdf", [
 	            "Attachment" => false
 	        ]);
-			return $this->redirectToRoute('recep.location.consult',['id'=>$location->getId()]);
+			//return $this->redirectToRoute('recep.location.consult',['id'=>$location->getId()]);
 			//génération de la facture
 		}
 

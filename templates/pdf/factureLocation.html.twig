@@ -28,9 +28,9 @@
                 height: 50px; 
 
                 /** Extra personal styles **/
-                background-color: #03a9f4;
-                color: white;
-                text-align: center;
+                /*background-color: #03a9f4;
+                color: white;*/
+                text-align: left;
                 line-height: 35px;
             }
         </style>
@@ -48,8 +48,7 @@
     		<center><strong> Le {{"now"|date("d M Y / H:m:s")}} CICM HOTEL Facture N° {{location.numero}}</strong></center>
         </header>
         <footer>
-             Le {{"now"|date("d M Y / H:m:s")}} 
-            Facture générée par Mr/M {{app.user.nom}} {{app.user.prenom}} employé de CICM Hotel
+           <p><strong>LA DIRECTION</strong></p>
         </footer>
         <main>
 					<center>

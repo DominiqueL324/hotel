@@ -28,9 +28,9 @@
                 height: 50px; 
 
                 /** Extra personal styles **/
-                background-color: #03a9f4;
-                color: white;
-                text-align: center;
+                /**background-color: #03a9f4;**/
+                /**color: white;**/
+                text-align: left;
                 line-height: 35px;
             }
         </style>
@@ -48,8 +48,7 @@
     		<center><strong> Le {{"now"|date("d M Y / H:m:s")}} CICM HOTEL Facture N° CICM/{{proformat.id}}/PRO</strong></center>
         </header>
         <footer>
-             Le {{"now"|date("d M Y / H:m:s")}} 
-            Facture générée par Mr/M {{app.user.nom}} {{app.user.prenom}} employé de CICM Hotel
+        	<p><strong>LA DIRECTION</strong></p>
         </footer>
         <main>
 					<center>
@@ -59,77 +58,87 @@
 						<div >
 							<center><h4 style="margin-top: 40px; margin-left: 15px;">FACTURE PROFORMAT POUR l'EVENEMENT {{proformat.motif}}</h4></center>
 							<table width="100%"  cellpadding="7" border="1" style="border-collapse: collapse;">
-								<tr style="font-size: 20px;text-align: center; height: 150px;">
-									<td colspan="4">INFORMATIONS DE BASES</td>
+								<tr style="font-size: 20px;height: 150px;">
+									<td colspan="8">INFORMATIONS DE BASES</td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px;">
-									<td>Motif de la proforma</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{proformat.motif}}</strong></td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date </td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{{proformat.madeat|date('d/m/y')}}</strong></td>
+									<td colspan="5"><strong>Motif</strong></td>
+									<td colspan="3"><strong>Date</strong></td>
+								</tr>
+								<tr style="font-size: 20px;margin-left: 10px;">
+									<td colspan="5">{{proformat.motif}}</strong></td>
+									<td colspan="3">{{proformat.madeat|date('d/m/y')}}</strong></td>
+								</tr>
+								<tr style="font-size: 20px; height: 150px;">
+									<td colspan="8">LISTE DES SALLES</td>
 								</tr>
 								<tr style="font-size: 20px;text-align: center; height: 150px;">
-									<td colspan="4">LISTE DES SALLES</td>
+											<td colspan="4"><strong>Salle </strong></td>
+											<td><strong>Prix/Jr</strong> </td>
+											<td ><strong>Places</strong> </td>
+											<td ><strong>Jour(s)</strong> </td>
+											<td ><strong>Total</strong> </td>
 								</tr>
 								{% for proformatSalle in proformatS %}
 										<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-											<td>&nbsp;Salle</td>
-											<td><strong> {{proformatSalle.salle.typesalle}}  </strong></td>
-											<td>&nbsp;Prix</td>
-											<td><strong> {{proformatSalle.salle.prix|number_format}}</strong> </td>
-											<td>&nbsp;Places</td>
-											<td><strong> {{proformatSalle.salle.places}}</strong> </td>
-											<td>&nbsp;Nombre jours</td>
-											<td><strong> {{proformatSalle.day}}</strong> </td>
-											<td>&nbsp;Cout Total</td>
-											<td><strong> {{proformatSalle.cout|number_format}}</strong> </td>
+											<td colspan="4">{{proformatSalle.salle.typesalle}}</td>
+											<td>{{proformatSalle.salle.prix|number_format}}</td>
+											<td >{{proformatSalle.salle.places}}</td>
+											<td >{{proformatSalle.day}}</td>
+											<td><strong> {{proformatSalle.cout|number_format}} Frs</strong> </td>
 										</tr>
 								{% endfor %}
 
-								<tr style="font-size: 20px;text-align: center; height: 150px;">
-									<td colspan="4">LISTE DES CHAMBRES</td>
+								<tr style="font-size: 20px; height: 150px;">
+									<td colspan="8">LISTE DES CHAMBRES</td>
+								</tr>
+								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+											<td colspan="5"><strong>Libelle </strong></td>
+											<td><strong>Prix/Jr</strong> </td>
+											<td ><strong>Nuité(s)</strong> </td>
+											<td><strong>Total</strong> </td>
 								</tr>
 								{% for proformatOffre in proformatO %}
 										<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-											<td>&nbsp;Chambre</td>
-											<td><strong> {{proformatOffre.offre.libelle}}  </strong></td>
-											<td>&nbsp;Prix</td>
+											<td colspan="5"><strong> {{proformatOffre.offre.libelle}}  </strong></td>
 											<td><strong> {{proformatOffre.offre.prix|number_format}}</strong> </td>
-											<td>&nbsp;Places</td>
-											<td><strong> {{proformatOffre.offre.places}}</strong> </td>
-											<td>&nbsp;Nombre nuités</td>
-											<td><strong> {{proformatOffre.nuite}}</strong> </td>
-											<td>&nbsp;Cout Total</td>
-											<td><strong> {{proformatOffre.cout|number_format}}</strong> </td>
+											<td ><strong> {{proformatOffre.nuite}}</strong> </td>
+											<td><strong> {{proformatOffre.cout|number_format}} Frs</strong> </td>
 										</tr>
 								{% endfor %}
-								<tr style="font-size: 20px;text-align: center; height: 150px;">
-									<td colspan="4">RECAPITULATIF</td>
+
+								<tr style="font-size: 20px; height: 150px;">
+									<td colspan="8">LISTE DES REPAS</td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-									<td colspan="2">Coût Total Normal: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{proformat.couttotal|number_format }} FCfa</strong></td>
+											<td colspan="5"><strong>Repas </strong></td>
+											<td><strong>Prix</strong> </td>
+											<td ><strong>Quantité(s)</strong> </td>
+											<td><strong>Total</strong> </td>
+								</tr>
+								{% for proformatRepas in proformatR %}
+										<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
+											<td colspan="5"><strong> {{proformatRepas.repas.type}}  </strong></td>
+											<td><strong> {{proformatRepas.repas.prix|number_format}}</strong> </td>
+											<td ><strong> {{proformatRepas.quantite}}</strong> </td>
+											<td><strong> {{proformatRepas.cout|number_format}} Frs</strong> </td>
+										</tr>
+								{% endfor %}
+								<tr style="font-size: 20px; height: 150px;">
+									<td colspan="8">RECAPITULATIF</td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-									<td colspan="2">Remise: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{proformat.remise|number_format }}  FCfa</strong></td>
+									<td colspan="4">Coût Total Normal: </td>
+									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="4"><strong>{{proformat.cout|number_format }} FCfa</strong></td>
 								</tr>
 								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-									<td colspan="2">Caution: </td>
-									<td style="background-color: rgb(245,245,245); text-align: center;" colspan="2"><strong>{{proformat.caution|number_format}} FCfa</strong></td>
-								</tr>
-								<tr style="font-size: 20px; margin-left: 10px; height: 100px;">
-									<td colspan="2">NET A PAYER: </td>
-									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="2"><strong>{{((proformat.couttotal + proformat.caution) - 
-									proformat.remise)|number_format}} FCfa</strong></td>
+									<td colspan="4">NET A PAYER: </td>
+									<td style="background-color: rgb(240,240,240); text-align: center;" colspan="4"><strong>{{proformat.cout|number_format}} FCfa</strong></td>
 								</tr>
 							</table>
 							<center>
-								<p style="font-size: 20px; margin-left: 10px;"> Arreté la présente à la somme de <strong>{{((proformat.couttotal + proformat.caution) - 
-									proformat.remise)|number_format}} FCfa</strong></p>
+								<p style="font-size: 20px; margin-left: 10px;"> Arreté la présente à la somme de <strong>{{proformat.cout|number_format}} FCfa</strong></p>
 							</center>
-							<p><strong>LA DIRECTION</strong></p>
-							
 						</div>
 			</main>
     </body>
