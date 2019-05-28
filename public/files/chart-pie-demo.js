@@ -16,37 +16,27 @@ function getData(url, callback,labels,nombre){
         console.error("Erreur réseau avec l'URL " + url);
     });
     req.send(null);
-    //var data = [12,20,30,40,50,62,68,70,89,23,11,12];
-    //return data;
 }
 function resultat(info,labels,nombre){
   result = JSON.parse(info);
   result['status']["libelle"].forEach(function(item){
     labels.push(item);
   });
-  result['status']["nombre"].forEach(function(items){
+  nombre = result['status']["nombre"];
+ /* result['status']["nombre"].forEach(function(items){
      if (Number.isInteger(items)) {
         nombre.push(items)
       }
-  });
-  console.log(nombre)
-  console.log(labels)
-}
+  });*/
+  //console.log(nombre)
 
-// Pie Chart Example
-var labels=[];
-var data=[];
-getData("http://127.0.0.1:8000/recep/charts/test/check",resultat,labels,data);
-var data = [12,20,30,40];
-console.log(typeof data)
-console.log(typeof labels)
-var ctx = document.getElementById("myPieChart");
+  var ctx = document.getElementById("myPieChart");
 var myPieChart = new Chart(ctx, {
   type: 'doughnut',
   data: {
     labels: labels,
     datasets: [{
-      data: data,
+      data: nombre,
       backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
       hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
       hoverBorderColor: "rgba(234, 236, 244, 1)",
@@ -61,12 +51,19 @@ var myPieChart = new Chart(ctx, {
       borderWidth: 1,
       xPadding: 15,
       yPadding: 15,
-      displayColors: false,
+      displayColors: true,
       caretPadding: 10,
     },
     legend: {
-      display: false
+      display: true
     },
-    cutoutPercentage: 80,
+    cutoutPercentage: 10,
   },
 });
+
+}
+
+// Pie Chart Example
+var labels=[];
+var data
+getData("http://127.0.0.1:8000/recep/charts/test/check",resultat,labels,data);
